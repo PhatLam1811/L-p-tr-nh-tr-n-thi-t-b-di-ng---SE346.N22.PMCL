@@ -35,9 +35,11 @@ const styles = StyleSheet.create({
   },
 });
 
+const dummy = [];
+
 const AsyncStorageTest = () => {
   const [inputName, setInputName] = useState('');
-  const [listName, setListName] = useState([]);
+  const [listName, setListName] = useState(dummy);
   const [retrieveData, setRetrieveData] = useState('');
 
   const contentChangeHandler = text => {
@@ -48,7 +50,6 @@ const AsyncStorageTest = () => {
     try {
       const listname_stringify = JSON.stringify(listName);
       await AsyncStorage.setItem('listname', listname_stringify);
-      setInputName('');
     } catch (error) {
       // Error saving data
       setRetrieveData('error input:' + error.message);
@@ -59,9 +60,15 @@ const AsyncStorageTest = () => {
     try {
       const names = await AsyncStorage.getItem('listname');
       if (names !== null) {
-        // We have data!!
-        const list_name = JSON.parse(names);
+        const list_name = await JSON.parse(names);
         setListName(list_name);
+        setRetrieveData('listname get from async ' + Date.now());
+
+        //await _storeData();
+      } else {
+        setRetrieveData(
+          'listname cant be get ' + Date.now() + ' ' + names + ' ....',
+        );
       }
     } catch (error) {
       // Error retrieving data
@@ -69,31 +76,39 @@ const AsyncStorageTest = () => {
     }
   };
 
-  const saveName = () => {
-    setListName(prevList => {
-      return [{key: makeid(5), name: inputName}, ...prevList];
-    });
+  const saveName = async () => {
+    let newList = listName;
+    newList[listName.length] = {key: makeid(5), name: inputName};
+    setListName(newList);
 
-    _storeData();
+    await _storeData();
+    setRetrieveData(listName.length);
+
+    setInputName('');
   };
 
-  const deleteAllName = () => {
+  const deleteAllName = async () => {
     setListName(prevList => {
       return [];
     });
-
-    _storeData();
-  };
-  const reloadList = () => {
-    loadListFromDatabase();
+    await AsyncStorage.clear();
   };
 
-  const loadListFromDatabase = async () => {
-    _retrieveData();
+  const clearScreen = () => {
+    setListName(prevList => []);
   };
+  const reloadList = async () => {
+    await _retrieveData();
+  };
+
+  useEffect(() => {
+    //setRetrieveData('listname updated ' + Date.now());
+  }, [listName]);
 
   return (
     <View style={styles.container}>
+      <Text>{retrieveData}</Text>
+
       <Text>{inputName}</Text>
       <FlatList
         data={listName}
@@ -111,6 +126,7 @@ const AsyncStorageTest = () => {
       <Button title="Reload" onPress={reloadList} />
 
       <Button title="Save name" onPress={saveName} />
+      <Button title="clear list" onPress={clearScreen} />
 
       <Button title="Delete all name" onPress={deleteAllName} />
     </View>
