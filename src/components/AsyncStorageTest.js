@@ -39,7 +39,7 @@ const dummy = [];
 
 const AsyncStorageTest = () => {
   const [inputName, setInputName] = useState('');
-  const [listName, setListName] = useState(dummy);
+  const [listName, setListName] = useState([]);
   const [retrieveData, setRetrieveData] = useState('');
 
   const contentChangeHandler = text => {
@@ -48,8 +48,8 @@ const AsyncStorageTest = () => {
 
   const _storeData = async () => {
     try {
-      const listname_stringify = JSON.stringify(listName);
-      await AsyncStorage.setItem('listname', listname_stringify);
+      //const listname_stringify = JSON.stringify(listName);
+      await AsyncStorage.setItem('listname', JSON.stringify(listName));
     } catch (error) {
       // Error saving data
       setRetrieveData('error input:' + error.message);
@@ -76,13 +76,24 @@ const AsyncStorageTest = () => {
     }
   };
 
+  // const saveName = useCallback(async () => {
+  //   let newList = listName;
+  //   newList[listName.length] = {key: makeid(5), name: inputName};
+  //   setListName(prevState => [...newList]);
+  //   // setListName(prevState => [...prevState, {key: makeid(5), name: inputName}]);
+
+  //   await _storeData();
+
+  //   setInputName('');
+  // }, []);
+
   const saveName = async () => {
     let newList = listName;
     newList[listName.length] = {key: makeid(5), name: inputName};
-    setListName(newList);
+    setListName(prevState => [...newList]);
+    // setListName(prevState => [...prevState, {key: makeid(5), name: inputName}]);
 
     await _storeData();
-    setRetrieveData(listName.length);
 
     setInputName('');
   };
@@ -103,6 +114,7 @@ const AsyncStorageTest = () => {
 
   useEffect(() => {
     //setRetrieveData('listname updated ' + Date.now());
+    setRetrieveData(listName.length);
   }, [listName]);
 
   return (
