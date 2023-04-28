@@ -1,8 +1,8 @@
 /* eslint-disable*/
 
-import React from 'react';
+import React from "react";
 
-import { View } from 'react-native';
+import MainScreen from "./src/screen/MainScreen";
 
 const App = () => {
   return (
@@ -11,7 +11,7 @@ const App = () => {
     // </Provider>
     // <DetailsView />
 
-    <View />
+    <MainScreen />
   );
 }
 
