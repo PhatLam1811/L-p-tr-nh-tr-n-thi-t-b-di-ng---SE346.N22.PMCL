@@ -2,11 +2,11 @@ import React from "react";
 
 import { Text, View } from "react-native";
 
-const NoteList = () => {
+const NoteList = (props) => {
     return (
-        <View>
-            <Text>This is a note list</Text>
-        </View>
+        <View style={props.style}>
+            <Text style={{ color: "black" }}> This is a note list</Text>
+        </View >
     );
 }
 
