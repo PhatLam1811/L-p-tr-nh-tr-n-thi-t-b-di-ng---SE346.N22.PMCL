@@ -5,6 +5,9 @@ import {View, Text, Button, TextInput} from 'react-native';
 import {connect} from 'react-redux';
 import {FlatList, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import {AsyncStorage} from 'react-native';
+
+
 import moment from 'moment';
 import NavigationBar from '../components/NavigationBar';
 
@@ -39,21 +42,71 @@ const DetailsView = () => {
     },
   });
 
-  const [inputName, setInputName] = useState('');
-  const [listName, setListName] = useState([]);
-  const [retrieveData, setRetrieveData] = useState('');
+  const [inputTitle, setInputTitle] = useState('');
+  const [inputSubTitle, setInputSubTitle] = useState([]);
+  const [inputNote, setInputNote] = useState('');
+
+  const saveBtnPress=async()=>{
+    try {
+      await AsyncStorage.setItem(
+        'noteTitle',
+        inputTitle,
+      );
+      await AsyncStorage.setItem(
+        'noteSubTitle',
+        inputSubTitle,
+      );
+      await AsyncStorage.setItem(
+        'noteContent',
+        inputNote,
+      );
+
+      const saveTitle = await AsyncStorage.getItem('noteTitle');
+      const saveSubTitle = await AsyncStorage.getItem('noteSubTitle');
+      const saveContent = await AsyncStorage.getItem('noteContent');
+
+      if (saveTitle !== null) {
+        console.log(saveTitle);
+      }
+      if (saveSubTitle !== null) {
+        console.log(saveSubTitle);
+      }  
+          if (saveContent !== null) {
+        console.log(saveContent);
+      }
+
+      console.log('Pressed')
+    } catch (error) {
+      // Error saving data
+      console.log('Error: '+error.message)
+
+    }
+  }
+
+  const inputTitleChange=title=>{
+setInputTitle(title)
+  }
+  const inputSubTitleChange=subTitle=>{
+    setInputSubTitle(subTitle)
+      }
+      const inputNoteChange=note=>{
+        setInputNote(note)
+          }
+
   return (
     <View>
       <NavigationBar />
-      <TextInput placeholder="Note title" placeholderTextColor="#1f1c1cf8" />
+      <TextInput placeholder="Note title" placeholderTextColor="#1f1c1cf8" onChangeText={inputTitleChange} />
       <Text style={styles.timestamp}>
         {moment().utcOffset('+07:00').format('LLLL')}
       </Text>
-      <TextInput placeholder="Note subtitle" placeholderTextColor="#383a3bc0" />
+      <TextInput placeholder="Note subtitle" placeholderTextColor="#383a3bc0" onChangeText={inputSubTitleChange}/>
       <TextInput
         placeholder="Type your note here"
         placeholderTextColor="#383a3bc0"
+        onChangeText={inputNoteChange}
       />
+      <Button onPress={saveBtnPress} title="Press Me"/>
     </View>
   );
 };

@@ -36,10 +36,14 @@ const NavigationBar = () => {
       height: 18,
     },
   });
+
+  const onNavBtnPress=()=>{
+    console.log('press nav')
+  }
   return (
     // react native bắt buộc file ảnh phải cùng folder mà require nó
     <View>
-      <TouchableOpacity activeOpacity={0.5}>
+      <TouchableOpacity activeOpacity={0.5} onPress={onNavBtnPress}>
         <Image source={require('./returnicon.png')} style={styles.backButton} />
       </TouchableOpacity>
       <Text>navigation bar</Text>
