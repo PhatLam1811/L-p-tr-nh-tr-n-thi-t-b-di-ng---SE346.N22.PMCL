@@ -14,7 +14,7 @@ import {FlatList, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 
-const NavigationBar = () => {
+const NavigationBar = (props) => {
   const styles = StyleSheet.create({
     container: {
       paddingTop: 22,
@@ -43,7 +43,7 @@ const NavigationBar = () => {
   return (
     // react native bắt buộc file ảnh phải cùng folder mà require nó
     <View>
-      <TouchableOpacity activeOpacity={0.5} onPress={onNavBtnPress}>
+      <TouchableOpacity activeOpacity={0.5} onPress={props.onPress}>
         <Image source={require('./returnicon.png')} style={styles.backButton} />
       </TouchableOpacity>
       <Text>navigation bar</Text>

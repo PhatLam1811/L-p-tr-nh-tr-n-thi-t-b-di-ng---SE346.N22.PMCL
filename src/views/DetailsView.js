@@ -23,7 +23,10 @@ function makeid(length) {
   }
   return result;
 }
-const DetailsView = () => {
+  // const saveTitle = await AsyncStorage.getItem('noteTitle');
+  // const saveSubTitle = await AsyncStorage.getItem('noteSubTitle');
+  // const saveContent = await AsyncStorage.getItem('noteContent');
+const DetailsView =(navigation) => {
   const styles = StyleSheet.create({
     container: {
       paddingTop: 22,
@@ -43,8 +46,11 @@ const DetailsView = () => {
   });
 
   const [inputTitle, setInputTitle] = useState('');
-  const [inputSubTitle, setInputSubTitle] = useState([]);
+  const [inputSubTitle, setInputSubTitle] = useState('');
   const [inputNote, setInputNote] = useState('');
+
+
+
 
   const saveBtnPress=async()=>{
     try {
@@ -61,6 +67,17 @@ const DetailsView = () => {
         inputNote,
       );
 
+navigation.navigate('Main');
+      // console.log('Pressed')
+    } catch (error) {
+      // Error saving data
+      console.log('Error: '+error.message)
+
+    }
+
+
+  }
+    const logdger=async()=>{
       const saveTitle = await AsyncStorage.getItem('noteTitle');
       const saveSubTitle = await AsyncStorage.getItem('noteSubTitle');
       const saveContent = await AsyncStorage.getItem('noteContent');
@@ -75,14 +92,7 @@ const DetailsView = () => {
         console.log(saveContent);
       }
 
-      console.log('Pressed')
-    } catch (error) {
-      // Error saving data
-      console.log('Error: '+error.message)
-
     }
-  }
-
   const inputTitleChange=title=>{
 setInputTitle(title)
   }
@@ -95,7 +105,7 @@ setInputTitle(title)
 
   return (
     <View>
-      <NavigationBar />
+      <NavigationBar onPress={saveBtnPress}/>
       <TextInput placeholder="Note title" placeholderTextColor="#1f1c1cf8" onChangeText={inputTitleChange} />
       <Text style={styles.timestamp}>
         {moment().utcOffset('+07:00').format('LLLL')}
@@ -106,7 +116,7 @@ setInputTitle(title)
         placeholderTextColor="#383a3bc0"
         onChangeText={inputNoteChange}
       />
-      <Button onPress={saveBtnPress} title="Press Me"/>
+
     </View>
   );
 };
