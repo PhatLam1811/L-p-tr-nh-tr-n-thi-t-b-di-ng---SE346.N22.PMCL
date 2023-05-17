@@ -7,6 +7,8 @@ import {FlatList, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {AsyncStorage} from 'react-native';
 
+import { GetNoteAction } from '../actions/GetNote.js';
+import { SaveNoteAction } from '../actions/SaveNote.js';
 
 import moment from 'moment';
 import NavigationBar from '../components/NavigationBar';
@@ -49,49 +51,16 @@ const DetailsView =(navigation) => {
   const [inputSubTitle, setInputSubTitle] = useState('');
   const [inputNote, setInputNote] = useState('');
 
-
-
-
   const saveBtnPress=async()=>{
-    try {
-      await AsyncStorage.setItem(
-        'noteTitle',
-        inputTitle,
-      );
-      await AsyncStorage.setItem(
-        'noteSubTitle',
-        inputSubTitle,
-      );
-      await AsyncStorage.setItem(
-        'noteContent',
-        inputNote,
-      );
+          const saveActionResponse=await SaveNoteAction({title:inputTitle,subTitle:inputSubTitle,content:inputNote});
 
-navigation.navigate('Main');
-      // console.log('Pressed')
-    } catch (error) {
-      // Error saving data
-      console.log('Error: '+error.message)
-
-    }
-
+console.log(saveActionResponse);
 
   }
     const logdger=async()=>{
-      const saveTitle = await AsyncStorage.getItem('noteTitle');
-      const saveSubTitle = await AsyncStorage.getItem('noteSubTitle');
-      const saveContent = await AsyncStorage.getItem('noteContent');
+      const GetNoteResponse=await GetNoteAction('lveGGoz');
 
-      if (saveTitle !== null) {
-        console.log(saveTitle);
-      }
-      if (saveSubTitle !== null) {
-        console.log(saveSubTitle);
-      }  
-          if (saveContent !== null) {
-        console.log(saveContent);
-      }
-
+      console.log(GetNoteResponse)
     }
   const inputTitleChange=title=>{
 setInputTitle(title)
@@ -116,6 +85,7 @@ setInputTitle(title)
         placeholderTextColor="#383a3bc0"
         onChangeText={inputNoteChange}
       />
+      <Button title='logger' onPress={logdger}/>
 
     </View>
   );

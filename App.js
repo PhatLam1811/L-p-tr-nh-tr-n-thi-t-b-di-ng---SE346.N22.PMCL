@@ -15,12 +15,11 @@ const App = () => {
     // </Provider>
     // <DetailsView />
     <NavigationContainer>
-      <DetailsView/>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Main"
           component={MainScreen}
-        />
+        /> */}
         <Stack.Screen name="Detail" component={DetailsView} />
       </Stack.Navigator>
 
