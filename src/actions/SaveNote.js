@@ -18,19 +18,10 @@ export const SaveNoteAction = async (noteData) => {
     const ID=makeid(7);
 
     try {
-        await AsyncStorage.setItem(
-          'noteTitle'+ID,
-          noteData.title,
-        );
-        await AsyncStorage.setItem(
-          'noteSubTitle'+ID,
-          noteData.subTitle,
-        );
-        await AsyncStorage.setItem(
-          'noteContent'+ID,
-          noteData.content,
-        );
-        return{result:'success',data:noteData,ID:ID}
+
+        const jsonData = JSON.stringify({...noteData,ID:ID});
+        await AsyncStorage.setItem('noteData'+ID,jsonData);
+        return{result:'success',data:{...noteData,ID:ID}}
   }
   catch(error){console.log(error)
   return{result:'fail',error:error}
