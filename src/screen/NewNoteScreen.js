@@ -1,34 +1,15 @@
 /* eslint-disable*/
 
 import React, {Component, useState, useCallback, useEffect} from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
-import {connect} from 'react-redux';
-import {FlatList, StyleSheet, Alert} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import {AsyncStorage} from 'react-native';
+import {View, Text, Button, TextInput,StyleSheet} from 'react-native';
 
-import { GetNoteAction } from '../actions/GetNote.js';
 import { SaveNoteAction } from '../actions/SaveNote.js';
 
 import moment from 'moment';
 import NavigationBar from '../components/NavigationBar';
 
-function makeid(length) {
-  let result = '';
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZa_xXx_I_Put_A_Little_Secret_Here_xXx_bcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
-  // const saveTitle = await AsyncStorage.getItem('noteTitle');
-  // const saveSubTitle = await AsyncStorage.getItem('noteSubTitle');
-  // const saveContent = await AsyncStorage.getItem('noteContent');
-const DetailsView =() => {
+
+const NewNoteScreen =() => {
   const styles = StyleSheet.create({
     container: {
       paddingTop: 22,
@@ -50,20 +31,13 @@ const DetailsView =() => {
   const [inputTitle, setInputTitle] = useState('');
   const [inputSubTitle, setInputSubTitle] = useState('');
   const [inputNote, setInputNote] = useState('');
-
   const saveBtnPress=async()=>{
           const saveActionResponse=await SaveNoteAction({title:inputTitle,subTitle:inputSubTitle,content:inputNote});
 
 console.log(saveActionResponse);
-navigation.navigate('Main');
 
   }
-    const logdger=async()=>{
-      const GetNoteResponse=await GetNoteAction('LyS1Um_');
 
-      console.log(GetNoteResponse)
-
-    }
   const inputTitleChange=title=>{
 setInputTitle(title)
   }
@@ -87,9 +61,7 @@ setInputTitle(title)
         placeholderTextColor="#383a3bc0"
         onChangeText={inputNoteChange}
       />
-      <Button title='logger' onPress={logdger}/>
-
     </View>
   );
 };
-export default DetailsView;
+export default NewNoteScreen;

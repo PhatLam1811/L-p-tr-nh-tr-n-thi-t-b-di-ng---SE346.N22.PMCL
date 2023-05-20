@@ -1,3 +1,6 @@
+/* eslint-disable*/
+
+
 import React from "react";
 
 import { StyleSheet, Switch, Text, View } from "react-native";
@@ -22,6 +25,8 @@ const MainScreen = () => {
     const CreateImageNoteHandler = () => {
         console.log("image note pressed!")
         // display create image note screen
+
+
     }
 
     const CreateURLNoteHandler = () => {
@@ -32,6 +37,7 @@ const MainScreen = () => {
     const CreateNoteHandler = () => {
         console.log("create note pressed!")
         // display create new note screen
+
     }
 
     return (
