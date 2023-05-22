@@ -12,9 +12,9 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <MainScreen />
+//    <MainScreen />
 //<DetailNoteScreen NoteID="UEh_5_X"/>
-//<NewNoteScreen/>
+<NewNoteScreen/>
   );
 }
 

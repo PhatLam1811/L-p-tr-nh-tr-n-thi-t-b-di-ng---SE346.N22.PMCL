@@ -1,7 +1,6 @@
 /* eslint-disable*/
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export const DeleteNoteAction = async (ID) => {
     try {
         const deleteNoteData = await AsyncStorage.removeItem('noteData'+ID);

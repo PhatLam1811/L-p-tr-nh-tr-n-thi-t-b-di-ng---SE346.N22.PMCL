@@ -7,9 +7,11 @@ import { SaveNoteAction } from '../actions/SaveNote.js';
 
 import moment from 'moment';
 import NavigationBar from '../components/NavigationBar';
+import { DeleteAllNoteAction,DeleteNoteAction } from '../actions/DeleteNote.js';
+import { GetAllNoteAction ,GetNoteAction} from '../actions/GetNote.js';
+import { UpdateNoteAction } from '../actions/UpdateNote.js';
 
-
-const NewNoteScreen =() => {
+const NewNoteScreen = () => {
   const styles = StyleSheet.create({
     container: {
       paddingTop: 22,
@@ -48,6 +50,15 @@ setInputTitle(title)
         setInputNote(note)
           }
 
+        //   useEffect(()=>{
+        //     async function start(){
+        //     const noteRes= await UpdateNoteAction('P_aQsIK',{title:'updateddfs title',subTitle:'updated subTdasditle',content:'updated content'});
+        //     console.log(noteRes);
+        //     const check=await GetAllNoteAction();
+        //     console.log(check);
+        //     };
+        //     start();
+        // },[]);
   return (
     <View>
       <NavigationBar onPress={saveBtnPress}/>
