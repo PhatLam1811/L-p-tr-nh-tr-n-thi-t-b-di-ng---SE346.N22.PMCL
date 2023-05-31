@@ -5,6 +5,8 @@ import Task from "./src/components/tasks/Task"
 import {View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Button, Keyboard} from 'react-native'
 import { TextInput } from "@react-native-material/core";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SaveNoteAction} from'./src/actions/SaveNote'
+import {GetNoteAction} from'./src/actions/GetNote'
 
 function makeid(length) {
   let result = '';
@@ -25,10 +27,13 @@ const App = () => {
   const [retrieveData, setRetrieveData] = useState('');
 
 
-  const save = async () => {
+  const save = async (itemsCopy) => {
     try {
-      console.log(JSON.stringify(taskItems));
-      await AsyncStorage.setItem('taskItems', JSON.stringify(taskItems));
+      console.log("taskItems in savemethod:" + JSON.stringify(itemsCopy));
+
+
+      //await SaveNoteAction(taskItems);
+      await AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
     } 
     catch (error) {
       // Error saving data
@@ -38,17 +43,16 @@ const App = () => {
 
   const _retrieveData = async () => {
     try {
-      const names = await AsyncStorage.getItem('taskItems');
+      console.log("_retriveData begins");
 
+      const names = await AsyncStorage.getItem('taskItems');
+      console.log("got datas" + names);
       if (names !== null) {
 
         const list_name = await JSON.parse(names);
-      
 
         setTaskItems(list_name);
         setRetrieveData('taskItems get from async ' + Date.now());
-
-        
       } 
       else {
         setRetrieveData(
@@ -62,27 +66,32 @@ const App = () => {
   };
 
   const completeTask = async(index)  =>{
+    console.log("index is being deleted:" + index);
+
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index,1); 
+    console.log("itemsCopy:" + JSON.stringify(itemsCopy));
     setTaskItems([...itemsCopy]);
-    await _storeData();
+
+    await save(itemsCopy);
   }
   const handleAddTask = async () =>{
 
-    setTaskItems([...taskItems, task]);
+    let itemsCopy = [...taskItems, task];
+    await save(itemsCopy);
 
     setTask(null);
-    Keyboard.dismiss();1
+    Keyboard.dismiss();
+    setTaskItems([...taskItems, task]);
     
   }
-  const clearScreen = () => {
-    setListName(prevList => []);
-  };
+
   const reloadList = async () => {
     await _retrieveData();
   };
 
   useEffect(() => {
+    console.log("taskItems after settaskItems but in useEffect hook" + JSON.stringify(taskItems));
     
   }, [taskItems]);
 
@@ -95,7 +104,7 @@ const App = () => {
           {
             taskItems.map((item, index) => {
               return (
-                <TouchableOpacity key={index} onPress={() => completeTask()}>
+                <TouchableOpacity key={index} onPress={() => completeTask(index)}>
                   <Task  text={item}/>
                 </TouchableOpacity>
               )
