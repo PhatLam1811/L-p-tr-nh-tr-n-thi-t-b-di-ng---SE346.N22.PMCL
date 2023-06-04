@@ -19,9 +19,9 @@ export const SaveNoteAction = async (noteData) => {
     const ID=makeid(7);
 
     try {
-        const jsonData = JSON.stringify({...noteData,ID:ID});
+        const jsonData = JSON.stringify({noteData,ID:ID});
         await AsyncStorage.setItem('taskItems'+ID,jsonData);
-        return{result:'success',data:{...noteData,ID:ID}}
+        return{result:'success',data:{noteData,ID:ID}}
   }
   catch(error){console.log(error)
   return{result:'fail',error:error}

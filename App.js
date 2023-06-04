@@ -6,7 +6,8 @@ import {View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity
 import { TextInput } from "@react-native-material/core";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SaveNoteAction} from'./src/actions/SaveNote'
-import {GetNoteAction} from'./src/actions/GetNote'
+import {GetAllNoteAction, GetNoteAction} from'./src/actions/GetNote'
+import {DeleteAllNoteAction, DeleteNoteAction}from'./src/actions/DeleteNote'
 
 function makeid(length) {
   let result = '';
@@ -30,28 +31,33 @@ const App = () => {
   const save = async (itemsCopy) => {
     try {
       console.log("taskItems in savemethod:" + JSON.stringify(itemsCopy));
-
-
       //await SaveNoteAction(taskItems);
-      await AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
+      // await AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
+
+      const saveData= await SaveNoteAction(itemsCopy);
+      console.log(saveData);
+      return saveData.data;
     } 
     catch (error) {
       // Error saving data
       setRetrieveData('error input:' + error.message);
+      return null;
     }
   };
 
   const _retrieveData = async () => {
+
     try {
       console.log("_retriveData begins");
 
-      const names = await AsyncStorage.getItem('taskItems');
-      console.log("got datas" + names);
-      if (names !== null) {
+      // const names = await AsyncStorage.getItem('taskItems');
 
-        const list_name = await JSON.parse(names);
-
-        setTaskItems(list_name);
+      const names=await GetAllNoteAction();
+      //await DeleteAllNoteAction();
+      console.log(names);
+      // console.log("got datas" + names);
+      if (names.result === 'success') {
+        setTaskItems(names.data);
         setRetrieveData('taskItems get from async ' + Date.now());
       } 
       else {
@@ -59,6 +65,7 @@ const App = () => {
           'taskItems cant be get ' + Date.now() + ' ' + names + ' ....',
         );
       }
+
     } catch (error) {
       // Error retrieving data
       setRetrieveData('error retrieve:' + error.message);
@@ -67,23 +74,23 @@ const App = () => {
 
   const completeTask = async(index)  =>{
     console.log("index is being deleted:" + index);
-
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index,1); 
-    console.log("itemsCopy:" + JSON.stringify(itemsCopy));
     setTaskItems([...itemsCopy]);
+    await DeleteNoteAction(taskItems[index].ID);
+    // await save(itemsCopy);
 
-    await save(itemsCopy);
+
   }
   const handleAddTask = async () =>{
+    // let itemsCopy = [...taskItems, task];
 
-    let itemsCopy = [...taskItems, task];
-    await save(itemsCopy);
-
-    setTask(null);
+    const saveData=await save(task);
+    //await SaveNoteAction(task);
     Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    
+    setTaskItems([...taskItems,saveData]);
+    setTask(null);
+
   }
 
   const reloadList = async () => {
@@ -105,7 +112,7 @@ const App = () => {
             taskItems.map((item, index) => {
               return (
                 <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                  <Task  text={item}/>
+                  <Task  text={item.noteData}/>
                 </TouchableOpacity>
               )
             })
@@ -122,7 +129,7 @@ const App = () => {
         <TextInput 
           style={styles.input} 
           placeholder={'Write a task'} 
-          value={task} onChangeText={text => setTask(text)}/>
+          value={task} onChangeText={text =>{setTask(text)}}/>
 
         <TouchableOpacity onPress={async () =>{
           handleAddTask();
