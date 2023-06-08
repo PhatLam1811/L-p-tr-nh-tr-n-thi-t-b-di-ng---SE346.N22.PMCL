@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect}  from "react";
 
 import { StyleSheet, Switch, Text, View } from "react-native";
 import { FAB } from "@react-native-material/core";
@@ -8,7 +8,32 @@ import Icon2 from "react-native-vector-icons/MaterialIcons";
 import SearchBar from "../components/SearchBar";
 import NoteList from "../components/notes/NoteList";
 
-const MainScreen = () => {
+import {GetAllNoteAction, GetNoteAction} from'./../actions/GetNote'
+
+const MainScreen = (props) => {
+    const [taskItems,setTaskItems] = useState([]);
+
+    const _retrieveData=async()=>{
+        const names=await GetAllNoteAction();
+        console.log(names);
+        if (names.result === 'success') {
+        //   console.log(names.data);
+          setTaskItems(names.data);
+        }     
+    }
+    useEffect(() => {
+        _retrieveData();
+      }, []);
+
+    const screenNavigation=(ID)=>{
+        props.navigation.navigate('Detail', {
+            ID: ID,
+            onGoBack:()=> _retrieveData()
+            ,
+
+        });
+    }
+
     const ChangeNotesLayoutHandler = () => {
         console.log("change notes layout (column to grids & vice versa)")
         // change notes display style 
@@ -32,6 +57,11 @@ const MainScreen = () => {
     const CreateNoteHandler = () => {
         console.log("create note pressed!")
         // display create new note screen
+        props.navigation.navigate('NewTask',{
+            onGoBack: ()=>_retrieveData(),
+        });
+
+
     }
 
     return (
@@ -43,7 +73,7 @@ const MainScreen = () => {
             <SearchBar
                 style={styles.mainScreen__searchBar}
                 onChangeLayout={ChangeNotesLayoutHandler} />
-            <NoteList style={styles.mainScreen__noteList} />
+            <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation}/>
             <View style={styles.mainScreen__toolbar}>
                 <Icon1
                     name="checklist"
