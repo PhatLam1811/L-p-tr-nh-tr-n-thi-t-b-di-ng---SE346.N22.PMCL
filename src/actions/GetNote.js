@@ -5,14 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const GetNoteAction = async (ID) => {
     try {
   
-        const noteData = await AsyncStorage.getItem('noteData'+ID);
+        const noteData = await AsyncStorage.getItem('taskItems'+ID);
 
            return{result:'success',data:JSON.parse(noteData)};
 
   }catch(error){console.log(error)
   return{result:'fail',error:error};
 }};
-
 export const GetAllNoteAction = async () => {
     try {
       let notes=[];
@@ -24,7 +23,7 @@ export const GetAllNoteAction = async () => {
           let value = store[i][1];
           console.log(key);
           const jsonData=JSON.parse(value);
-notes.push(jsonData);
+          notes.push(jsonData);
         });
       });
 

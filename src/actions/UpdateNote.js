@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const UpdateNoteAction = async (ID,noteUpdateData) => {
     try {
   
-        const noteData = await AsyncStorage.mergeItem('noteData'+ID,JSON.stringify(noteUpdateData));
+        const noteData = await AsyncStorage.mergeItem('taskItems'+ID,JSON.stringify(noteUpdateData));
            return{result:'success',data:JSON.parse(noteData)};
 
   }catch(error){console.log(error)

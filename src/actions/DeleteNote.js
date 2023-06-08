@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const DeleteNoteAction = async (ID) => {
     try {
-        const deleteNoteData = await AsyncStorage.removeItem('noteData'+ID);
+        const deleteNoteData = await AsyncStorage.removeItem('taskItems'+ID);
            return{result:'success',message:'success delete!',result:deleteNoteData};
 
   }catch(error){console.log(error)

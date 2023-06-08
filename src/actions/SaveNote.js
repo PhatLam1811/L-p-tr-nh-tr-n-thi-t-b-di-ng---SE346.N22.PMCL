@@ -1,4 +1,5 @@
 /* eslint-disable*/
+/*notes for my friend Phat- this is being used for Task, not notes anymore*/
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
     function makeid(length) {
@@ -18,10 +19,9 @@ export const SaveNoteAction = async (noteData) => {
     const ID=makeid(7);
 
     try {
-
-        const jsonData = JSON.stringify({...noteData,ID:ID});
-        await AsyncStorage.setItem('noteData'+ID,jsonData);
-        return{result:'success',data:{...noteData,ID:ID}}
+        const jsonData = JSON.stringify({noteData,ID:ID});
+        await AsyncStorage.setItem('taskItems'+ID,jsonData);
+        return{result:'success',data:{noteData,ID:ID}}
   }
   catch(error){console.log(error)
   return{result:'fail',error:error}
