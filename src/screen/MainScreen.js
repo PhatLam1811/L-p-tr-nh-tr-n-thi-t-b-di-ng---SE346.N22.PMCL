@@ -9,6 +9,7 @@ import AppColors from "../utils/AppColors";
 import { FAB } from "@react-native-material/core";
 import { StyleSheet, Switch, Text, View } from "react-native";
 import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote'
+import { DeleteAllNoteAction } from "../actions/DeleteNote";
 
 const MainScreen = (props) => {
     const [taskItems, setTaskItems] = useState([]);
