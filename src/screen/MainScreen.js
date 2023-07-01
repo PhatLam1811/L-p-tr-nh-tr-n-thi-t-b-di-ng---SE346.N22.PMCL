@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 
-import Icon1 from "react-native-vector-icons/Octicons";
-import Icon2 from "react-native-vector-icons/MaterialIcons";
+import OctIcon from "react-native-vector-icons/Octicons";
+import MatIcon from "react-native-vector-icons/MaterialIcons";
 import SearchBar from "../components/SearchBar";
 import NoteList from "../components/notes/NoteList";
 import AppColors from "../utils/AppColors";
 
 import { FAB } from "@react-native-material/core";
 import { StyleSheet, Switch, Text, View } from "react-native";
-import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote'
+import { GetAllNoteAction } from './../actions/GetNote'
 
 const MainScreen = (props) => {
-    const [taskItems, setTaskItems] = useState([]);
+    const [notes, setNotes] = useState([]);
+    const [isGridLayout, SetIsGridLayout] = useState(true);
 
     const ChangeNotesLayoutHandler = () => {
         console.log("change notes layout (column to grids & vice versa)")
+        SetIsGridLayout(prev => !prev);
         // change notes display style 
     }
 
@@ -33,6 +35,10 @@ const MainScreen = (props) => {
         // display create URL note screen
     }
 
+    const SearchNoteHandler = (input) => {
+        console.log("on search: " + input);
+    }
+
     const CreateNoteHandler = () => {
         console.log("create note pressed!")
         // display create new note screen
@@ -43,10 +49,8 @@ const MainScreen = (props) => {
 
     const _retrieveData = async () => {
         const names = await GetAllNoteAction();
-        // console.log(names);
         if (names.result === 'success') {
-            // console.log(names.data);
-            setTaskItems(names.data);
+            setNotes(names.data);
         }
     }
 
@@ -69,34 +73,38 @@ const MainScreen = (props) => {
             </View>
             <SearchBar
                 style={styles.mainScreen__searchBar}
+                layout={isGridLayout ? "grid" : "column"}
+                onSearch={SearchNoteHandler}
                 onChangeLayout={ChangeNotesLayoutHandler} />
-            <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation} />
+            <NoteList
+                style={styles.mainScreen__noteList}
+                list={notes}
+                layout={isGridLayout ? "grid" : "column"}
+                screenNavigation={screenNavigation} />
             <View style={styles.mainScreen__toolbar}>
-                <Icon1
+                <OctIcon
                     name="checklist"
                     {...styles.mainScreen__icon}
                     onPress={CreateChecklistNoteHandler} />
-                <Icon2
+                <MatIcon
                     name="image"
                     {...styles.mainScreen__icon}
                     size={30}
                     onPress={CreateImageNoteHandler} />
-                <Icon1
+                <OctIcon
                     name="globe"
                     {...styles.mainScreen__icon}
                     onPress={CreateURLNoteHandler} />
                 <FAB
                     {...styles.mainScreen__newNoteFAB}
                     icon={
-                        <Icon1 name="plus"
+                        <OctIcon name="plus"
                             {...styles.mainScreen__icon} />}
                     onPress={CreateNoteHandler} />
             </View>
         </View >
     );
 };
-
-export default MainScreen;
 
 const styles = StyleSheet.create({
     mainScreen: {
@@ -132,12 +140,11 @@ const styles = StyleSheet.create({
         flex: 12,
         backgroundColor: "transparent",
         marginBottom: "5%",
-        marginHorizontal: "3%",
     },
 
     mainScreen__toolbar: {
-        backgroundColor: AppColors.secondaryDark /*"#262626"*/,
         flex: 1.5,
+        backgroundColor: AppColors.secondaryDark,
         flexDirection: "row",
         alignItems: "center",
         width: "100%",
@@ -162,3 +169,5 @@ const styles = StyleSheet.create({
         marginBottom: "auto"
     },
 });
+
+export default MainScreen;

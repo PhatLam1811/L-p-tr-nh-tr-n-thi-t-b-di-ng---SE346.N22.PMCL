@@ -4,6 +4,7 @@ import { Text, TouchableOpacity, View, FlatList } from "react-native";
 import { DeleteAllNoteAction, DeleteNoteAction } from './../../actions/DeleteNote'
 
 import Task from "./../tasks/Task"
+import NoteCard from "./NoteCard";
 
 const NoteList = (props) => {
   const [notes, setNotes] = useState([]);
@@ -19,8 +20,8 @@ const NoteList = (props) => {
   }
 
   useEffect(() => {
-    console.log('porops list is: ');
-    console.log(props.list)
+    // console.log('porops list is: ');
+    // console.log(props.list)
     setNotes(props.list);
   }, [props]);
 
@@ -37,9 +38,11 @@ const NoteList = (props) => {
 
         <FlatList style={{ margin: 5 }}
           data={notes}
-          numColumns={2}
-          keyExtractor={(item, index) => item.id}
-          renderItem={(item) => <Task text={item.noteData} />}
+          key={props.layout === "grid" ? gridColumns : colColumns}
+          numColumns={props.layout === "grid" ? 2 : 1}
+          keyExtractor={item => item.ID}
+          // renderItem={(item) => <Task text={item.noteData} />}
+          renderItem={item => <NoteCard />}
         />
       </View>
     </View >
