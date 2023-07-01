@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
-import {Text, TouchableOpacity, View, FlatList, StyleSheet} from 'react-native';
+import { Text, TouchableOpacity, View, FlatList, StyleSheet } from 'react-native';
 import {
   DeleteAllNoteAction,
   DeleteNoteAction,
@@ -31,7 +31,7 @@ const NoteList = props => {
     <View style={props.style}>
       <View style={styles.container}>
 
-        {props.list.map((item,index) => {
+        {props.list.map((item, index) => {
           // console.log('item is: ');
           // console.log(item);
           // console.log('index is: ');
@@ -46,7 +46,7 @@ const NoteList = props => {
             </View>
           );
         })}
-        
+
       </View>
     </View>
   );
@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    
+
   },
 
   item: {
     margin: 5,
     alignSelf: 'center',
-    width: '48%',
+    width: '100%',
   },
 });
 

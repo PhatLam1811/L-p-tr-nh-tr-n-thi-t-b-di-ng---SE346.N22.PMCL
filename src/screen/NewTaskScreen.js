@@ -6,184 +6,188 @@ import {
   View,
   Text,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  Button,
-  Keyboard,
+  TouchableOpacity
 } from 'react-native';
-import {TextInput} from '@react-native-material/core';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SaveNoteAction} from './../actions/SaveNote';
-import {GetAllNoteAction, GetNoteAction} from './../actions/GetNote';
-import {DeleteAllNoteAction, DeleteNoteAction} from './../actions/DeleteNote';
+
+import NoteList from "../components/notes/NoteList";
+
+import {Button, TextInput} from '@react-native-material/core';
+
 
 const NewTaskScreen = props => {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
-  const [retrieveData, setRetrieveData] = useState('');
 
-  const save = async itemsCopy => {
-    try {
-      console.log('taskItems in savemethod:' + JSON.stringify(itemsCopy));
-      //await SaveNoteAction(taskItems);
-      // await AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
 
-      const saveData = await SaveNoteAction(itemsCopy);
-      console.log(saveData);
-      return saveData.data;
-    } catch (error) {
-      // Error saving data
-      setRetrieveData('error input:' + error.message);
-      return null;
-    }
-  };
+
+  const ChangeNotesLayoutHandler = () => {
+      console.log("change notes layout (column to grids & vice versa)")
+      // change notes display style 
+  }
+
+  const CreateChecklistNoteHandler = () => {
+      console.log("checklist pressed!")
+      // display create checklist note screen
+  }
+
+  const CreateImageNoteHandler = () => {
+      console.log("image note pressed!")
+      // display create image note screen
+  }
+
+  const CreateURLNoteHandler = () => {
+      console.log("URL note pressed!")
+  }
+
 
   const _retrieveData = async () => {
-    try {
-      console.log('_retriveData begins');
+    console.log("im retrieving...");
+  
+    //const names = await GetAllNoteAction();
+    // if (names.result === 'success') {
+    //     console.log(names.data);
+    //     setTaskItems(names.data);
+    // }
+    
+  }
 
-      // const names = await AsyncStorage.getItem('taskItems');
-
-      const names = await GetAllNoteAction();
-      //await DeleteAllNoteAction();
-      console.log(names);
-      // console.log("got datas" + names);
-      if (names.result === 'success') {
-        setTaskItems(names.data);
-        setRetrieveData('taskItems get from async ' + Date.now());
-      } else {
-        setRetrieveData(
-          'taskItems cant be get ' + Date.now() + ' ' + names + ' ....',
-        );
-      }
-    } catch (error) {
-      // Error retrieving data
-      setRetrieveData('error retrieve:' + error.message);
-    }
-  };
-
-  const completeTask = async index => {
-    console.log('index is being deleted:' + index);
+  const completeTask = async(index)  =>{
     let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
+    itemsCopy.splice(index,1); 
     setTaskItems([...itemsCopy]);
-    await DeleteNoteAction(taskItems[index].ID);
-  };
-  const handleAddTask = async () => {
-    // let itemsCopy = [...taskItems, task];
+   
+  }
 
-    const saveData = await save(task);
-    //await SaveNoteAction(task);
+  const HandleAddTask = async () => {
+    //let itemsCopy = [...taskItems, task];
+    console.log("adding" + task);
 
-    Keyboard.dismiss();
-    // setTaskItems([...taskItems,saveData]);
+    console.log('taskItems before change:' + JSON.stringify(taskItems));
+    //const saveData = await SaveNoteAction(itemsCopy);
 
-    // setTask(null);
+    //Keyboard.dismiss();
+    setTaskItems([...taskItems,task]);
+    setTask(null);
 
-    props.route.params.onGoBack();
-
-    props.navigation.goBack();
-  };
-  const reloadList = async () => {
-    await _retrieveData();
   };
 
   useEffect(() => {
-    console.log(
-      'taskItems after settaskItems but in useEffect hook' +
-        JSON.stringify(taskItems),
-    );
-  }, [taskItems]);
+    console.log('taskItems after change:' + JSON.stringify(taskItems));
+  }, [taskItems] );
+
+  const screenNavigation = (ID) => {
+      props.navigation.navigate('Detail', {
+          ID: ID,
+          onGoBack: () => _retrieveData(),
+      });
+  }
+
+
 
   return (
-    <View style={styles.container}>
-      <Text text={retrieveData}>hello</Text>
-      <View style={styles.taskswrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
-        <View style={styles.items}>
-          {taskItems.map((item, index) => {
+    <View style={styles.mainScreen}>
+       
+      <View style={styles.mainScreen__header}>
+          <TextInput 
+            style={styles.mainScreen__taskTitle } 
+            placeholder={'Write a task'}
+            value={task}
+            onChangeText={ text => {
+                setTask(text);
+              }
+            }
+          />
+          <Button
+          onPress={HandleAddTask}
+          title="+"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+          />
+      </View>
+    
+      <View style={styles.items}>
+        {
+          taskItems.map((item, index) => {
             return (
               <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Task text={item.noteData} />
+                <Task  text={item}/>
               </TouchableOpacity>
-            );
-          })}
-        </View>
-        {/* <Button title="Reload" onPress={reloadList} /> */}
+            )
+          })
+        }
+
       </View>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.writeTaskWrapper}>
-        <TextInput
-          style={styles.input}
-          placeholder={'Write a task'}
-          value={task}
-          onChangeText={text => {
-            setTask(text);
-          }}
-        />
 
-        <TouchableOpacity
-          onPress={async () => {
-            handleAddTask();
-          }}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </View>
 
-    // write a task
+    </View >
+
+
   );
 };
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#E8EAED',
+  items:{
+    marginTop: 30
   },
-  taskswrapper: {
-    paddingTop: 80,
-    paddingHorizontal: 20,
+  mainScreen: {
+      flexDirection: "column",
+      justifyContent: "space-between",
+      height: "100%",
   },
-  items: {
-    marginTop: 30,
+
+  mainScreen__header: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignSelf:"flex-start",
+      alignItems: "center",
+      marginVertical: "5%",
+      marginHorizontal: "3%",
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+
+  mainScreen__title: {
+      fontSize: 25,
+      fontWeight: 700,
   },
-  writeTaskWrapper: {
-    position: 'absolute',
-    bottom: 60,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+
+  mainScreen__noteList: {
+      flex: 12,
+      backgroundColor: "transparent",
+      marginBottom: "5%",
+      marginHorizontal: "3%",
   },
-  input: {
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: '#FFF',
-    borderRadius: 50,
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
-    width: 250,
+  mainScreen__taskTitle: {
+    flex: 12,
+    backgroundColor: "transparent",
+    marginBottom: "5%",
+    marginHorizontal: "3%",
   },
-  addText: {},
+
+  
+  mainScreen__newNoteFAB: {
+      color: "#fcba03",
+      variant: "standard",
+      size: "default",
+      marginLeft: "auto",
+      marginRight: "5%",
+      marginTop: "-7%",
+      marginBottom: "auto"
+  },
   addWrapper: {
-    width: 60,
-    height: 60,
+    width: 30,
+    height: 30,
     backgroundColor: '#FFF',
     borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#C0C0C0',
-    borderWidth: 1,
+    borderWidth: 1
   },
+  addText: {
+
+  }
 });
 
 export default NewTaskScreen;
