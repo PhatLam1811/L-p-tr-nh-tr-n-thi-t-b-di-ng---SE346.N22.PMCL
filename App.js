@@ -22,8 +22,6 @@ import MainScreen from './src/screen/MainScreen';
 import DetailScreen from './src/screen/DetailScreen';
 import {ScreenType} from './src/constants/Constants';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
 const App = () => {

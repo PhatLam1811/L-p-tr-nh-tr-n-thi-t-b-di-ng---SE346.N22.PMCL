@@ -1,16 +1,11 @@
 import React, {useState, useEffect} from 'react';
 
-import {Text, TouchableOpacity, View, FlatList, StyleSheet} from 'react-native';
-import {
-  DeleteAllNoteAction,
-  DeleteNoteAction,
-} from './../../actions/DeleteNote';
+import { Text, TouchableOpacity,View,FlatList } from "react-native";
+import {DeleteAllNoteAction, DeleteNoteAction}from'./../../actions/DeleteNote'
 
 import Task from './../tasks/Task';
 
-const NoteList = props => {
-  const [notes, setNotes] = useState([]);
-  //console.log(props.list);
+const NoteList = (props) => {
 
   const openTask = async index => {
     // console.log("index is being deleted:" + index);
@@ -27,44 +22,26 @@ const NoteList = props => {
   //     setNotes(props.list);
   // }, [props]);
 
-  return (
-    <View style={props.style}>
-      <View style={styles.container}>
+    return (
+        <View style={props.style}>
+            <View>
+{/* {            notes.map((item, index) => {
+              return (
+                <TouchableOpacity key={index} onPress={() => openTask(index)}>
+                  <Task text={item.noteData}/>
+                </TouchableOpacity>
+              )
+            })} */}
 
-        {props.list.map((item,index) => {
-          // console.log('item is: ');
-          // console.log(item);
-          // console.log('index is: ');
-          // console.log(index);
-          return (
-            <View style={styles.item}>
-              <TouchableOpacity
-                key={index}
-                onPress={() => openTask(index)}>
-                <Task text={item.noteData} />
-              </TouchableOpacity>
+<FlatList style={{margin:5}}
+  data={notes}
+  numColumns={2}
+  keyExtractor={(item, index) => item.id }
+  renderItem={(item) => <Task text={item.noteData}/> }
+/>
             </View>
-          );
-        })}
-        
-      </View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    
-  },
-
-  item: {
-    margin: 5,
-    alignSelf: 'center',
-    width: '48%',
-  },
-});
+        </View >
+    );
+}
 
 export default NoteList;
