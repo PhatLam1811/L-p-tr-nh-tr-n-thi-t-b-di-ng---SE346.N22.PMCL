@@ -47,23 +47,22 @@ const MainScreen = (props) => {
         });
     }
 
-    const _retrieveData = async () => {
-        const names = await GetAllNoteAction();
-        if (names.result === 'success') {
-            setNotes(names.data);
-        }
-    }
-
-    useEffect(() => {
-        _retrieveData();
-    }, []);
-
     const screenNavigation = (ID) => {
-        props.navigation.navigate('Detail', {
+        props.navigation.navigate('NewTask', {
             ID: ID,
             onGoBack: () => _retrieveData(),
         });
     }
+
+    useEffect(() => {
+        const _retrieveData = async () => {
+            const names = await GetAllNoteAction();
+            if (names.result === 'success') {
+                setNotes(names.data);
+            }
+        };
+        _retrieveData();
+    }, []);
 
     return (
         <View style={styles.mainScreen}>
@@ -71,16 +70,16 @@ const MainScreen = (props) => {
                 <Text style={styles.mainScreen__title}>My Notes</Text>
                 <Switch />
             </View>
-            <SearchBar
-                style={styles.mainScreen__searchBar}
-                layout={isGridLayout ? "grid" : "column"}
-                onSearch={SearchNoteHandler}
-                onChangeLayout={ChangeNotesLayoutHandler} />
-            <NoteList
-                style={styles.mainScreen__noteList}
-                list={notes}
-                layout={isGridLayout ? "grid" : "column"}
-                screenNavigation={screenNavigation} />
+            <View style={styles.mainScreen__contentContainer}>
+                <SearchBar
+                    layout={isGridLayout ? "grid" : "column"}
+                    onSearch={SearchNoteHandler}
+                    onChangeLayout={ChangeNotesLayoutHandler} />
+                <NoteList
+                    list={notes}
+                    layout={isGridLayout ? "grid" : "column"}
+                    screenNavigation={screenNavigation} />
+            </View>
             <View style={styles.mainScreen__toolbar}>
                 <OctIcon
                     name="checklist"
@@ -97,9 +96,7 @@ const MainScreen = (props) => {
                     onPress={CreateURLNoteHandler} />
                 <FAB
                     {...styles.mainScreen__newNoteFAB}
-                    icon={
-                        <OctIcon name="plus"
-                            {...styles.mainScreen__icon} />}
+                    icon={<OctIcon name="plus" {...styles.mainScreen__icon} />}
                     onPress={CreateNoteHandler} />
             </View>
         </View >
@@ -108,58 +105,57 @@ const MainScreen = (props) => {
 
 const styles = StyleSheet.create({
     mainScreen: {
+        flex: 1,
+        flexDirection: "column",
         backgroundColor: AppColors.primaryDark,
         flexDirection: "column",
         justifyContent: "space-between",
-        alignContent: "space-between",
+        alignItems: "center",
+        width: "100%",
         height: "100%",
     },
 
     mainScreen__header: {
         flex: 1,
         flexDirection: "row",
+        backgroundColor: "inherit",
         justifyContent: "space-between",
         alignItems: "center",
-        marginVertical: "5%",
-        marginHorizontal: "3%",
+        width: "100%",
     },
 
-    mainScreen__title: {
-        color: AppColors.textDark,
-        fontSize: 25,
-        fontWeight: 700,
-    },
-
-    mainScreen__searchBar: {
-        flex: 1,
-        marginBottom: "5%",
-        marginHorizontal: "3%",
-    },
-
-    mainScreen__noteList: {
-        flex: 12,
-        backgroundColor: "transparent",
-        marginBottom: "5%",
+    mainScreen__contentContainer: {
+        flex: 8,
+        flexDirection: "column",
+        backgroundColor: "inherit"
     },
 
     mainScreen__toolbar: {
-        flex: 1.5,
+        flex: 1,
         backgroundColor: AppColors.secondaryDark,
         flexDirection: "row",
         alignItems: "center",
         width: "100%",
-        height: "10%",
         paddingHorizontal: "3%",
+    },
+
+    mainScreen__title: {
+        backgroundColor: "transparent",
+        color: AppColors.textDark,
+        fontSize: 25,
+        fontWeight: 700,
+        marginLeft: "5%",
     },
 
     mainScreen__icon: {
         backgroundColor: "transparent",
-        size: 25,
         color: AppColors.iconDark,
+        size: 25,
         marginHorizontal: "3%"
     },
 
     mainScreen__newNoteFAB: {
+        backgroundColor: "transparent",
         color: "#fcba03",
         variant: "standard",
         size: "default",

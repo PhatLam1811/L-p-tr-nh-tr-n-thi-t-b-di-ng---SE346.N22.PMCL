@@ -53,8 +53,11 @@ const styles = StyleSheet.create({
     searchBar: {
         backgroundColor: AppColors.secondaryDark,
         color: AppColors.textDark,
-        display: "flex",
         flexDirection: "row",
+        width: "95%",
+        height: 50,
+        marginBottom: "5%",
+        marginHorizontal: "2.5%",
         borderRadius: 10,
     },
 
@@ -62,6 +65,7 @@ const styles = StyleSheet.create({
         flex: 1.5,
         justifyContent: "center",
         alignItems: "center",
+        width: "100%",
     },
 
     searchBar__icon: {
