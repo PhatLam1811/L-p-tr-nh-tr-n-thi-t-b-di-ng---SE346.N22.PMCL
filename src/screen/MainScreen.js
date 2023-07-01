@@ -73,7 +73,7 @@ const MainScreen = (props) => {
             <SearchBar
                 style={styles.mainScreen__searchBar}
                 onChangeLayout={ChangeNotesLayoutHandler} />
-            <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation}/>
+            {/* <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation}/> */}
             <View style={styles.mainScreen__toolbar}>
                 <Icon1
                     name="checklist"
