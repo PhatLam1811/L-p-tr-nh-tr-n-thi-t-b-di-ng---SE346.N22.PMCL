@@ -38,7 +38,7 @@ const NoteList = (props) => {
 
         <FlatList style={{ margin: 5 }}
           data={notes}
-          key={props.layout === "grid" ? gridColumns : colColumns}
+          key={props.layout === "grid" ? 2 : 1}
           numColumns={props.layout === "grid" ? 2 : 1}
           keyExtractor={item => item.ID}
           // renderItem={(item) => <Task text={item.noteData} />}
