@@ -1,38 +1,17 @@
-import React,{useState,useEffect}  from "react";
-
-import { StyleSheet, Switch, Text, View } from "react-native";
-import { FAB } from "@react-native-material/core";
+import React, { useState, useEffect } from "react";
 
 import Icon1 from "react-native-vector-icons/Octicons";
 import Icon2 from "react-native-vector-icons/MaterialIcons";
 import SearchBar from "../components/SearchBar";
 import NoteList from "../components/notes/NoteList";
+import AppColors from "../utils/AppColors";
 
-import {GetAllNoteAction, GetNoteAction} from'./../actions/GetNote'
+import { FAB } from "@react-native-material/core";
+import { StyleSheet, Switch, Text, View } from "react-native";
+import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote'
 
 const MainScreen = (props) => {
-    const [taskItems,setTaskItems] = useState([]);
-
-    const _retrieveData=async()=>{
-        const names=await GetAllNoteAction();
-        console.log(names);
-        if (names.result === 'success') {
-        //   console.log(names.data);
-          setTaskItems(names.data);
-        }     
-    }
-    useEffect(() => {
-        _retrieveData();
-      }, []);
-
-    const screenNavigation=(ID)=>{
-        props.navigation.navigate('Detail', {
-            ID: ID,
-            onGoBack:()=> _retrieveData()
-            ,
-
-        });
-    }
+    const [taskItems, setTaskItems] = useState([]);
 
     const ChangeNotesLayoutHandler = () => {
         console.log("change notes layout (column to grids & vice versa)")
@@ -57,11 +36,29 @@ const MainScreen = (props) => {
     const CreateNoteHandler = () => {
         console.log("create note pressed!")
         // display create new note screen
-        props.navigation.navigate('NewTask',{
-            onGoBack: ()=>_retrieveData(),
+        props.navigation.navigate('NewTask', {
+            onGoBack: () => _retrieveData(),
         });
+    }
 
+    const _retrieveData = async () => {
+        const names = await GetAllNoteAction();
+        // console.log(names);
+        if (names.result === 'success') {
+            // console.log(names.data);
+            setTaskItems(names.data);
+        }
+    }
 
+    useEffect(() => {
+        _retrieveData();
+    }, []);
+
+    const screenNavigation = (ID) => {
+        props.navigation.navigate('Detail', {
+            ID: ID,
+            onGoBack: () => _retrieveData(),
+        });
     }
 
     return (
@@ -73,23 +70,26 @@ const MainScreen = (props) => {
             <SearchBar
                 style={styles.mainScreen__searchBar}
                 onChangeLayout={ChangeNotesLayoutHandler} />
-            {/* <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation}/> */}
+            <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation} />
             <View style={styles.mainScreen__toolbar}>
                 <Icon1
                     name="checklist"
-                    {...styles.mainScreen__checklistIcon}
+                    {...styles.mainScreen__icon}
                     onPress={CreateChecklistNoteHandler} />
                 <Icon2
                     name="image"
-                    {...styles.mainScreen__imageIcon}
+                    {...styles.mainScreen__icon}
+                    size={30}
                     onPress={CreateImageNoteHandler} />
                 <Icon1
                     name="globe"
-                    {...styles.mainScreen__globeIcon}
+                    {...styles.mainScreen__icon}
                     onPress={CreateURLNoteHandler} />
                 <FAB
                     {...styles.mainScreen__newNoteFAB}
-                    icon={props => <Icon1 name="plus" {...props} />}
+                    icon={
+                        <Icon1 name="plus"
+                            {...styles.mainScreen__icon} />}
                     onPress={CreateNoteHandler} />
             </View>
         </View >
@@ -100,7 +100,7 @@ export default MainScreen;
 
 const styles = StyleSheet.create({
     mainScreen: {
-        backgroundColor: "#1c1c1c",
+        backgroundColor: AppColors.primaryDark,
         flexDirection: "column",
         justifyContent: "space-between",
         alignContent: "space-between",
@@ -116,6 +116,12 @@ const styles = StyleSheet.create({
         marginHorizontal: "3%",
     },
 
+    mainScreen__title: {
+        color: AppColors.textDark,
+        fontSize: 25,
+        fontWeight: 700,
+    },
+
     mainScreen__searchBar: {
         flex: 1,
         marginBottom: "5%",
@@ -124,20 +130,14 @@ const styles = StyleSheet.create({
 
     mainScreen__noteList: {
         flex: 12,
-        backgroundColor: "yellow",
+        backgroundColor: "transparent",
         marginBottom: "5%",
         marginHorizontal: "3%",
     },
 
-    mainScreen__title: {
-        color: "white",
-        fontSize: 25,
-        fontWeight: 700,
-    },
-
     mainScreen__toolbar: {
+        backgroundColor: AppColors.secondaryDark /*"#262626"*/,
         flex: 1.5,
-        backgroundColor: "#262626",
         flexDirection: "row",
         alignItems: "center",
         width: "100%",
@@ -145,21 +145,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: "3%",
     },
 
-    mainScreen__checklistIcon: {
+    mainScreen__icon: {
         backgroundColor: "transparent",
         size: 25,
-        marginHorizontal: "3%"
-    },
-
-    mainScreen__imageIcon: {
-        backgroundColor: "transparent",
-        size: 30,
-        marginHorizontal: "3%"
-    },
-
-    mainScreen__globeIcon: {
-        backgroundColor: "transparent",
-        size: 25,
+        color: AppColors.iconDark,
         marginHorizontal: "3%"
     },
 
@@ -171,5 +160,5 @@ const styles = StyleSheet.create({
         marginRight: "5%",
         marginTop: "-7%",
         marginBottom: "auto"
-    }
+    },
 });
