@@ -8,6 +8,7 @@ import DetailScreen from "./src/screen/DetailScreen";
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MenuProvider } from "react-native-popup-menu";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,14 +19,15 @@ const App = () => {
   return (
     //    <MainScreen />
     //<DetailNoteScreen NoteID="UEh_5_X"/>
-
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Main" component={MainScreen} />
-        <Stack.Screen name="NewTask" component={NewTaskScreen} />
-        <Stack.Screen name="Detail" component={DetailScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>)
+    <MenuProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Main" component={MainScreen} />
+          <Stack.Screen name="NewTask" component={NewTaskScreen} />
+          <Stack.Screen name="Detail" component={DetailScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </MenuProvider>)
 };
 
 export default App;
