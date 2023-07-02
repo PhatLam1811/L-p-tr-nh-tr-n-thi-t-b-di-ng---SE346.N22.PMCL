@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SaveNoteAction} from './../actions/SaveNote';
 import {GetAllNoteAction, GetNoteAction} from './../actions/GetNote';
 import {DeleteAllNoteAction, DeleteNoteAction} from './../actions/DeleteNote';
+import Note from '../classes/Note';
+import GenerateRandom from '../utils/GenerateRandom';
 
 const NewTaskScreen = props => {
   const [task, setTask] = useState();
@@ -29,7 +31,17 @@ const NewTaskScreen = props => {
       //await SaveNoteAction(taskItems);
       // await AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
 
-      const saveData = await SaveNoteAction(itemsCopy);
+      const ID=GenerateRandom(7);
+      const note=Note.create(ID,'title','subtitle',itemsCopy,new Date(),'normal-note')
+      console.log('note is:')
+      console.log(note)
+      if(note===null){
+        console.log('note is null');
+        return;
+      }
+
+
+      const saveData = await SaveNoteAction(note);
       console.log(saveData);
       return saveData.data;
     } catch (error) {

@@ -7,12 +7,15 @@ import NoteList from "../components/notes/NoteList";
 import AppColors from "../utils/AppColors";
 
 import { FAB } from "@react-native-material/core";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { Image, StyleSheet, Switch, Text, View } from "react-native";
 import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote'
 import { DeleteAllNoteAction } from "../actions/DeleteNote";
+import DocumentPicker from "react-native-document-picker";
+import ImagePicker from 'react-native-image-crop-picker';
 
 const MainScreen = (props) => {
     const [taskItems, setTaskItems] = useState([]);
+    const [imageSource,setImageSource]=useState('https://api.adorable.io/avatars/80/abott@adorable.png');
 
     const ChangeNotesLayoutHandler = () => {
         console.log("change notes layout (column to grids & vice versa)")
@@ -24,14 +27,50 @@ const MainScreen = (props) => {
         // display create checklist note screen
     }
 
-    const CreateImageNoteHandler = () => {
+    const CreateImageNoteHandler =async () => {
         console.log("image note pressed!")
         // display create image note screen
+
+        // try{
+        // // const doc=await DocumentPicker.pick({
+        // //     type:[DocumentPicker.types.images],
+        // //     allowMultiSelection:false,
+        // // });
+
+        // const doc=await DocumentPicker.pickSingle({
+        //     type:[DocumentPicker.types.images],
+        // });
+
+        // console.log(doc)
+        // }
+        // catch(err){
+        //     console.log(err);
+        //     if(DocumentPicker.isCancel(e)){
+        //         console.log(e);
+        //     }
+        // }
+
+        try{
+            ImagePicker.openPicker({
+                width: 300,
+                height: 400,
+                cropping: true
+              }).then(image => {
+                console.log(image);
+                setImageSource(image.path)
+              });
+        }
+        catch(err){
+            console.log(err)
+        }
+
     }
 
     const CreateURLNoteHandler = () => {
         console.log("URL note pressed!")
         // display create URL note screen
+        // DeleteAllNoteAction();
+        // _retrieveData();
     }
 
     const CreateNoteHandler = () => {
@@ -46,7 +85,7 @@ const MainScreen = (props) => {
         const names = await GetAllNoteAction();
         // console.log(names);
         if (names.result === 'success') {
-            // console.log(names.data);
+            console.log(names);
             setTaskItems(names.data);
         }
     }
@@ -72,6 +111,9 @@ const MainScreen = (props) => {
                 style={styles.mainScreen__searchBar}
                 onChangeLayout={ChangeNotesLayoutHandler} />
             <NoteList style={styles.mainScreen__noteList} list={taskItems} screenNavigation={screenNavigation} />
+            <Image source={{
+                uri:imageSource
+            }}/>
             <View style={styles.mainScreen__toolbar}>
                 <Icon1
                     name="checklist"

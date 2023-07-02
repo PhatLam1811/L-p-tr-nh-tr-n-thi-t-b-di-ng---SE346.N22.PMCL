@@ -30,23 +30,21 @@ const NoteList = props => {
   return (
     <View style={props.style}>
       <View style={styles.container}>
-
-        {props.list.map((item,index) => {
+        {props.list.map((item, index) => {
           // console.log('item is: ');
           // console.log(item);
           // console.log('index is: ');
           // console.log(index);
           return (
             <View style={styles.item}>
-              <TouchableOpacity
-                key={index}
-                onPress={() => openTask(index)}>
-                <Task text={item.noteData} />
-              </TouchableOpacity>
+              {item ? (
+                <TouchableOpacity key={index} onPress={() => openTask(index)}>
+                  <Task text={item.noteData} />
+                </TouchableOpacity>
+              ) : null}
             </View>
           );
         })}
-        
       </View>
     </View>
   );
@@ -57,7 +55,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    
   },
 
   item: {
