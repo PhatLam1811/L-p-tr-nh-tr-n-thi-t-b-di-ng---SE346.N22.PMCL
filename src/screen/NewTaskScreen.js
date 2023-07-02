@@ -9,9 +9,8 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import NoteList from "../components/notes/NoteList";
-
-import {Button, TextInput} from '@react-native-material/core';
+import {Button, TextInput,IconButton, Stack} from '@react-native-material/core';
+import Icon from "react-native-vector-icons/Octicons";
 
 
 const NewTaskScreen = props => {
@@ -85,109 +84,59 @@ const NewTaskScreen = props => {
 
 
   return (
-    <View style={styles.mainScreen}>
+    <View >
        
-      <View style={styles.mainScreen__header}>
-          <TextInput 
-            style={styles.mainScreen__taskTitle } 
+       <Stack spacing={2} style={{ margin: 16 }}>
+          <TextInput
+            label='Add task'
             placeholder={'Write a task'}
             value={task}
             onChangeText={ text => {
-                setTask(text);
-              }
+              setTask(text);
             }
+            }
+            variant="outlined"
+            trailing={
+              props => (
+              <IconButton 
+                onPress={HandleAddTask}
+                icon={props => <Icon name="plus" {...props} />} {...props} 
+
+              />
+            )}
           />
-          <Button
-          onPress={HandleAddTask}
-          title="+"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-          />
-      </View>
+      </Stack>
     
       <View style={styles.items}>
         {
           taskItems.map((item, index) => {
             return (
               <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Task  text={item}/>
+                <Task text={item}/>
               </TouchableOpacity>
             )
           })
         }
-
       </View>
-
-
-
     </View >
-
-
   );
 };
 
 
 const styles = StyleSheet.create({
   items:{
-    marginTop: 30
+    //marginTop: 30
   },
-  mainScreen: {
-      flexDirection: "column",
-      justifyContent: "space-between",
-      height: "100%",
-  },
+ 
 
-  mainScreen__header: {
+  taskContent: {
+      height:"100%",
       flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignSelf:"flex-start",
-      alignItems: "center",
-      marginVertical: "5%",
-      marginHorizontal: "3%",
-  },
-
-  mainScreen__title: {
-      fontSize: 25,
-      fontWeight: 700,
-  },
-
-  mainScreen__noteList: {
-      flex: 12,
       backgroundColor: "transparent",
-      marginBottom: "5%",
       marginHorizontal: "3%",
   },
-  mainScreen__taskTitle: {
-    flex: 12,
-    backgroundColor: "transparent",
-    marginBottom: "5%",
-    marginHorizontal: "3%",
-  },
-
   
-  mainScreen__newNoteFAB: {
-      color: "#fcba03",
-      variant: "standard",
-      size: "default",
-      marginLeft: "auto",
-      marginRight: "5%",
-      marginTop: "-7%",
-      marginBottom: "auto"
-  },
-  addWrapper: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#FFF',
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#C0C0C0',
-    borderWidth: 1
-  },
-  addText: {
-
-  }
+ 
 });
 
 export default NewTaskScreen;
