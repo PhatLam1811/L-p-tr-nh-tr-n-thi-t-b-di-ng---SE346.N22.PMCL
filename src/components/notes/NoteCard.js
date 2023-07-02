@@ -12,6 +12,10 @@ const NoteCard = (props) => {
 
   const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
 
+  const NotePressHandler = () => {
+    props.onSelect(props.index);
+  }
+
   const EditNoteHandler = () => {
     console.log("Edit Note");
   }
@@ -31,7 +35,7 @@ const NoteCard = (props) => {
   return (
     <Menu>
       <MenuTrigger triggerOnLongPress
-        onAlternativeAction={() => console.log("press")}
+        onAlternativeAction={NotePressHandler}
         customStyles={{
           TriggerTouchableComponent: TouchableOpacity,
           triggerWrapper: styles.noteCard,

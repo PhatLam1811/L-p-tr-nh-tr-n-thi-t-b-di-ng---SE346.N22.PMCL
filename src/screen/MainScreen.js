@@ -49,7 +49,7 @@ const MainScreen = (props) => {
     }
 
     const screenNavigation = (ID) => {
-        props.navigation.navigate('NewTask', {
+        props.navigation.navigate('Detail', {
             ID: ID,
             onGoBack: () => _retrieveData(),
         });
