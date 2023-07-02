@@ -8,15 +8,34 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
 const NoteCard = (props) => {
-  const note = props.item;
   const createdDate = moment(new Date()).format("dddd, Do MMM YYYY, h:mm a");
 
   const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
 
+  const NotePressHandler = () => {
+    props.onSelect(props.index);
+  }
+
+  const EditNoteHandler = () => {
+    console.log("Edit Note");
+  }
+
+  const CopyNoteHandler = () => {
+    console.log("Copy Note");
+  }
+
+  const ShareNoteHandler = () => {
+    console.log("Share Note");
+  }
+
+  const DeleteNoteHandler = () => {
+    console.log("Delete Note");
+  }
+
   return (
     <Menu>
       <MenuTrigger triggerOnLongPress
-        onAlternativeAction={() => console.log("press")}
+        onAlternativeAction={NotePressHandler}
         customStyles={{
           TriggerTouchableComponent: TouchableOpacity,
           triggerWrapper: styles.noteCard,
@@ -28,10 +47,12 @@ const NoteCard = (props) => {
           <Text style={styles.noteCard_lastUpdated}>{createdDate}</Text>
         </View>
       </MenuTrigger>
-      <MenuOptions>
-        <MenuOption onSelect={_ => console.log("pressed 1")} customStyles={styles.noteCard_title} value={1} text="One" />
-        <MenuOption onSelect={_ => console.log("pressed 2")} style={styles.noteCard_title} value={2} text="Two" />
-        <MenuOption onSelect={_ => console.log("pressed 3")} style={styles.noteCard_title} value={3} text="Three" />
+      <MenuOptions style={styles.noteCard_popupMenu}>
+        <Text style={styles.popupMenu_title}>Note Title {props.id}</Text>
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={EditNoteHandler} value={1} text="Edit Note" />
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={CopyNoteHandler} value={1} text="Copy Note" />
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={ShareNoteHandler} value={2} text="Share Note" />
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={DeleteNoteHandler} value={3} text="Delete Note" />
       </MenuOptions>
     </Menu >
   );
@@ -77,6 +98,31 @@ const styles = StyleSheet.create({
   noteCard_lastUpdated: {
     color: AppColors.textDark,
     fontSize: 10,
+  },
+
+  noteCard_popupMenu: {
+    backgroundColor: AppColors.secondaryDark,
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    alignItems: "flex-start",
+    height: 190,
+  },
+
+  popupMenu_title: {
+    color: "#fcba03",
+    padding: 10,
+  },
+
+  popupMenu_options: {
+    optionWrapper: {
+      width: "100%",
+      paddingVertical: 10,
+      paddingHorizontal: 0,
+    },
+    optionText: {
+      color: AppColors.textDark,
+      paddingHorizontal: 10,
+    },
   },
 });
 
