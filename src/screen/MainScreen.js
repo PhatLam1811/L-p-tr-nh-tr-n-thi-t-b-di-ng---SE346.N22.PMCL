@@ -8,7 +8,8 @@ import AppColors from "../utils/AppColors";
 
 import { FAB } from "@react-native-material/core";
 import { StyleSheet, Switch, Text, View } from "react-native";
-import { GetAllNoteAction } from './../actions/GetNote'
+import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote'
+import { DeleteAllNoteAction } from "../actions/DeleteNote";
 
 const MainScreen = (props) => {
     const [notes, setNotes] = useState([]);
