@@ -1,102 +1,95 @@
 /* eslint-disable*/
+import React, { useState, useEffect } from "react";
 
-import React,{useState,useEffect}  from "react";
-import {View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity, Button, Keyboard} from 'react-native'
-import { TextInput } from "@react-native-material/core";
-import {SaveNoteAction} from'./../actions/SaveNote'
-import {GetAllNoteAction, GetNoteAction} from'./../actions/GetNote'
-import {DeleteAllNoteAction, DeleteNoteAction}from'./../actions/DeleteNote'
-import { NavigationHelpersContext } from "@react-navigation/native";
+import OctIcon from "react-native-vector-icons/Octicons";
+import MatIcon from "react-native-vector-icons/MaterialIcons";
+import EntIcon from "react-native-vector-icons/Entypo";
+import AppColors from "../utils/AppColors";
+import NoteDetails from "../components/notes/NoteDetails";
+
+import { View, Text, StyleSheet, Button } from "react-native";
+import { GetNoteAction } from "./../actions/GetNote";
+import { DeleteNoteAction } from "./../actions/DeleteNote";
 
 const NewTaskScreen = (props) => {
-  const [task,setTask] = useState({});
-  console.log(props.route.params)
+  const [task, setTask] = useState({});
+  // console.log(props.route.params)
 
-  const _retrieve=async()=>{
-    const taskResponse=await GetNoteAction(props.route.params.ID);
+  const _retrieve = async () => {
+    const taskResponse = await GetNoteAction(props.route.params.ID);
     console.log(taskResponse);
-    if(taskResponse.result==='success'){
-        setTask(taskResponse.data);
+    if (taskResponse.result === 'success') {
+      setTask(taskResponse.data);
     }
   }
-  const _delete=async()=>{
-    const taskResponse=await DeleteNoteAction(props.route.params.ID);
+  const _delete = async () => {
+    const taskResponse = await DeleteNoteAction(props.route.params.ID);
     console.log(taskResponse);
-    if(taskResponse.message==='success delete!'){
-        console.log('success delete');
-        //console.log(props.route.params.onGoBack)
-        props.route.params.onGoBack();
-        props.navigation.goBack();
+    if (taskResponse.message === 'success delete!') {
+      console.log('success delete');
+      //console.log(props.route.params.onGoBack)
+      props.route.params.onGoBack();
+      props.navigation.goBack();
     }
   }
   useEffect(() => {
-    console.log("taskItems after settaskItems but in useEffect hook");
-    _retrieve();
+    // console.log("taskItems after settaskItems but in useEffect hook");
+    // _retrieve();
   }, []);
 
   return (
-    <View style={styles.container}>
-    <Text >{task.noteData}</Text>
-    <Button title="Completed" onPress={_delete}/>
-    </View> 
-    // write a task
-
-    
+    <View style={styles.noteScreen}>
+      <View style={styles.noteScreen_header}>
+        <MatIcon name="arrow-back-ios" {...styles.noteScreen_icon} {...styles.noteScreen_backIcon} />
+        <EntIcon name="share" {...styles.noteScreen_icon} {...styles.noteScreen_shareIcon} />
+        <OctIcon name="check-circle" {...styles.noteScreen_icon} {...styles.noteScreen_saveIcon} />
+      </View>
+      <NoteDetails />
+      <View style={styles.noteScreen_mischellaneous}></View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    backgroundColor: '#E8EAED'
+  noteScreen: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: AppColors.secondaryDark,
   },
-  taskswrapper:{
-    paddingTop:80,
-    paddingHorizontal:20,
 
+  noteScreen_header: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: AppColors.secondaryDark,
+    alignItems: "center",
   },
-  items:{
-    marginTop: 30
-  },
-  sectionTitle:{
-    fontSize:24,
-    fontWeight:'bold'
-  },
-  writeTaskWrapper:{
-    position:'absolute',
-    bottom:60,
-    width:'100%',
-    flexDirection:'row',
-    justifyContent:'space-around',
-    alignItems:'center'
 
+  noteScreen_mischellaneous: {
+    flex: 0.7,
+    backgroundColor: AppColors.primaryDark,
   },
-  input:{
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor:'#FFF',
-    borderRadius: 50,
-    borderColor:'#C0C0C0',
-    borderWidth:1,
-    width: 250,
-    
-   
-  },
-  addText:{
 
+  noteScreen_icon: {
+    backgroundColor: "transparent",
+    color: AppColors.iconDark,
+    size: 30,
   },
-  addWrapper:{ 
-    width:60,
-    height:60,
-    backgroundColor:"#FFF",
-    borderRadius:60,
-    justifyContent:'center',
-    alignItems:'center',
-    borderColor:'#C0C0C0',
-    borderWidth:1
 
-  }
+  noteScreen_backIcon: {
+    size: 40,
+    marginLeft: "3%",
+  },
+
+  noteScreen_shareIcon: {
+    marginLeft: "auto",
+    marginRight: 20,
+  },
+
+  noteScreen_saveIcon: {
+    marginLeft: 0,
+    marginRight: "3%",
+  },
+
 });
 
 export default NewTaskScreen;
- 

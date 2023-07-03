@@ -2,31 +2,27 @@ import React, { useEffect, useState } from "react";
 
 import { StyleSheet, TextInput, View } from "react-native";
 
-import Icon1 from "react-native-vector-icons/MaterialIcons";
-import Icon2 from "react-native-vector-icons/Feather";
+import OctIcon from "react-native-vector-icons/Octicons";
+import MatIcon from "react-native-vector-icons/MaterialIcons";
+import FeaIcon from "react-native-vector-icons/Feather";
 import AppColors from "../utils/AppColors";
 
 const SearchBar = (props) => {
-    const [searchValue, setSearchValue] = useState("");
-
-    useEffect(() => {
-        const onSearch = setTimeout(() => {
-            console.log("filter by search");
-        }, 500);
-
-        return () => {
-            clearTimeout(onSearch);
-        }
-    }, [searchValue]);
+    const [searchInput, setSearchInput] = useState("");
 
     const InputTextChangeHandler = (value) => {
-        setSearchValue(value);
+        setSearchInput(value);
     }
+
+    useEffect(() => {
+        const onSearch = setTimeout(_ => props.onSearch(searchInput), 500);
+        return () => clearTimeout(onSearch);
+    }, [searchInput]);
 
     return (
         <View style={{ ...styles.searchBar, ...props.style }}>
             <View style={styles.searchBar__iconContainer}>
-                <Icon1 name="search" {...styles.searchBar__icon} />
+                <MatIcon name="search" {...styles.searchBar__icon} />
             </View>
             <View style={styles.searchBar__textInputContainer}>
                 <TextInput
@@ -34,11 +30,18 @@ const SearchBar = (props) => {
                     autoFocus={false}
                     placeholder="Search notes"
                     placeholderTextColor={AppColors.iconDark}
-                    value={searchValue}
+                    value={searchInput}
                     onChangeText={InputTextChangeHandler} />
             </View>
             <View style={styles.searchBar__iconContainer} >
-                <Icon2 name="layout"{...styles.searchBar__icon} onPress={props.onChangeLayout} />
+                {props.layout === "grid" && <FeaIcon
+                    name="layout"
+                    {...styles.searchBar__icon}
+                    onPress={props.onChangeLayout} />}
+                {props.layout === "column" && <OctIcon
+                    name="rows"
+                    {...styles.searchBar__icon}
+                    onPress={props.onChangeLayout} />}
             </View>
         </View>
     );
@@ -50,8 +53,11 @@ const styles = StyleSheet.create({
     searchBar: {
         backgroundColor: AppColors.secondaryDark,
         color: AppColors.textDark,
-        display: "flex",
         flexDirection: "row",
+        width: "95%",
+        height: 50,
+        marginBottom: "5%",
+        marginHorizontal: "2.5%",
         borderRadius: 10,
     },
 
@@ -59,6 +65,7 @@ const styles = StyleSheet.create({
         flex: 1.5,
         justifyContent: "center",
         alignItems: "center",
+        width: "100%",
     },
 
     searchBar__icon: {
