@@ -10,9 +10,10 @@ import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 const NoteCard = (props) => {
   const createdDate = moment(new Date()).format("dddd, Do MMM YYYY, h:mm a");
 
-  const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
+  // const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
+  const imgURI = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
 
-  const NotePressHandler = () => {
+  const NoteSelectHandler = () => {
     props.onSelect(props.index);
   }
 
@@ -35,12 +36,12 @@ const NoteCard = (props) => {
   return (
     <Menu>
       <MenuTrigger triggerOnLongPress
-        onAlternativeAction={NotePressHandler}
+        onAlternativeAction={NoteSelectHandler}
         customStyles={{
           TriggerTouchableComponent: TouchableOpacity,
           triggerWrapper: styles.noteCard,
         }}>
-        <Image style={styles.noteCard__image} source={{ uri: imgURI }} resizeMode="stretch" />
+        {props.index % 3 === 0 && <Image style={styles.noteCard__image} source={{ uri: imgURI }} resizeMode="stretch" />}
         <View style={styles.noteCard__content}>
           <Text style={styles.noteCard_title}>{`Note Title ${props.id}`}</Text>
           <Text style={styles.noteCard_subTitle} numberOfLines={5}>Note SubTitle</Text>
@@ -71,8 +72,7 @@ const styles = StyleSheet.create({
 
   noteCard__image: {
     width: "100%",
-    minHeight: 100,
-    maxHeight: 200,
+    aspectRatio: 3 / 2,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
