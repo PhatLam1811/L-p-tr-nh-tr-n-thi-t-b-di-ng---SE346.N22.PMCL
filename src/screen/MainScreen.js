@@ -69,6 +69,10 @@ const MainScreen = props => {
           },
         },
         response => {
+            console.log("response.assets[0]");
+            console.log(response.assets[0]);
+            console.log('response.assets[0].uri');
+
           console.log(response.assets[0].uri);
           setImageSource(response.assets[0].uri)
         },
