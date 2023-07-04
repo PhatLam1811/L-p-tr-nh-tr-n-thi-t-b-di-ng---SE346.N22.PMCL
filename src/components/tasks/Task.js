@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacityComponent} from 'react-native'
-
+import AppColors from '../../utils/AppColors';
 const Task = (props) => {
     return (
         <View style={styles.item}>
@@ -17,14 +17,14 @@ const Task = (props) => {
 
 const styles = StyleSheet.create({
     item:{
-        backgroundColor: '#FFF',
+        backgroundColor: AppColors.primaryDark,
         padding:15,
         borderRadius:10,
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'space-between',
-        width:'45%',
-        margin:15,
+        width:'95%',
+        margin:10,
     },
     itemLeft:{
         flexDirection:'row',
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     },
     itemText:{
         maxWidth:'80%',
-        
+        color:'#fff'
     },
     circular:{
         width:12,

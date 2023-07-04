@@ -1,75 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
-import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import moment from 'moment';
+import TaskList from '../tasks/TaskList';
 
-import { View, StyleSheet, TextInput, Text, Image } from "react-native";
+import { View, StyleSheet, TextInput, Text } from "react-native";
 
 const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
-const NoteDetails = (props) => {
-    const [imageRatio, setImageRatio] = useState(0);
+const SubTitleInput = (props) => {
+    const [inputHeight, setInputHeight] = useState(30);
 
-    const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
-        setImageRatio(width / height);
+    const SubTitleInputLayoutChangeHandler = (event) => {
+        console.log("layout change");
+        setInputHeight(50);
     }
 
     return (
-        <View style={styles.noteDetails}>
-            <TextInput style={styles.noteDetails_title}
-                maxLength={titleMaxLength}
+        
+        <View style={styles.subTitle_container}>
+           
+            <View style={{ ...styles.subTitle_colorTag, height: inputHeight, backgroundColor: "red" }} />
+            <TextInput style={styles.subTitle_content}
+                multiline={true}
+                maxLength={subTitleMaxLength}
                 selectionColor={"#fcba03"}
-                value={props.note?.title}
-                onChangeText={text => props.onTitleChange(text)}
-                placeholder="Note Title"
-                placeholderTextColor={AppColors.iconDark} />
-            <Text style={styles.noteDetails_lastUpdated}>{props.note?.lastUpdated}</Text>
-            <View style={styles.noteDetails_subTitle}>
-                <View style={{ ...styles.subTitle_colorTag, backgroundColor: props.note?.colorTag }} />
-                <TextInput style={styles.subTitle_content}
-                    editable
-                    multiline
-                    maxLength={subTitleMaxLength}
-                    selectionColor={"#fcba03"}
-                    value={props.note?.subTitle}
-                    onChangeText={text => props.onSubTitleChange(text)}
-                    placeholder="Note Subtitle"
-                    placeholderTextColor={AppColors.iconDark} />
-            </View>
-            <View style={styles.noteDetails_content}>
-                {props.note?.image != null && <View>
-                    <Image
-                        style={{
-                            width: "98%",
-                            aspectRatio: imageRatio,
-                        }}
-                        onLoad={OnImageLoadHandler}
-                        source={{ uri: props.note?.image }}
-                        resizeMode="stretch" />
-                    <MatComIcon style={styles.content_imageDeleteIcon}
-                        name="trash-can"
-                        color="red"
-                        size={30}
-                        onPress={() => props.onImageDelete()} />
-                </View>}
-                <TextInput style={styles.content_text}
-                    editable
-                    multiline
-                    value={props.note?.content}
-                    onChangeText={text => props.onContentChange(text)}
-                    placeholder="Type Your Note Here"
-                    placeholderTextColor={AppColors.iconDark} />
-            </View>
-        </View >
+                placeholder="Note Subtitle"
+                placeholderTextColor={AppColors.iconDark}
+                onLayout={SubTitleInputLayoutChangeHandler} />
+        </View>
     );
 };
 
+const NoteDetails = (props) => {
+    const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
+    const [taskItems, setTaskItems] = useState([1,2,3,5,4]);
+
+    useEffect(() => 
+    {
+        console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
+    }, [taskItems] );
+    
+    return (
+        
+        <View style={styles.noteDetails}>
+            <TextInput style={styles.noteDetails_title}
+        
+                maxLength={titleMaxLength}
+                selectionColor={"#fcba03"}
+                placeholder="Note Title"
+                placeholderTextColor={AppColors.iconDark} />
+            <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
+            <SubTitleInput />
+            {/* {
+
+                taskItems.map((item, index) => {
+                    console.log('on map 1 ' + item + " " + index);
+                  
+                })
+            } */}
+            {
+                <TaskList taskItems = {taskItems} setTaskItems = {setTaskItems}></TaskList>
+            }
+            
+            
+        </View >
+    );
+
+ 
+
+};
+
+
 const styles = StyleSheet.create({
     noteDetails: {
-        backgroundColor: "transparent",
-        color: AppColors.textDark,
-        height: "100%",
+        flex: 8.3,
         paddingVertical: 0,
         paddingHorizontal: 10,
     },
@@ -86,9 +92,8 @@ const styles = StyleSheet.create({
         paddingStart: 3,
     },
 
-    noteDetails_subTitle: {
+    subTitle_container: {
         flexDirection: "row",
-        color: AppColors.textDark,
         marginVertical: 20,
         marginHorizontal: 3,
     },
@@ -99,37 +104,14 @@ const styles = StyleSheet.create({
     },
 
     subTitle_content: {
+        backgroundColor: "blue",
         color: AppColors.textDark,
         width: "98%",
-        minHeight: 50,
-        height: "auto",
+        height: 50,
         fontSize: 18,
         marginHorizontal: 3,
-    },
-
-    noteDetails_content: {
-        color: "inherit",
-        flexDirection: "column",
-    },
-
-    content_imageDeleteIcon: {
-        backgroundColor: "white",
-        position: "absolute",
-        top: 10,
-        right: 20,
-        padding: 5,
-        borderRadius: 50,
-    },
-
-    content_text: {
-        color: AppColors.textDark,
-        width: "98%",
-        minHeight: 50,
-        height: "auto",
-        marginHorizontal: 3,
-        textAlign: "justify",
-        fontSize: 18,
-    },
+        paddingVertical: 1,
+    }
 });
 
 export default NoteDetails;
