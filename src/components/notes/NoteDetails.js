@@ -3,7 +3,7 @@ import React, { useState,useEffect } from "react";
 import AppColors from "../../utils/AppColors";
 import moment from 'moment';
 import TaskList from '../tasks/TaskList';
-
+import TaskModel from '../../classes/Task.js';
 import { View, StyleSheet, TextInput, Text } from "react-native";
 
 const titleMaxLength = 50;
@@ -35,7 +35,15 @@ const SubTitleInput = (props) => {
 
 const NoteDetails = (props) => {
     const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
-    const [taskItems, setTaskItems] = useState([1,2,3,5,4]);
+    const [taskItems, setTaskItems] 
+        = useState([
+        new TaskModel("watch walking dead ep6",false),
+        new TaskModel("finished todo app",true),
+        new TaskModel("report today tasks to PL",false),
+        new TaskModel("jogging",false),
+        new TaskModel("sleep at 10",false),
+
+    ]);
 
     useEffect(() => 
     {

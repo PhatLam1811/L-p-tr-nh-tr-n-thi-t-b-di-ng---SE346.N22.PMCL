@@ -1,4 +1,4 @@
-class Note {
+export default class Note {
     constructor(ID,title, subTitle, content,createDate,type) {
         this.ID=ID;
         this.title = title;

@@ -1,13 +1,40 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacityComponent} from 'react-native'
 import AppColors from '../../utils/AppColors';
+import Icon from "react-native-vector-icons/Octicons";
+
+const getFullName = (isFinished, text) => {
+    if(isFinished === false){
+        return (
+            <View style={styles.itemLeft}>
+
+                <View style={styles.square}></View>
+                <Text style={styles.itemText}>{text} </Text>
+            </View>
+        )
+
+    }
+    else{
+        return (
+        <View style={styles.itemLeft}>
+
+            <View style={styles.square}>
+                <Icon name="check" size={24} style={{}}/>
+            </View>
+            <Text style={styles.itemTextButCompleted}>{text} </Text>
+        </View>
+        )
+    }
+  };
+
 const Task = (props) => {
     return (
         <View style={styles.item}>
-            <View style={styles.itemLeft}>
-                <View style={styles.square}></View>
-                <Text style={styles.itemText}>{props.text} </Text>
-            </View>
+                {
+                    getFullName(props.isFinished, props.text)
+
+                }
+            
             <View style={styles.circular}>
 
             </View>
@@ -35,13 +62,22 @@ const styles = StyleSheet.create({
         width:24,
         height:24,
         backgroundColor: '#55BCF6',
-        opacity:0.4,
+        opacity:0.8,
         borderRadius:5,
         marginRight:15,
+       alignItems:"center"
+        
     },
+    
     itemText:{
         maxWidth:'80%',
         color:'#fff'
+    },
+    itemTextButCompleted:{
+        maxWidth:'80%',
+        color:'#fff',
+        textDecorationLine:"line-through",
+        textDecorationStyle: 'solid'
     },
     circular:{
         width:12,
