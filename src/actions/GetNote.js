@@ -44,6 +44,10 @@ export const GetAllNoteAction = async () => {
       return{result:'success',data:notes};
 
 
-  }catch(error){console.log(error)
-  return{result:'fail',error:error};
-}};
+  }
+  catch(error)
+  {
+    console.log(error)
+    return{result:'fail',error:error};
+  }
+};

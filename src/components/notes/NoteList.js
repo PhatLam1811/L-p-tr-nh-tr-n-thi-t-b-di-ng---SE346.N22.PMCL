@@ -6,7 +6,7 @@ import {
   DeleteNoteAction,
 } from './../../actions/DeleteNote';
 
-import Task from "./../tasks/Task"
+import Note from "../../classes/Note.js"
 import NoteCard from "./NoteCard";
 
 const NoteList = props => {
@@ -22,6 +22,7 @@ const NoteList = props => {
   };
 
   const RenderNoteComponentsHandler = (list) => {
+    console.log(list);
     return list.map((item) => {
       const index = notes.findIndex(noteItem => noteItem.ID === item.ID);
       return <NoteCard key={index} index={index} id={item.ID} onSelect={openTask} />
@@ -70,36 +71,23 @@ const NoteList = props => {
   useEffect(() => setNotes(props.list), [props]);
 
   return (
-    <View style={props.style}>
-      <View style={styles.container}>
-
-        {props.list.map((item,index) => {
-          // console.log('item is: ');
-          // console.log(item);
-          // console.log('index is: ');
-          // console.log(index);
-          return (
-            <View style={styles.item}>
-              <TouchableOpacity
-                key={index}
-                onPress={() => openTask(index)}>
-                <Task text={item.noteData} />
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-        
-      </View>
+    <View style={styles.noteList}>
+      <ScrollView>
+        {RenderLayoutHandler()}
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    
+  noteList: {
+    backgroundColor: "inherit",
+    height: "85%",
+  },
+
+  noteList__container: {
+    flexDirection: "row",
+    padding: "1%",
   },
 
   noteList__column: {

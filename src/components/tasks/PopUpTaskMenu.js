@@ -3,14 +3,14 @@ import React from 'react';
 
 import AppColors from '../../utils/AppColors';
 import moment from 'moment';
+import TaskList from './TaskList';
 
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
-const NoteCard = (props) => {
+const PopUpTaskMenu = (props) => {
   const createdDate = moment(new Date()).format("dddd, Do MMM YYYY, h:mm a");
 
-  // const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
   const imgURI = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
 
   const NoteSelectHandler = () => {
@@ -41,19 +41,16 @@ const NoteCard = (props) => {
           TriggerTouchableComponent: TouchableOpacity,
           triggerWrapper: styles.noteCard,
         }}>
-        {props.index % 3 === 0 && <Image style={styles.noteCard__image} source={{ uri: imgURI }} resizeMode="stretch" />}
-        <View style={styles.noteCard__content}>
-          <Text style={styles.noteCard_title}>{`Note Title ${props.id}`}</Text>
-          <Text style={styles.noteCard_subTitle} numberOfLines={5}>Note SubTitle</Text>
-          <Text style={styles.noteCard_lastUpdated}>{createdDate}</Text>
-        </View>
+         {
+          <Task taskItems = {props.taskItems} setTaskItems = {props.setTaskItems}></Task>
+        }
       </MenuTrigger>
       <MenuOptions style={styles.noteCard_popupMenu}>
-        <Text style={styles.popupMenu_title}>Note Title {props.id}</Text>
-        <MenuOption customStyles={styles.popupMenu_options} onSelect={EditNoteHandler} value={1} text="Edit Note" />
-        <MenuOption customStyles={styles.popupMenu_options} onSelect={CopyNoteHandler} value={1} text="Copy Note" />
-        <MenuOption customStyles={styles.popupMenu_options} onSelect={ShareNoteHandler} value={2} text="Share Note" />
-        <MenuOption customStyles={styles.popupMenu_options} onSelect={DeleteNoteHandler} value={3} text="Delete Note" />
+        <Text style={styles.popupMenu_title}>{props.name}</Text>
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={EditNoteHandler} value={1} text="Edit Item" />
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={CopyNoteHandler} value={2} text="Web Search" />
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={ShareNoteHandler} value={3} text="Copy To Clipboard" />
+        <MenuOption customStyles={styles.popupMenu_options} onSelect={DeleteNoteHandler} value={4} text="Delete Note" />
       </MenuOptions>
     </Menu >
   );
@@ -126,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NoteCard;
+export default PopUpTaskMenu;
