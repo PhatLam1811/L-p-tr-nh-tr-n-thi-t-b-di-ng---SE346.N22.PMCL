@@ -4,7 +4,7 @@ import React from "react";
 
 import MainScreen from "./src/screen/MainScreen";
 import NewTaskScreen from "./src/screen/NewTaskScreen";
-import DetailScreen from "./src/screen/DetailScreen";
+import NoteScreen from "./src/screen/NoteScreen";
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -21,13 +21,18 @@ const App = () => {
     //<DetailNoteScreen NoteID="UEh_5_X"/>
     <MenuProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false }} >
           <Stack.Screen name="Main" component={MainScreen} />
           <Stack.Screen name="NewTask" component={NewTaskScreen} />
-          <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen name="Detail"
+            component={NoteScreen}
+            options={{
+              animationTypeForReplace: "push",
+              animation: "slide_from_right"
+            }} />
         </Stack.Navigator>
       </NavigationContainer>
-    </MenuProvider>)
+    </MenuProvider >)
 };
 
 export default App;
