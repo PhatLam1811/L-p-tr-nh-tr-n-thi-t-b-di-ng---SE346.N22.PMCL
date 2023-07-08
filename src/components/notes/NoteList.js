@@ -6,7 +6,7 @@ import {
   DeleteNoteAction,
 } from './../../actions/DeleteNote';
 
-import Task from "./../tasks/Task"
+import Note from "../../classes/Note.js"
 import NoteCard from "./NoteCard";
 
 const NoteList = props => {
@@ -22,6 +22,7 @@ const NoteList = props => {
   };
 
   const RenderNoteComponentsHandler = (list) => {
+    console.log(list);
     return list.map((item) => {
       const index = notes.findIndex(noteItem => noteItem.ID === item.ID);
       return <NoteCard key={index} index={index} id={item.ID} onSelect={openTask} />

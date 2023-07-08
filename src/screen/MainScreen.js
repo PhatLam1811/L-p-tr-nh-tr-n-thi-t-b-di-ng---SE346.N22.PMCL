@@ -98,7 +98,10 @@ const MainScreen = props => {
     const CreateNoteHandler = () => {
         console.log('create note pressed!');
         // display create new note screen
-        props.navigation.navigate('NewTask', {
+        // props.navigation.navigate('NewTask', {
+        //     onGoBack: () => _retrieveData(),
+        // });
+        props.navigation.navigate('Detail', {
             onGoBack: () => _retrieveData(),
         });
     };
