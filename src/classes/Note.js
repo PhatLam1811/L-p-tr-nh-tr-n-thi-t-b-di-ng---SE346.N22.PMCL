@@ -1,13 +1,13 @@
 class Note {
-    constructor(ID,title, subTitle, content,createDate,type) {       
+    constructor(ID,title, subTitle, content,createDate,image,url,color) {       
         this.ID=ID;
         this.title = title;
         this.subTitle = subTitle;
         this.content = content;
         this.createDate = createDate;
-        this.type=type;
-
-
+        this.image=image;
+        this.url=url;
+        this.color = color;
     }
     static create(...args) {
         
@@ -17,7 +17,7 @@ class Note {
             subTitle === null || subTitle === undefined||
             content === null || content === undefined||
             createDate === null || createDate === undefined||
-            type === null || type === undefined
+            type === null
             ) {
           return null;
         }

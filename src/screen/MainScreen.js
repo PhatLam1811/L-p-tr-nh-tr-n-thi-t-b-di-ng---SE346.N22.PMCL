@@ -7,7 +7,7 @@ import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
 
 import {FAB} from '@react-native-material/core';
-import {Image, StyleSheet, Switch, Text, View} from 'react-native';
+import {Image, StyleSheet, Switch, Text, View, Alert, Share,} from 'react-native';
 import {GetAllNoteAction, GetNoteAction} from './../actions/GetNote';
 import {DeleteAllNoteAction} from '../actions/DeleteNote';
 import DocumentPicker from 'react-native-document-picker';
@@ -17,7 +17,9 @@ const exampleImage = require('./s.jpg');
 
 const MainScreen = props => {
   const [taskItems, setTaskItems] = useState([]);
-  const [imageSource, setImageSource] = useState('');
+  const [imageSource, setImageSource] = useState(
+    'file:///data/user/0/com.myproj/cache/rn_image_picker_lib_temp_236e801c-48cf-4579-b746-3b99a851e6ba.jpg',
+  );
   const [notes, setNotes] = useState([]);
   const [isGridLayout, SetIsGridLayout] = useState(true);
   const ChangeNotesLayoutHandler = () => {
@@ -55,13 +57,13 @@ const MainScreen = props => {
     // }
 
     try {
-      console.log('require h.jpg is:');
-      console.log(require('./s.jpg'));
-      console.log('example image is:');
-      console.log(exampleImage);
-      console.log('image source:');
-      console.log(imageSource);
-      console.log('----------------------');
+      // console.log('require h.jpg is:');
+      // console.log(require('./s.jpg'));
+      // console.log('example image is:');
+      // console.log(exampleImage);
+      // console.log('image source:');
+      // console.log(imageSource);
+      // console.log('----------------------');
       launchImageLibrary(
         {
           storagOptions: {
@@ -69,12 +71,13 @@ const MainScreen = props => {
           },
         },
         response => {
-            console.log("response.assets[0]");
-            console.log(response.assets[0]);
-            console.log('response.assets[0].uri');
-
+          //   console.log("response.assets[0]");
+          //   console.log(response.assets[0]);
+          //   console.log('response.assets[0].uri');
           console.log(response.assets[0].uri);
-          setImageSource(response.assets[0].uri)
+          setImageSource(prevState => {
+            return response.assets[0].uri;
+          });
         },
       );
     } catch (err) {
@@ -86,9 +89,32 @@ const MainScreen = props => {
     console.log('on search: ' + input);
   };
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'React Native | A framework for building native apps using React',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
+
   const CreateURLNoteHandler = () => {
     console.log('URL note pressed!');
     // display create URL note screen
+
+    onShare();
+    
   };
 
   const CreateNoteHandler = () => {
@@ -148,7 +174,7 @@ const MainScreen = props => {
         />
       </View>
       <View>
-        <Image style={{height:400,width:400}} source={{uri:imageSource}} />
+        <Image style={{height: 400, width: 400}} source={{uri: imageSource}} />
       </View>
 
       <View style={styles.mainScreen__toolbar}>
