@@ -30,7 +30,7 @@ import AppColors from '../../utils/AppColors.js';
 const EditNoteHandler = (toDo) => {
 
     console.log("who am i?");
-    
+
 }
 
 const CopyNoteHandler = (item) => {
@@ -69,7 +69,7 @@ const WebSearch = async (item) => {
 
 const NewTaskScreen = (props) => {
     const [task, setTask] = useState();
-    //const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const _retrieveData = async () => {
         console.log("im retrieving...");
@@ -177,7 +177,7 @@ const NewTaskScreen = (props) => {
                                         <MenuOption customStyles={styles.popupMenu_options} onSelect={deleteTask} value={index} text="Delete Note" />
                                     </MenuOptions>
                                 </Menu >
-                              
+
                             </View>
 
                         )
