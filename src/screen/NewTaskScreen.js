@@ -9,7 +9,7 @@ import { SaveNoteAction } from './../actions/SaveNote'
 import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote'
 import { DeleteAllNoteAction, DeleteNoteAction } from './../actions/DeleteNote'
 import Note from '../classes/Note';
-import GenerateRandom from '../utils/GenerateRandom';
+import GenerateRandom from '../utils/Utils';
 
 const NewTaskScreen = (props) => {
   const [task, setTask] = useState();

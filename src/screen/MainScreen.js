@@ -10,8 +10,9 @@ import { FAB } from '@react-native-material/core';
 import { Image, StyleSheet, Switch, Text, View } from 'react-native';
 import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote';
 import { DeleteAllNoteAction } from '../actions/DeleteNote';
-import DocumentPicker from 'react-native-document-picker';
+// import DocumentPicker from 'react-native-document-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import Utils from '../utils/Utils';
 
 const exampleImage = require('./s.jpg');
 
@@ -20,6 +21,7 @@ const MainScreen = props => {
     const [imageSource, setImageSource] = useState('');
     const [notes, setNotes] = useState([]);
     const [isGridLayout, SetIsGridLayout] = useState(true);
+
     const ChangeNotesLayoutHandler = () => {
         console.log('change notes layout (column to grids & vice versa)');
         SetIsGridLayout(prev => !prev);
@@ -34,7 +36,9 @@ const MainScreen = props => {
     const CreateImageNoteHandler = async () => {
         console.log('image note pressed!');
         // display create image note screen
+    };
 
+    const TestImagePicker = async () => {
         // try{
         // // const doc=await DocumentPicker.pick({
         // //     type:[DocumentPicker.types.images],
@@ -80,7 +84,7 @@ const MainScreen = props => {
         } catch (err) {
             console.log(err);
         }
-    };
+    }
 
     const SearchNoteHandler = input => {
         console.log('on search: ' + input);
@@ -147,21 +151,19 @@ const MainScreen = props => {
                     screenNavigation={screenNavigation}
                 />
             </View>
-            <View>
-                <Image style={{ height: 400, width: 400 }} source={{ uri: imageSource }} />
-            </View>
-
             <View style={styles.mainScreen__toolbar}>
                 <OctIcon
                     name="checklist"
                     {...styles.mainScreen__icon}
-                    onPress={CreateChecklistNoteHandler}
+                    // onPress={CreateChecklistNoteHandler}
+                    onPress={async () => await Utils.GenerateSampleNotes(7)}
                 />
                 <MatIcon
                     name="image"
                     {...styles.mainScreen__icon}
                     size={30}
-                    onPress={CreateImageNoteHandler}
+                    // onPress={CreateImageNoteHandler}
+                    onPress={async () => await Utils.ClearData()}
                 />
                 <OctIcon
                     name="globe"

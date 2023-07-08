@@ -1,16 +1,16 @@
 /* eslint-disable*/
 
-import React, {Component, useState, useCallback, useEffect} from 'react';
-import {View, Text, Button, TextInput, StyleSheet} from 'react-native';
+import React, { Component, useState, useCallback, useEffect } from 'react';
+import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 
-import {SaveNoteAction} from '../actions/SaveNote.js';
+import { SaveNoteAction } from '../actions/SaveNote.js';
 
 import moment from 'moment';
 import NavigationBar from '../components/NavigationBar';
-import {DeleteAllNoteAction, DeleteNoteAction} from '../actions/DeleteNote.js';
-import {GetAllNoteAction, GetNoteAction} from '../actions/GetNote.js';
-import {UpdateNoteAction} from '../actions/UpdateNote.js';
-import GenerateRandom from '../utils/GenerateRandom.js';
+import { DeleteAllNoteAction, DeleteNoteAction } from '../actions/DeleteNote.js';
+import { GetAllNoteAction, GetNoteAction } from '../actions/GetNote.js';
+import { UpdateNoteAction } from '../actions/UpdateNote.js';
+import GenerateRandom from '../utils/Utils.js';
 import Note, { create } from '../classes/Note.js';
 
 const NewNoteScreen = () => {
@@ -70,7 +70,7 @@ const NewNoteScreen = () => {
 
   const updateNote = async () => {
     const ID = '';
-    const note=Note.create(ID,title,subTitle,content,new Date(),'normal-text');
+    const note = Note.create(ID, title, subTitle, content, new Date(), 'normal-text');
     const noteRes = await UpdateNoteAction(ID, note);
     console.log(noteRes);
     const check = await GetAllNoteAction();
