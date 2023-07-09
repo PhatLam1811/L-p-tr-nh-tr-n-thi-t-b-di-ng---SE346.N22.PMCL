@@ -32,6 +32,7 @@ const EditNoteHandler = (toDo) => {
 
     console.log("who am i?");
 
+
 }
 
 const CopyNoteHandler = (item) => {
@@ -164,6 +165,7 @@ const NewTaskScreen = (props) => {
                                         <MenuOption customStyles={styles.popupMenu_options} onSelect={deleteTask} value={index} text="Delete Note" />
                                     </MenuOptions>
                                 </Menu >
+
 
                             </View>
 

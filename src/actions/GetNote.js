@@ -1,12 +1,17 @@
 /* eslint-disable*/
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Note from '../classes/Note';
 
 
 export const GetNoteAction = async (ID) => {
     try {
   
-        const noteData = await AsyncStorage.getItem('taskItems'+ID);
-
+        const noteData = await AsyncStorage.getItem('Note_'+ID);
+        if(jsonData===null||jsonData===undefined){
+          console.log('Something wrong with noteData in GetNoteAction');
+          console.log(noteData);
+          return;
+        }
            return{result:'success',data:JSON.parse(noteData)};
 
   }catch(error){console.log(error)
@@ -23,10 +28,19 @@ export const GetAllNoteAction = async () => {
           let value = store[i][1];
           console.log(key);
           const jsonData=JSON.parse(value);
-          notes.push(jsonData);
+          
+          console.log('json is:');
+          console.log(jsonData);
+          if(jsonData===null||jsonData===undefined){
+            return;
+          }
+          const note=Note.create(jsonData.ID,jsonData.title,jsonData.subTitle,jsonData.content,jsonData.createDate,jsonData.type);
+          
+          notes.push(note);
         });
       });
 
+      console.log(notes)
       return{result:'success',data:notes};
 
 
