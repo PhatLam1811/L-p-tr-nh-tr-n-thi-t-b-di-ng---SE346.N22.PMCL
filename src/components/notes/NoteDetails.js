@@ -1,10 +1,20 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
 import moment from 'moment';
 import TaskList from '../tasks/TaskList';
 import TaskModel from '../../classes/Task.js';
 import { View, StyleSheet, TextInput, Text } from "react-native";
+import {
+    Button,
+    Dialog,
+    DialogHeader,
+    DialogContent,
+    DialogActions,
+    Provider,
+    TextInput as MyTextPut
+} from '@react-native-material/core';
+import Material from '@react-native-material/core'
 
 const titleMaxLength = 50;
 const subTitleMaxLength = 70;
@@ -18,9 +28,9 @@ const SubTitleInput = (props) => {
     }
 
     return (
-        
+
         <View style={styles.subTitle_container}>
-           
+
             <View style={{ ...styles.subTitle_colorTag, height: inputHeight, backgroundColor: "red" }} />
             <TextInput style={styles.subTitle_content}
                 multiline={true}
@@ -33,50 +43,127 @@ const SubTitleInput = (props) => {
     );
 };
 
+const MyDialog = (content) => {
+    return (
+        <Dialog visible={true} onDismiss={() => setVisible(false)}>
+            <DialogHeader title="tu tu sua" />
+            <DialogContent>
+                <Text>
+                    {content}
+                </Text>
+            </DialogContent>
+            <DialogActions>
+                <Button
+                    title="Cancel"
+                    compact
+                    variant="text"
+                    onPress={() => setVisible(false)}
+                />
+                <Button
+                    title="Ok"
+                    compact
+                    variant="text"
+                    onPress={() => setVisible(false)}
+                />
+            </DialogActions>
+        </Dialog>
+    )
+}
+
+
 const NoteDetails = (props) => {
     const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
-    const [taskItems, setTaskItems] 
+    const [taskItems, setTaskItems]
         = useState([
-        new TaskModel("watch walking dead ep6",false),
-        new TaskModel("finished todo app",true),
-        new TaskModel("report today tasks to PL",false),
-        new TaskModel("jogging",false),
-        new TaskModel("sleep at 10",false),
+            new TaskModel("watch walking dead ep6", false),
+            new TaskModel("finished todo app", true),
+            new TaskModel("report today tasks to PL", false),
+            new TaskModel("jogging", false),
+            new TaskModel("sleep at 10", false),
 
-    ]);
+        ]);
+    const [dialogId,setDialogId] = useState(0);
+    const [dialogValue,setDialogValue] = useState("");
 
-    useEffect(() => 
-    {
-        console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
-    }, [taskItems] );
-    
+    const [visible, setVisible] = useState(false);
+    const ShowNoteDialog = (id) => {
+        setVisible(true);
+        setDialogId(id);
+        setDialogValue(taskItems[id].toDo)
+    }
+
+    useEffect(() => {
+        console.log('taskItems changed');
+    }, [taskItems]);
+
+
     return (
-        
-        <View style={styles.noteDetails}>
-            <TextInput style={styles.noteDetails_title}
-        
-                maxLength={titleMaxLength}
-                selectionColor={"#fcba03"}
-                placeholder="Note Title"
-                placeholderTextColor={AppColors.iconDark} />
-            <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
-            <SubTitleInput />
-            {/* {
+        <>
+            <Provider>
+
+                {
+                    visible ?
+                        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+                            <DialogHeader title="tu tu sua" />
+                            <DialogContent>
+                                <MyTextPut value={dialogValue} onChangeText={text =>{setDialogValue(text)}}/>
+                                    
+                                
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    title="Cancel"
+                                    compact
+                                    variant="text"
+                                    onPress={() => setVisible(false)}
+                                />
+                                <Button
+                                    title="Ok"
+                                    compact
+                                    variant="text"
+                                    onPress={() => {
+                                        let items = taskItems;
+                                        items[dialogId].toDo = dialogValue;
+                                        console.log(items[dialogId].toDo);
+                                        setTaskItems(items);    
+                                        setVisible(false);
+                                        
+
+                                    }
+                                    }
+                                />
+                            </DialogActions>
+                        </Dialog>
+                        : null
+                }
+                <View style={styles.noteDetails}>
+                    <TextInput style={styles.noteDetails_title}
+
+                        maxLength={titleMaxLength}
+                        selectionColor={"#fcba03"}
+                        placeholder="Note Title"
+                        placeholderTextColor={AppColors.iconDark} />
+                    <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
+                    <SubTitleInput />
+                    {/* {
 
                 taskItems.map((item, index) => {
                     console.log('on map 1 ' + item + " " + index);
                   
                 })
             } */}
-            {
-                <TaskList taskItems = {taskItems} setTaskItems = {setTaskItems}></TaskList>
-            }
-            
-            
-        </View >
+                    {
+                        <TaskList taskItems={taskItems} setVisible={ShowNoteDialog} setTaskItems={setTaskItems}></TaskList>
+                    }
+
+
+                </View >
+            </Provider>
+        </>
+
     );
 
- 
+
 
 };
 

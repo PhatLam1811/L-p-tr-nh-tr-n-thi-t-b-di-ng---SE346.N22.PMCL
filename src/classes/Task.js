@@ -9,4 +9,4 @@ export default class TaskModel{
         this.toDo=toDo;
         this.isFinished=isFinished;
     }
-  }
+}

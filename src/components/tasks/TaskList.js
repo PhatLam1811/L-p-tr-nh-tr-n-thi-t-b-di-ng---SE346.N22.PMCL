@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Task from './Task';
 import {
-    Alert,
     View,
     Text,
     StyleSheet,
@@ -14,11 +13,13 @@ import {
 } from 'react-native';
 
 import {
-    Stack,
-    TextInput, IconButton, Dialog,
+    TextInput, IconButton,
+    Dialog,
     DialogHeader,
     DialogContent,
     DialogActions,
+    Provider,
+
 } from '@react-native-material/core';
 import Icon from "react-native-vector-icons/Octicons";
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
@@ -30,7 +31,7 @@ import AppColors from '../../utils/AppColors.js';
 const EditNoteHandler = (toDo) => {
 
     console.log("who am i?");
-    
+
 }
 
 const CopyNoteHandler = (item) => {
@@ -40,25 +41,12 @@ const CopyNoteHandler = (item) => {
 }
 const supportedURL = 'https://google.com/search?q=';
 
-// const ShareNoteHandler = useCallback(async () => {
-//         // Checking if the link is supported for links with custom URL scheme.
-//         const supported = await Linking.canOpenURL(supportedURL);
-
-//         if (supported) {
-//           // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-//           // by some browser in the mobile
-//           await Linking.openURL(supportedURL);
-//         } else {
-//           Alert.alert(`Don't know how to open this URL: ${supportedURL}`);
-//         }
-//       }
-// );
 
 const WebSearch = async (item) => {
     // Checking if the link is supported for links with custom URL scheme.
     let valueINeed = (supportedURL + item);
     console.log(valueINeed);
-    const supported = await Linking.canOpenURL(valueINeed);
+    //const supported = await Linking.canOpenURL(valueINeed);
 
 
     console.log(supported);
@@ -69,7 +57,6 @@ const WebSearch = async (item) => {
 
 const NewTaskScreen = (props) => {
     const [task, setTask] = useState();
-    //const [visible, setVisible] = useState(false);
 
     const _retrieveData = async () => {
         console.log("im retrieving...");
@@ -127,7 +114,7 @@ const NewTaskScreen = (props) => {
 
     return (
         <View >
-
+           
             <View>
                 <TextInput
                     style={{}}
@@ -171,13 +158,13 @@ const NewTaskScreen = (props) => {
 
                                     <MenuOptions style={styles.noteCard_popupMenu}>
                                         <Text style={styles.popupMenu_title}>{item.toDo}</Text>
-                                        <MenuOption customStyles={styles.popupMenu_options} onSelect={setVisible} value={true} text="Edit Item" />
+                                        <MenuOption customStyles={styles.popupMenu_options} onSelect={props.setVisible} value={index} text="Edit Item" />
                                         <MenuOption customStyles={styles.popupMenu_options} onSelect={WebSearch} value={item.toDo} text="Web Search" />
                                         <MenuOption customStyles={styles.popupMenu_options} onSelect={CopyNoteHandler} value={item.toDo} text="Copy To Clipboard" />
                                         <MenuOption customStyles={styles.popupMenu_options} onSelect={deleteTask} value={index} text="Delete Note" />
                                     </MenuOptions>
                                 </Menu >
-                              
+
                             </View>
 
                         )
