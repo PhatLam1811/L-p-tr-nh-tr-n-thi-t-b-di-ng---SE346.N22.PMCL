@@ -18,8 +18,8 @@ const getFullName = (isFinished, text) => {
         return (
         <View style={styles.itemLeft}>
 
-            <View style={styles.square}>
-                <Icon name="check" size={24} style={{}}/>
+            <View style={styles.squarebutCompleted}>
+                <Icon name="check" size={24} style={{}} color={"#fff"}/>
             </View>
             <Text style={styles.itemTextButCompleted}>{text} </Text>
         </View>
@@ -35,23 +35,21 @@ const Task = (props) => {
 
                 }
             
-            <View style={styles.circular}>
+            {/* <View style={styles.circular}>
 
-            </View>
+            </View> */}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     item:{
-        backgroundColor: AppColors.primaryDark,
+        backgroundColor:'transparent',
         padding:15,
-        borderRadius:10,
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'space-between',
         width:'95%',
-        margin:10,
     },
     itemLeft:{
         flexDirection:'row',
@@ -61,16 +59,29 @@ const styles = StyleSheet.create({
     square: {
         width:24,
         height:24,
-        backgroundColor: '#55BCF6',
-        opacity:0.8,
-        borderRadius:5,
+        backgroundColor: 'transparent',
+        opacity:1,
+        borderRadius:20,
+        borderWidth:1,
+        borderColor:'#fff',
         marginRight:15,
        alignItems:"center"
         
     },
-    
+    squarebutCompleted: {
+        width:24,
+        height:24,
+        backgroundColor: '#424242',
+        opacity:1,
+        borderRadius:20,
+        borderWidth:1,
+        borderColor:'#424242',
+        marginRight:15,
+       alignItems:"center"
+        
+    },
     itemText:{
-        maxWidth:'80%',
+        maxWidth:'100%',
         color:'#fff'
     },
     itemTextButCompleted:{

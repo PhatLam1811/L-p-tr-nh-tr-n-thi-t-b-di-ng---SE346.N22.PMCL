@@ -6,8 +6,7 @@ class NoteImage extends Note{
         super(content);
         super(createDate);
         super(type);
-        this.image=image;
-        this.url=url;
+       
     }
   }
   
