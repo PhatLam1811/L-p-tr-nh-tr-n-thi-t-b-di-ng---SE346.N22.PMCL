@@ -7,12 +7,17 @@ export const GetNoteAction = async (ID) => {
   try {
 
     const noteData = await AsyncStorage.getItem('Note_' + ID);
-    if (jsonData === null || jsonData === undefined) {
+
+    if (noteData === null || noteData === undefined) {
       console.log('Something wrong with noteData in GetNoteAction');
       console.log(noteData);
       return;
     }
-    return { result: 'success', data: JSON.parse(noteData) };
+
+    return {
+      result: 'success',
+      data: JSON.parse(noteData)
+    };
 
   } catch (error) {
     console.log(error)

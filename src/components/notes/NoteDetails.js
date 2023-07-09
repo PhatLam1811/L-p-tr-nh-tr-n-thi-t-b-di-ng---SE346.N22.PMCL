@@ -11,8 +11,17 @@ const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
 const NoteDetails = (props) => {
+    const noteData = {
+        title: props.note.title,
+        subTitle: props.note.subTitle,
+        colorTag: props.note.colorTag,
+        lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY, h:mm a"),
+        content: props.note.content,
+        image: props.note.image,
+        url: props.note.url,
+        tasks: props.note.tasks,
+    }
     const [imageRatio, setImageRatio] = useState(0);
-    const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
     const [taskItems, setTaskItems]
         = useState();
 
@@ -20,9 +29,9 @@ const NoteDetails = (props) => {
         setImageRatio(width / height);
     }
 
-    useEffect(() => {
-        console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
-    }, [taskItems]);
+    // useEffect(() => {
+    //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
+    // }, [taskItems]);
 
     return (
 
@@ -30,32 +39,32 @@ const NoteDetails = (props) => {
             <TextInput style={styles.noteDetails_title}
                 maxLength={titleMaxLength}
                 selectionColor={"#fcba03"}
-                value={props.note?.title}
+                value={noteData.title}
                 onChangeText={text => props.onTitleChange(text)}
                 placeholder="Note Title"
                 placeholderTextColor={AppColors.iconDark} />
-            <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
+            <Text style={styles.noteDetails_lastUpdated}>{noteData.lastUpdated}</Text>
             <View style={styles.noteDetails_subTitle}>
-                <View style={{ ...styles.subTitle_colorTag, backgroundColor: props.note?.colorTag }} />
+                <View style={{ ...styles.subTitle_colorTag, backgroundColor: noteData.colorTag }} />
                 <TextInput style={styles.subTitle_content}
                     editable
                     multiline
                     maxLength={subTitleMaxLength}
                     selectionColor={"#fcba03"}
-                    value={props.note?.subTitle}
+                    value={noteData.subTitle}
                     onChangeText={text => props.onSubTitleChange(text)}
                     placeholder="Note Subtitle"
                     placeholderTextColor={AppColors.iconDark} />
             </View>
             <View style={styles.noteDetails_content}>
-                {props.note?.image != null && <View>
+                {noteData.image != null && <View>
                     <Image
                         style={{
                             width: "98%",
                             aspectRatio: imageRatio,
                         }}
                         onLoad={OnImageLoadHandler}
-                        source={{ uri: props.note?.image }}
+                        source={{ uri: noteData.image }}
                         resizeMode="stretch" />
                     <MatComIcon style={styles.content_imageDeleteIcon}
                         name="trash-can"
@@ -66,12 +75,15 @@ const NoteDetails = (props) => {
                 <TextInput style={styles.content_text}
                     editable
                     multiline
-                    value={props.note?.content}
+                    value={noteData.content}
                     onChangeText={text => props.onContentChange(text)}
                     selectionColor={"#fcba03"}
                     placeholder="Type Your Note Here"
                     placeholderTextColor={AppColors.iconDark} />
-                {props.note.tasks.length > 0 && <TaskList taskItems={props.note.tasks} setTaskItems={setTaskItems}></TaskList>}
+                {noteData.tasks != null &&
+                    <TaskList
+                        taskItems={noteData.tasks}
+                        setTaskItems={setTaskItems} />}
             </View>
         </View >
     );

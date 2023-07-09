@@ -37,26 +37,32 @@ const sampleTasks = [
 
 const NoteScreen = (props) => {
   const defaultState = {
+    ID: null,
     title: null,
     lastUpdated: initLastUpdated,
     subTitle: null,
     colorTag: noteColorTags[0],
     image: sampleImage,
     content: null,
-    tasks: sampleTasks,
+    url: null,
+    tasks: null,
   }
   const [note, setNote] = useState(defaultState);
 
   // console.log(props.route.params)
 
-  // const _retrieve = async () => {
-  //   if ()
-  //   const taskResponse = await GetNoteAction(props.route.params.ID);
-  //   console.log(taskResponse);
-  //   if (taskResponse.result === 'success') {
-  //     setTask(taskResponse.data);
-  //   }
-  // }
+  const _retrieve = async () => {
+    try {
+      const response = await GetNoteAction(props.route.params.ID);
+
+      if (response.result === 'success') {
+        setNote(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const _delete = async () => {
     const taskResponse = await DeleteNoteAction(props.route.params.ID);
@@ -71,17 +77,9 @@ const NoteScreen = (props) => {
 
   const SaveNoteHandler = async () => {
     try {
-      const model = Note.create({
-        title: note.title,
-        subTitle: note.subTitle,
-        content: note.content,
-        image: note.image,
-        url: note.url,
-        tasks: note.tasks,
-        lastUpdated: note.lastUpdated
-      });
+      const model = Note.create({ ...note, lastUpdated: new Date() });
 
-      if (model != null) {
+      if (model == null) {
         console.log("Invalid note model!");
         return;
       }
@@ -101,6 +99,10 @@ const NoteScreen = (props) => {
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
 
+  useEffect(() => {
+    _retrieve();
+  }, []);
+
   return (
     <View style={styles.noteScreen}>
       <ScrollView style={{ height: "100%" }}>
@@ -109,8 +111,13 @@ const NoteScreen = (props) => {
             {...styles.noteScreen_icon}
             {...styles.noteScreen_backIcon}
             onPress={() => props.navigation.goBack()} />
-          <EntIcon name="share" {...styles.noteScreen_icon} {...styles.noteScreen_shareIcon} />
-          <OctIcon name="check-circle" {...styles.noteScreen_icon} {...styles.noteScreen_saveIcon} />
+          <EntIcon name="share"
+            {...styles.noteScreen_icon}
+            {...styles.noteScreen_shareIcon} />
+          <OctIcon name="check-circle"
+            {...styles.noteScreen_icon}
+            {...styles.noteScreen_saveIcon}
+            onPress={SaveNoteHandler} />
         </View>
         <NoteDetails note={note}
           onTitleChange={NoteTitleChangeHandler}

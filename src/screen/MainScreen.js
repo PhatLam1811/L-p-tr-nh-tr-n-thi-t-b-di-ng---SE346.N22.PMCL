@@ -94,10 +94,12 @@ const MainScreen = props => {
         // display create URL note screen
     };
 
+
+
     const NoteScreenNavigateHandler = (ID) => {
         props.navigation.navigate('Detail', {
             ID: ID,
-            onGoBack: () => LoadNoteDataHandler(),
+            // onGoBack: () => LoadNoteDataHandler(),
         });
     }
 
