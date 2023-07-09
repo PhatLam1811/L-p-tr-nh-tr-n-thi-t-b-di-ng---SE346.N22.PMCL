@@ -4,48 +4,17 @@ import AppColors from "../../utils/AppColors";
 import moment from 'moment';
 import TaskList from '../tasks/TaskList';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import TaskModel from '../../classes/Task.js';
 
 import { View, StyleSheet, TextInput, Text, Image } from "react-native";
 
 const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
-const SubTitleInput = (props) => {
-    const [inputHeight, setInputHeight] = useState(30);
-
-    const SubTitleInputLayoutChangeHandler = (event) => {
-        console.log("layout change");
-        setInputHeight(50);
-    }
-
-    return (
-
-        <View style={styles.subTitle_container}>
-
-            <View style={{ ...styles.subTitle_colorTag, height: inputHeight, backgroundColor: "red" }} />
-            <TextInput style={styles.subTitle_content}
-                multiline={true}
-                maxLength={subTitleMaxLength}
-                selectionColor={"#fcba03"}
-                placeholder="Note Subtitle"
-                placeholderTextColor={AppColors.iconDark}
-                onLayout={SubTitleInputLayoutChangeHandler} />
-        </View>
-    );
-};
-
 const NoteDetails = (props) => {
     const [imageRatio, setImageRatio] = useState(0);
     const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
     const [taskItems, setTaskItems]
-        = useState([
-            // new TaskModel("watch walking dead ep6", false),
-            // new TaskModel("finished todo app", true),
-            // new TaskModel("report today tasks to PL", false),
-            // new TaskModel("jogging", false),
-            // new TaskModel("sleep at 10", false),
-        ]);
+        = useState();
 
     const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
         setImageRatio(width / height);
@@ -102,7 +71,7 @@ const NoteDetails = (props) => {
                     selectionColor={"#fcba03"}
                     placeholder="Type Your Note Here"
                     placeholderTextColor={AppColors.iconDark} />
-                {taskItems.length > 0 && <TaskList taskItems={taskItems} setTaskItems={setTaskItems}></TaskList>}
+                {props.note.tasks.length > 0 && <TaskList taskItems={props.note.tasks} setTaskItems={setTaskItems}></TaskList>}
             </View>
         </View >
     );

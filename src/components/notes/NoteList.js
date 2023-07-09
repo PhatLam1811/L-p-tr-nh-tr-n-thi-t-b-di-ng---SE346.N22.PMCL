@@ -1,31 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
-import { TouchableOpacity, View, StyleSheet, ScrollView } from 'react-native';
-import {
-  DeleteAllNoteAction,
-  DeleteNoteAction,
-} from './../../actions/DeleteNote';
-
-import Note from "../../classes/Note.js"
 import NoteCard from "./NoteCard";
+
+import { View, StyleSheet, ScrollView } from 'react-native';
 
 const NoteList = props => {
   const [notes, setNotes] = useState([]);
 
-  const openTask = (index) => {
-    // console.log("index is being deleted:" + index);
-    // let itemsCopy = [...notes];
-    // itemsCopy.splice(index,1);
-    // setNotes([...itemsCopy]);
-    // await DeleteNoteAction(notes[index].ID);
-    props.screenNavigation(notes[index].ID);
-  };
+  const SelectNoteHandler = (index) => props.screenNavigation(notes[index].ID);
 
   const RenderNoteComponentsHandler = (list) => {
-    console.log(list);
     return list.map((item) => {
       const index = notes.findIndex(noteItem => noteItem.ID === item.ID);
-      return <NoteCard key={index} index={index} id={item.ID} onSelect={openTask} />
+      return <NoteCard
+        key={index}
+        index={index}
+        note={item}
+        onSelect={SelectNoteHandler} />
     });
   }
 

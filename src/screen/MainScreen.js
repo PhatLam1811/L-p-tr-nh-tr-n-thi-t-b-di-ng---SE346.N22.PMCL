@@ -5,6 +5,7 @@ import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import SearchBar from '../components/SearchBar';
 import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
+import Utils from '../utils/Utils';
 
 import { FAB } from '@react-native-material/core';
 import { Image, StyleSheet, Switch, Text, View } from 'react-native';
@@ -12,12 +13,10 @@ import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote';
 import { DeleteAllNoteAction } from '../actions/DeleteNote';
 // import DocumentPicker from 'react-native-document-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import Utils from '../utils/Utils';
 
 const exampleImage = require('./s.jpg');
 
 const MainScreen = props => {
-    const [taskItems, setTaskItems] = useState([]);
     const [imageSource, setImageSource] = useState('');
     const [notes, setNotes] = useState([]);
     const [isGridLayout, SetIsGridLayout] = useState(true);
@@ -95,46 +94,30 @@ const MainScreen = props => {
         // display create URL note screen
     };
 
-    const CreateNoteHandler = () => {
-        console.log('create note pressed!');
-        // display create new note screen
-        // props.navigation.navigate('NewTask', {
-        //     onGoBack: () => _retrieveData(),
-        // });
-        props.navigation.navigate('Detail', {
-            onGoBack: () => _retrieveData(),
-        });
-    };
-
-    const _retrieveData = async () => {
-        const names = await GetAllNoteAction();
-        // console.log(names);
-        if (names.result === 'success') {
-            console.log(names);
-            setTaskItems(names.data);
-        }
-    };
-
-    useEffect(() => {
-        _retrieveData();
-    }, []);
-
-    const screenNavigation = (ID) => {
+    const NoteScreenNavigateHandler = (ID) => {
         props.navigation.navigate('Detail', {
             ID: ID,
-            onGoBack: () => _retrieveData(),
+            onGoBack: () => LoadNoteDataHandler(),
         });
     }
 
-    useEffect(() => {
-        const _retrieveData = async () => {
-            const names = await GetAllNoteAction();
-            if (names.result === 'success') {
-                setNotes(names.data);
+    const CreateNoteHandler = () => {
+        NoteScreenNavigateHandler();
+    };
+
+    const LoadNoteDataHandler = async () => {
+        try {
+            const response = await GetAllNoteAction();
+
+            if (response.result === 'success') {
+                setNotes(response.data);
             }
-        };
-        _retrieveData();
-    }, []);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => { LoadNoteDataHandler(); }, []);
 
     return (
         <View style={styles.mainScreen}>
@@ -146,13 +129,11 @@ const MainScreen = props => {
                 <SearchBar
                     layout={isGridLayout ? 'grid' : 'column'}
                     onSearch={SearchNoteHandler}
-                    onChangeLayout={ChangeNotesLayoutHandler}
-                />
+                    onChangeLayout={ChangeNotesLayoutHandler} />
                 <NoteList
                     list={notes}
                     layout={isGridLayout ? 'grid' : 'column'}
-                    screenNavigation={screenNavigation}
-                />
+                    screenNavigation={NoteScreenNavigateHandler} />
             </View>
             <View style={styles.mainScreen__toolbar}>
                 <OctIcon

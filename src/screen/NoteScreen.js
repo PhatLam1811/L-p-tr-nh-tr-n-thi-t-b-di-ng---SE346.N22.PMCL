@@ -6,11 +6,14 @@ import MatIcon from "react-native-vector-icons/MaterialIcons";
 import EntIcon from "react-native-vector-icons/Entypo";
 import AppColors from "../utils/AppColors";
 import NoteDetails from "../components/notes/NoteDetails";
+import TaskModel from "../classes/Task";
 import moment from 'moment';
 
-import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { GetNoteAction } from "../actions/GetNote";
 import { DeleteNoteAction } from "../actions/DeleteNote";
+import { SaveNoteAction } from "../actions/SaveNote";
+import Note from "../classes/Note";
 
 const initLastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
 const noteColorTags = [
@@ -24,6 +27,14 @@ const noteColorTags = [
 // const sampleImage = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
 const sampleImage = "https://khoinguonsangtao.vn/wp-content/uploads/2022/07/hinh-anh-anime-toc-xanh.jpg";
 
+const sampleTasks = [
+  new TaskModel("watch walking dead ep6", false),
+  new TaskModel("finished todo app", true),
+  new TaskModel("report today tasks to PL", false),
+  new TaskModel("jogging", false),
+  new TaskModel("sleep at 10", false),
+];
+
 const NoteScreen = (props) => {
   const defaultState = {
     title: null,
@@ -32,7 +43,7 @@ const NoteScreen = (props) => {
     colorTag: noteColorTags[0],
     image: sampleImage,
     content: null,
-    tasks: [],
+    tasks: sampleTasks,
   }
   const [note, setNote] = useState(defaultState);
 
@@ -55,6 +66,33 @@ const NoteScreen = (props) => {
       //console.log(props.route.params.onGoBack)
       props.route.params.onGoBack();
       props.navigation.goBack();
+    }
+  }
+
+  const SaveNoteHandler = async () => {
+    try {
+      const model = Note.create({
+        title: note.title,
+        subTitle: note.subTitle,
+        content: note.content,
+        image: note.image,
+        url: note.url,
+        tasks: note.tasks,
+        lastUpdated: note.lastUpdated
+      });
+
+      if (model != null) {
+        console.log("Invalid note model!");
+        return;
+      }
+
+      const response = await SaveNoteAction(model);
+
+      if (response != null) {
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
