@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import AppColors from "../../utils/AppColors";
 import TaskList from '../tasks/TaskList';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import moment from 'moment';
 
 import { View, StyleSheet, TextInput, Text, Image } from "react-native";
 
@@ -14,7 +15,8 @@ const NoteDetails = (props) => {
         title: props.note.title,
         subTitle: props.note.subTitle,
         colorTag: props.note.colorTag,
-        lastUpdated: props.note.lastUpdated,
+        createdDate: props.note.createdDate,
+        lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY h:mm a"),
         content: props.note.content,
         image: props.note.image,
         url: props.note.url,

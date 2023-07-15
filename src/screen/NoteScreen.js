@@ -9,7 +9,6 @@ import AppColors from "../utils/AppColors";
 import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
-import moment from 'moment';
 
 import { View, StyleSheet, ScrollView } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -33,7 +32,8 @@ const sampleTasks = [
 const defaultState = {
   ID: null,
   title: null,
-  lastUpdated: moment(new Date()).format("dddd, Do MMM YYYY h:mm a"),
+  createdDate: new Date(),
+  lastUpdated: new Date(),
   subTitle: null,
   colorTag: noteColorTags[0],
   image: null,

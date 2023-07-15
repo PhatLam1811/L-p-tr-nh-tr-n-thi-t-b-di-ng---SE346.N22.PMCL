@@ -14,7 +14,7 @@ function GenerateRandom(length) {
 }
 
 class Note {
-  constructor({ ID, title, subTitle, colorTag, lastUpdated, content, image, url, tasks }) {
+  constructor({ ID, title, subTitle, colorTag, createdDate, lastUpdated, content, image, url, tasks }) {
     this.ID = ID != null ? ID : GenerateRandom(7);
     this.title = title;
     this.subTitle = subTitle;
