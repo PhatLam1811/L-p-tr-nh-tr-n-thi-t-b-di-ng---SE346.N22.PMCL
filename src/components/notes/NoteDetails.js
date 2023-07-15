@@ -1,59 +1,31 @@
 import React, { useState, useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
-import moment from 'moment';
 import TaskList from '../tasks/TaskList';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import TaskModel from '../../classes/Task.js';
 
 import { View, StyleSheet, TextInput, Text, Image } from "react-native";
 
 const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
-const SubTitleInput = (props) => {
-    const [inputHeight, setInputHeight] = useState(30);
-
-    const SubTitleInputLayoutChangeHandler = (event) => {
-        console.log("layout change");
-        setInputHeight(50);
-    }
-
-    return (
-
-        <View style={styles.subTitle_container}>
-
-            <View style={{ ...styles.subTitle_colorTag, height: inputHeight, backgroundColor: "red" }} />
-            <TextInput style={styles.subTitle_content}
-                multiline={true}
-                maxLength={subTitleMaxLength}
-                selectionColor={"#fcba03"}
-                placeholder="Note Subtitle"
-                placeholderTextColor={AppColors.iconDark}
-                onLayout={SubTitleInputLayoutChangeHandler} />
-        </View>
-    );
-};
-
 const NoteDetails = (props) => {
-    const [imageRatio, setImageRatio] = useState(0);
-    const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
-    const [taskItems, setTaskItems]
-        = useState([
-            // new TaskModel("watch walking dead ep6", false),
-            // new TaskModel("finished todo app", true),
-            // new TaskModel("report today tasks to PL", false),
-            // new TaskModel("jogging", false),
-            // new TaskModel("sleep at 10", false),
-        ]);
-
-    const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
-        setImageRatio(width / height);
+    const note = {
+        title: props.note.title,
+        subTitle: props.note.subTitle,
+        colorTag: props.note.colorTag,
+        lastUpdated: props.note.lastUpdated,
+        content: props.note.content,
+        image: props.note.image,
+        url: props.note.url,
+        tasks: props.note.tasks,
     }
+    const [taskItems, setTaskItems]
+        = useState();
 
-    useEffect(() => {
-        console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
-    }, [taskItems]);
+    // useEffect(() => {
+    //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
+    // }, [taskItems]);
 
     return (
 
@@ -61,32 +33,32 @@ const NoteDetails = (props) => {
             <TextInput style={styles.noteDetails_title}
                 maxLength={titleMaxLength}
                 selectionColor={"#fcba03"}
-                value={props.note?.title}
+                value={note.title}
                 onChangeText={text => props.onTitleChange(text)}
                 placeholder="Note Title"
                 placeholderTextColor={AppColors.iconDark} />
-            <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
+            <Text style={styles.noteDetails_lastUpdated}>{note.lastUpdated}</Text>
             <View style={styles.noteDetails_subTitle}>
-                <View style={{ ...styles.subTitle_colorTag, backgroundColor: props.note?.colorTag }} />
+                <View style={{ ...styles.subTitle_colorTag, backgroundColor: note.colorTag }} />
                 <TextInput style={styles.subTitle_content}
                     editable
                     multiline
                     maxLength={subTitleMaxLength}
                     selectionColor={"#fcba03"}
-                    value={props.note?.subTitle}
+                    value={note.subTitle}
                     onChangeText={text => props.onSubTitleChange(text)}
                     placeholder="Note Subtitle"
                     placeholderTextColor={AppColors.iconDark} />
             </View>
             <View style={styles.noteDetails_content}>
-                {props.note?.image != null && <View>
+                {note.image != null && <View>
                     <Image
                         style={{
                             width: "98%",
-                            aspectRatio: imageRatio,
+                            aspectRatio: note.image.width / note.image.height,
                         }}
-                        onLoad={OnImageLoadHandler}
-                        source={{ uri: props.note?.image }}
+                        // complete={() => OnImageLoadHandler()}
+                        source={{ uri: note.image.uri }}
                         resizeMode="stretch" />
                     <MatComIcon style={styles.content_imageDeleteIcon}
                         name="trash-can"
@@ -94,15 +66,18 @@ const NoteDetails = (props) => {
                         size={30}
                         onPress={() => props.onImageDelete()} />
                 </View>}
-                <TextInput style={styles.content_text}
+                {note.tasks == null && <TextInput style={styles.content_text}
                     editable
                     multiline
-                    value={props.note?.content}
+                    value={note.content}
                     onChangeText={text => props.onContentChange(text)}
                     selectionColor={"#fcba03"}
                     placeholder="Type Your Note Here"
-                    placeholderTextColor={AppColors.iconDark} />
-                {taskItems.length > 0 && <TaskList taskItems={taskItems} setTaskItems={setTaskItems}></TaskList>}
+                    placeholderTextColor={AppColors.iconDark} />}
+                {note.tasks != null &&
+                    <TaskList
+                        taskItems={note.tasks}
+                        setTaskItems={setTaskItems} />}
             </View>
         </View >
     );

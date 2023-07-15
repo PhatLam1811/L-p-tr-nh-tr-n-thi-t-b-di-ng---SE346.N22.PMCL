@@ -1,26 +1,24 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppColors from "./AppColors";
 import Note from "../classes/Note";
 
 import { SaveNoteAction } from "../actions/SaveNote";
 
-function GenerateRandom(length) {
-  let result = '';
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZa_xXx_I_Put_A_Little_Secret_Here_xXx_bcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
-
 const GenerateSampleNotes = async (amount) => {
   try {
+    const sampleNote = {
+      title: "Sample Note",
+      subTitle: "Sample Subtitle",
+      // colorTag: AppColors.secondaryDark,
+      content: "Sample Content",
+      image: null,
+      tasks: null,
+      url: null,
+      // lastUpdated: new Date(),
+    };
+
     for (let i = 0; i < amount; index++) {
-      const ID = GenerateRandom(7)
-      const newNote = Note.create(ID, "Untitled", "", "", "", new Date(), 'normal-note');
+      const newNote = Note.create(sampleNote);
 
       if (newNote == null) {
         throw new Error("New note is null!");
@@ -47,7 +45,6 @@ const ClearData = async () => {
 }
 
 const Utils = {
-  GenerateRandom,
   GenerateSampleNotes,
   ClearData,
 }
