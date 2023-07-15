@@ -7,16 +7,18 @@ import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
 import Utils from '../utils/Utils';
 
+import { useIsFocused } from '@react-navigation/native';
 import { FAB } from '@react-native-material/core';
 import { Image, StyleSheet, Switch, Text, View } from 'react-native';
-import { GetAllNoteAction, GetNoteAction } from './../actions/GetNote';
-import { DeleteAllNoteAction } from '../actions/DeleteNote';
+import { GetAllNoteAction } from './../actions/GetNote';
 // import DocumentPicker from 'react-native-document-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const exampleImage = require('./s.jpg');
 
-const MainScreen = props => {
+const MainScreen = (props) => {
+    const isFocus = useIsFocused();
+
     const [imageSource, setImageSource] = useState('');
     const [notes, setNotes] = useState([]);
     const [isGridLayout, SetIsGridLayout] = useState(true);
@@ -25,16 +27,6 @@ const MainScreen = props => {
         console.log('change notes layout (column to grids & vice versa)');
         SetIsGridLayout(prev => !prev);
         // change notes display style
-    };
-
-    const CreateChecklistNoteHandler = () => {
-        console.log('checklist pressed!');
-        // display create checklist note screen
-    };
-
-    const CreateImageNoteHandler = async () => {
-        console.log('image note pressed!');
-        // display create image note screen
     };
 
     const TestImagePicker = async () => {
@@ -85,8 +77,23 @@ const MainScreen = props => {
         }
     }
 
+    const NoteScreenNavigateHandler = (ID) => {
+        const payload = { ID: ID };
+        props.navigation.navigate('Detail', payload);
+    }
+
     const SearchNoteHandler = input => {
         console.log('on search: ' + input);
+    };
+
+    const CreateChecklistNoteHandler = () => {
+        console.log('checklist pressed!');
+        // display create checklist note screen
+    };
+
+    const CreateImageNoteHandler = async () => {
+        console.log('image note pressed!');
+        // display create image note screen
     };
 
     const CreateURLNoteHandler = () => {
@@ -94,20 +101,12 @@ const MainScreen = props => {
         // display create URL note screen
     };
 
-
-
-    const NoteScreenNavigateHandler = (ID) => {
-        props.navigation.navigate('Detail', {
-            ID: ID,
-            // onGoBack: () => LoadNoteDataHandler(),
-        });
-    }
-
     const CreateNoteHandler = () => {
-        NoteScreenNavigateHandler();
+        const payload = { isCreateNote: true };
+        props.navigation.navigate("Detail", payload);
     };
 
-    const LoadNoteDataHandler = async () => {
+    const _retrieve = async () => {
         try {
             const response = await GetAllNoteAction();
 
@@ -117,9 +116,11 @@ const MainScreen = props => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }
 
-    useEffect(() => { LoadNoteDataHandler(); }, []);
+    useEffect(() => {
+        if (isFocus) _retrieve();
+    }, [isFocus]);
 
     return (
         <View style={styles.mainScreen}>

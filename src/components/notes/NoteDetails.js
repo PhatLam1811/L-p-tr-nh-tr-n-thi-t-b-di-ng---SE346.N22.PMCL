@@ -15,7 +15,7 @@ const NoteDetails = (props) => {
         title: props.note.title,
         subTitle: props.note.subTitle,
         colorTag: props.note.colorTag,
-        lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY, h:mm a"),
+        lastUpdated: props.note.lastUpdated,
         content: props.note.content,
         image: props.note.image,
         url: props.note.url,

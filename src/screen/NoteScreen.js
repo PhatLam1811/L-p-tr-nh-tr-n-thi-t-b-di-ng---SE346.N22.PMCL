@@ -15,7 +15,6 @@ import { DeleteNoteAction } from "../actions/DeleteNote";
 import { SaveNoteAction } from "../actions/SaveNote";
 import Note from "../classes/Note";
 
-const initLastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
 const noteColorTags = [
   AppColors.iconDark,
   "#fcba03",
@@ -35,21 +34,22 @@ const sampleTasks = [
   new TaskModel("sleep at 10", false),
 ];
 
+const defaultState = {
+  ID: null,
+  title: null,
+  lastUpdated: moment(new Date()).format("dddd, Do MMM YYYY h:mm a"),
+  subTitle: null,
+  colorTag: noteColorTags[0],
+  image: null,
+  content: null,
+  url: null,
+  tasks: null,
+}
+
 const NoteScreen = (props) => {
-  const defaultState = {
-    ID: null,
-    title: null,
-    lastUpdated: initLastUpdated,
-    subTitle: null,
-    colorTag: noteColorTags[0],
-    image: sampleImage,
-    content: null,
-    url: null,
-    tasks: null,
-  }
   const [note, setNote] = useState(defaultState);
 
-  // console.log(props.route.params)
+  console.log(props.route.params);
 
   const _retrieve = async () => {
     try {
@@ -100,7 +100,10 @@ const NoteScreen = (props) => {
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
 
   useEffect(() => {
-    _retrieve();
+    if (props.route.params.isCreateNote == null ||
+      props.route.params.isCreateNote == false) {
+      _retrieve();
+    }
   }, []);
 
   return (
