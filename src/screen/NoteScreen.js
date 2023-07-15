@@ -5,14 +5,19 @@ import OctIcon from "react-native-vector-icons/Octicons";
 import MatIcon from "react-native-vector-icons/MaterialIcons";
 import EntIcon from "react-native-vector-icons/Entypo";
 import AppColors from "../utils/AppColors";
+import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
+import TaskModel from "../classes/Task";
 import moment from 'moment';
 
-import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { GetNoteAction } from "../actions/GetNote";
 import { DeleteNoteAction } from "../actions/DeleteNote";
+import { SaveNoteAction } from "../actions/SaveNote";
+import DocumentPicker from 'react-native-document-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import Note from "../classes/Note";
 
-const initLastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
 const noteColorTags = [
   AppColors.iconDark,
   "#fcba03",
@@ -24,28 +29,28 @@ const noteColorTags = [
 // const sampleImage = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
 const sampleImage = "https://khoinguonsangtao.vn/wp-content/uploads/2022/07/hinh-anh-anime-toc-xanh.jpg";
 
+const sampleTasks = [
+  new TaskModel("watch walking dead ep6", false),
+  new TaskModel("finished todo app", true),
+  new TaskModel("report today tasks to PL", false),
+  new TaskModel("jogging", false),
+  new TaskModel("sleep at 10", false),
+];
+
+const defaultState = {
+  ID: null,
+  title: null,
+  lastUpdated: moment(new Date()).format("dddd, Do MMM YYYY h:mm a"),
+  subTitle: null,
+  colorTag: noteColorTags[0],
+  image: null,
+  content: null,
+  url: null,
+  tasks: null,
+}
+
 const NoteScreen = (props) => {
-  const defaultState = {
-    title: null,
-    lastUpdated: initLastUpdated,
-    subTitle: null,
-    colorTag: noteColorTags[0],
-    image: sampleImage,
-    content: null,
-    tasks: [],
-  }
   const [note, setNote] = useState(defaultState);
-
-  // console.log(props.route.params)
-
-  // const _retrieve = async () => {
-  //   if ()
-  //   const taskResponse = await GetNoteAction(props.route.params.ID);
-  //   console.log(taskResponse);
-  //   if (taskResponse.result === 'success') {
-  //     setTask(taskResponse.data);
-  //   }
-  // }
 
   const _delete = async () => {
     const taskResponse = await DeleteNoteAction(props.route.params.ID);
@@ -58,10 +63,79 @@ const NoteScreen = (props) => {
     }
   }
 
+  const SaveNoteHandler = async () => {
+    await AppController.SaveNote({
+      note: note,
+      onSuccess: () => props.navigation.goBack(),
+      onFailed: (response) => console.log(response),
+    })
+  }
+
+  const TestImagePicker = async () => {
+    // try{
+    // // const doc=await DocumentPicker.pick({
+    // //     type:[DocumentPicker.types.images],
+    // //     allowMultiSelection:false,
+    // // });
+
+    // const doc=await DocumentPicker.pickSingle({
+    //     type:[DocumentPicker.types.images],
+    // });
+
+    // console.log(doc)
+    // }
+    // catch(err){
+    //     console.log(err);
+    //     if(DocumentPicker.isCancel(e)){
+    //         console.log(e);
+    //     }
+    // }
+
+    try {
+      // console.log('require h.jpg is:');
+      // console.log(require('./s.jpg'));
+      // console.log('example image is:');
+      // console.log(exampleImage);
+      // console.log('image source:');
+      // console.log(imageSource);
+      // console.log('----------------------');
+      launchImageLibrary({
+        storagOptions: { path: 'image' },
+      },
+        response => {
+          if (response.assets != null) {
+            console.log(response.assets[0]);
+          }
+        },
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
+
+  useEffect(() => {
+    if (props.route.params.isCreateNote == false) {
+      AppController.GetNote({
+        ID: props.route.params.ID,
+        onSuccess: (data) => setNote(data),
+        onFailed: (response) => console.log(response)
+      })
+    }
+    else {
+      switch (props.route.params.type) {
+        case "task":
+          setNote(prev => { return { ...prev, tasks: [] } }); break;
+        case "image":
+          TestImagePicker();
+          console.log("image type"); break;
+      }
+    }
+  }, []);
 
   return (
     <View style={styles.noteScreen}>
@@ -71,8 +145,13 @@ const NoteScreen = (props) => {
             {...styles.noteScreen_icon}
             {...styles.noteScreen_backIcon}
             onPress={() => props.navigation.goBack()} />
-          <EntIcon name="share" {...styles.noteScreen_icon} {...styles.noteScreen_shareIcon} />
-          <OctIcon name="check-circle" {...styles.noteScreen_icon} {...styles.noteScreen_saveIcon} />
+          <EntIcon name="share"
+            {...styles.noteScreen_icon}
+            {...styles.noteScreen_shareIcon} />
+          <OctIcon name="check-circle"
+            {...styles.noteScreen_icon}
+            {...styles.noteScreen_saveIcon}
+            onPress={SaveNoteHandler} />
         </View>
         <NoteDetails note={note}
           onTitleChange={NoteTitleChangeHandler}
@@ -125,7 +204,6 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: "3%",
   },
-
 });
 
 export default NoteScreen;

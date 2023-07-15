@@ -1,5 +1,5 @@
 /* eslint-disable*/
-import React from 'react';
+import React, { useState } from 'react';
 
 import AppColors from '../../utils/AppColors';
 import moment from 'moment';
@@ -8,30 +8,29 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
 const NoteCard = (props) => {
-  const createdDate = moment(new Date()).format("dddd, Do MMM YYYY, h:mm a");
-
   // const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
   const imgURI = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
 
-  const NoteSelectHandler = () => {
-    props.onSelect(props.index);
+  const note = {
+    title: props.note.title,
+    subTitle: props.note.subTitle,
+    colorTag: props.note.colorTag,
+    lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY, h:mm a"),
+    image: props.note.image,
+    tasks: props.note.tasks,
   }
 
-  const EditNoteHandler = () => {
-    console.log("Edit Note");
+  const [imageRatio, setImageRatio] = useState(0);
+
+  const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
+    setImageRatio(width / height);
   }
 
-  const CopyNoteHandler = () => {
-    console.log("Copy Note");
-  }
-
-  const ShareNoteHandler = () => {
-    console.log("Share Note");
-  }
-
-  const DeleteNoteHandler = () => {
-    console.log("Delete Note");
-  }
+  const NoteSelectHandler = () => props.onSelect(props.index);
+  const EditNoteHandler = () => console.log("Edit Note");
+  const CopyNoteHandler = () => console.log("Copy Note");
+  const ShareNoteHandler = () => console.log("Share Note");
+  const DeleteNoteHandler = () => props.onDelete(props.index);
 
   return (
     <Menu>
@@ -39,13 +38,18 @@ const NoteCard = (props) => {
         onAlternativeAction={NoteSelectHandler}
         customStyles={{
           TriggerTouchableComponent: TouchableOpacity,
-          triggerWrapper: styles.noteCard,
+          triggerWrapper: { ...styles.noteCard, backgroundColor: note.colorTag }
         }}>
-        {props.index % 3 === 0 && <Image style={styles.noteCard__image} source={{ uri: imgURI }} resizeMode="stretch" />}
+        {note.image != null &&
+          <Image
+            style={{ ...styles.noteCard__image, aspectRatio: imageRatio }}
+            onLoad={OnImageLoadHandler}
+            source={{ uri: note.image }}
+            resizeMode="stretch" />}
         <View style={styles.noteCard__content}>
-          <Text style={styles.noteCard_title}>{`Note Title ${props.id}`}</Text>
-          <Text style={styles.noteCard_subTitle} numberOfLines={5}>Note SubTitle</Text>
-          <Text style={styles.noteCard_lastUpdated}>{createdDate}</Text>
+          <Text style={styles.noteCard_title}>{note.title}</Text>
+          <Text style={styles.noteCard_subTitle} numberOfLines={5}>{note.subTitle}</Text>
+          <Text style={styles.noteCard_lastUpdated}>{note.lastUpdated}  </Text>
         </View>
       </MenuTrigger>
       <MenuOptions style={styles.noteCard_popupMenu}>
@@ -72,7 +76,6 @@ const styles = StyleSheet.create({
 
   noteCard__image: {
     width: "100%",
-    aspectRatio: 3 / 2,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
