@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
-import moment from 'moment';
 import TaskList from '../tasks/TaskList';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -11,7 +10,7 @@ const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
 const NoteDetails = (props) => {
-    const noteData = {
+    const note = {
         title: props.note.title,
         subTitle: props.note.subTitle,
         colorTag: props.note.colorTag,
@@ -21,13 +20,8 @@ const NoteDetails = (props) => {
         url: props.note.url,
         tasks: props.note.tasks,
     }
-    const [imageRatio, setImageRatio] = useState(0);
     const [taskItems, setTaskItems]
         = useState();
-
-    const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
-        setImageRatio(width / height);
-    }
 
     // useEffect(() => {
     //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
@@ -39,32 +33,32 @@ const NoteDetails = (props) => {
             <TextInput style={styles.noteDetails_title}
                 maxLength={titleMaxLength}
                 selectionColor={"#fcba03"}
-                value={noteData.title}
+                value={note.title}
                 onChangeText={text => props.onTitleChange(text)}
                 placeholder="Note Title"
                 placeholderTextColor={AppColors.iconDark} />
-            <Text style={styles.noteDetails_lastUpdated}>{noteData.lastUpdated}</Text>
+            <Text style={styles.noteDetails_lastUpdated}>{note.lastUpdated}</Text>
             <View style={styles.noteDetails_subTitle}>
-                <View style={{ ...styles.subTitle_colorTag, backgroundColor: noteData.colorTag }} />
+                <View style={{ ...styles.subTitle_colorTag, backgroundColor: note.colorTag }} />
                 <TextInput style={styles.subTitle_content}
                     editable
                     multiline
                     maxLength={subTitleMaxLength}
                     selectionColor={"#fcba03"}
-                    value={noteData.subTitle}
+                    value={note.subTitle}
                     onChangeText={text => props.onSubTitleChange(text)}
                     placeholder="Note Subtitle"
                     placeholderTextColor={AppColors.iconDark} />
             </View>
             <View style={styles.noteDetails_content}>
-                {noteData.image != null && <View>
+                {note.image != null && <View>
                     <Image
                         style={{
                             width: "98%",
-                            aspectRatio: imageRatio,
+                            aspectRatio: note.image.width / note.image.height,
                         }}
-                        onLoad={OnImageLoadHandler}
-                        source={{ uri: noteData.image }}
+                        // complete={() => OnImageLoadHandler()}
+                        source={{ uri: note.image.uri }}
                         resizeMode="stretch" />
                     <MatComIcon style={styles.content_imageDeleteIcon}
                         name="trash-can"
@@ -72,17 +66,17 @@ const NoteDetails = (props) => {
                         size={30}
                         onPress={() => props.onImageDelete()} />
                 </View>}
-                <TextInput style={styles.content_text}
+                {note.tasks == null && <TextInput style={styles.content_text}
                     editable
                     multiline
-                    value={noteData.content}
+                    value={note.content}
                     onChangeText={text => props.onContentChange(text)}
                     selectionColor={"#fcba03"}
                     placeholder="Type Your Note Here"
-                    placeholderTextColor={AppColors.iconDark} />
-                {noteData.tasks != null &&
+                    placeholderTextColor={AppColors.iconDark} />}
+                {note.tasks != null &&
                     <TaskList
-                        taskItems={noteData.tasks}
+                        taskItems={note.tasks}
                         setTaskItems={setTaskItems} />}
             </View>
         </View >

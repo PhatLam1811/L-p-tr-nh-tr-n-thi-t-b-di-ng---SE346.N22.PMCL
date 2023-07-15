@@ -11,12 +11,9 @@ import TaskModel from "../classes/Task";
 import moment from 'moment';
 
 import { View, StyleSheet, ScrollView } from "react-native";
-import { GetNoteAction } from "../actions/GetNote";
 import { DeleteNoteAction } from "../actions/DeleteNote";
-import { SaveNoteAction } from "../actions/SaveNote";
 import DocumentPicker from 'react-native-document-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import Note from "../classes/Note";
 
 const noteColorTags = [
   AppColors.iconDark,
@@ -102,9 +99,13 @@ const NoteScreen = (props) => {
       launchImageLibrary({
         storagOptions: { path: 'image' },
       },
-        response => {
+        (response) => {
           if (response.assets != null) {
-            console.log(response.assets[0]);
+            NoteImageChangeHandler({
+              uri: response.assets[0].uri,
+              width: response.assets[0].width,
+              height: response.assets[0].height,
+            });
           }
         },
       );
@@ -116,6 +117,7 @@ const NoteScreen = (props) => {
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
+  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } })
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
 
   useEffect(() => {

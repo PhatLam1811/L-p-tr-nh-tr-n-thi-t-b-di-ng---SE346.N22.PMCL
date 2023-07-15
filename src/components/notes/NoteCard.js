@@ -1,5 +1,5 @@
 /* eslint-disable*/
-import React, { useState } from 'react';
+import React from 'react';
 
 import AppColors from '../../utils/AppColors';
 import moment from 'moment';
@@ -8,9 +8,6 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
 const NoteCard = (props) => {
-  // const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
-  const imgURI = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
-
   const note = {
     title: props.note.title,
     subTitle: props.note.subTitle,
@@ -18,12 +15,6 @@ const NoteCard = (props) => {
     lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY, h:mm a"),
     image: props.note.image,
     tasks: props.note.tasks,
-  }
-
-  const [imageRatio, setImageRatio] = useState(0);
-
-  const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
-    setImageRatio(width / height);
   }
 
   const NoteSelectHandler = () => props.onSelect(props.index);
@@ -42,9 +33,11 @@ const NoteCard = (props) => {
         }}>
         {note.image != null &&
           <Image
-            style={{ ...styles.noteCard__image, aspectRatio: imageRatio }}
-            onLoad={OnImageLoadHandler}
-            source={{ uri: note.image }}
+            style={{
+              ...styles.noteCard__image,
+              aspectRatio: note.image.width / note.image.height,
+            }}
+            source={{ uri: note.image.uri }}
             resizeMode="stretch" />}
         <View style={styles.noteCard__content}>
           <Text style={styles.noteCard_title}>{note.title}</Text>
