@@ -5,14 +5,12 @@ import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import SearchBar from '../components/SearchBar';
 import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
-import Utils from '../utils/Utils';
+import AppController from '../controllers/AppController';
 
 import { useIsFocused } from '@react-navigation/native';
 import { FAB } from '@react-native-material/core';
-import { Image, StyleSheet, Switch, Text, View } from 'react-native';
-import { GetAllNoteAction } from './../actions/GetNote';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 // import DocumentPicker from 'react-native-document-picker';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 const exampleImage = require('./s.jpg');
 
@@ -29,97 +27,37 @@ const MainScreen = (props) => {
         // change notes display style
     };
 
-    const TestImagePicker = async () => {
-        // try{
-        // // const doc=await DocumentPicker.pick({
-        // //     type:[DocumentPicker.types.images],
-        // //     allowMultiSelection:false,
-        // // });
+    const LoadNotesHandler = async () => AppController.GetAllNotes({
+        onSuccess: (data) => setNotes(data),
+        onFailed: (error) => console.log(error),
+    });
 
-        // const doc=await DocumentPicker.pickSingle({
-        //     type:[DocumentPicker.types.images],
-        // });
-
-        // console.log(doc)
-        // }
-        // catch(err){
-        //     console.log(err);
-        //     if(DocumentPicker.isCancel(e)){
-        //         console.log(e);
-        //     }
-        // }
-
-        try {
-            console.log('require h.jpg is:');
-            console.log(require('./s.jpg'));
-            console.log('example image is:');
-            console.log(exampleImage);
-            console.log('image source:');
-            console.log(imageSource);
-            console.log('----------------------');
-            launchImageLibrary(
-                {
-                    storagOptions: {
-                        path: 'image',
-                    },
-                },
-                response => {
-                    console.log("response.assets[0]");
-                    console.log(response.assets[0]);
-                    console.log('response.assets[0].uri');
-
-                    console.log(response.assets[0].uri);
-                    setImageSource(response.assets[0].uri)
-                },
-            );
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const NoteScreenNavigateHandler = (ID) => {
-        const payload = { ID: ID };
-        props.navigation.navigate('Detail', payload);
-    }
-
-    const SearchNoteHandler = input => {
+    const SearchNoteHandler = (input) => {
         console.log('on search: ' + input);
     };
 
-    const CreateChecklistNoteHandler = () => {
-        console.log('checklist pressed!');
-        // display create checklist note screen
-    };
-
-    const CreateImageNoteHandler = async () => {
-        console.log('image note pressed!');
-        // display create image note screen
-    };
-
-    const CreateURLNoteHandler = () => {
-        console.log('URL note pressed!');
-        // display create URL note screen
-    };
-
-    const CreateNoteHandler = () => {
-        const payload = { isCreateNote: true };
+    const CreateNoteHandler = (type) => {
+        const payload = { isCreateNote: true, type: type };
         props.navigation.navigate("Detail", payload);
     };
 
-    const _retrieve = async () => {
-        try {
-            const response = await GetAllNoteAction();
+    const SelectNoteHandler = (ID) => {
+        const payload = { isCreateNote: false, ID: ID };
+        props.navigation.navigate('Detail', payload);
+    }
 
-            if (response.result === 'success') {
-                setNotes(response.data);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+    const DeleteNoteHandler = (ID) => {
+        AppController.DeleteNote({
+            ID: ID,
+            onSuccess: () => LoadNotesHandler(),
+            onFailed: (error) => console.log(error)
+        });
     }
 
     useEffect(() => {
-        if (isFocus) _retrieve();
+        if (isFocus) {
+            LoadNotesHandler();
+        }
     }, [isFocus]);
 
     return (
@@ -136,31 +74,30 @@ const MainScreen = (props) => {
                 <NoteList
                     list={notes}
                     layout={isGridLayout ? 'grid' : 'column'}
-                    screenNavigation={NoteScreenNavigateHandler} />
+                    onSelectNote={SelectNoteHandler}
+                    onDeleteNote={DeleteNoteHandler} />
             </View>
             <View style={styles.mainScreen__toolbar}>
                 <OctIcon
                     name="checklist"
                     {...styles.mainScreen__icon}
-                    // onPress={CreateChecklistNoteHandler}
-                    onPress={async () => await Utils.GenerateSampleNotes(7)}
+                    onPress={() => CreateNoteHandler("task")}
                 />
                 <MatIcon
                     name="image"
                     {...styles.mainScreen__icon}
                     size={30}
-                    // onPress={CreateImageNoteHandler}
-                    onPress={async () => await Utils.ClearData()}
+                    onPress={() => CreateNoteHandler("image")}
                 />
                 <OctIcon
                     name="globe"
                     {...styles.mainScreen__icon}
-                    onPress={CreateURLNoteHandler}
+                    onPress={() => CreateNoteHandler("url")}
                 />
                 <FAB
                     {...styles.mainScreen__newNoteFAB}
                     icon={<OctIcon name="plus" {...styles.mainScreen__icon} />}
-                    onPress={CreateNoteHandler}
+                    onPress={() => CreateNoteHandler()}
                 />
             </View>
         </View>

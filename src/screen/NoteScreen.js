@@ -5,6 +5,7 @@ import OctIcon from "react-native-vector-icons/Octicons";
 import MatIcon from "react-native-vector-icons/MaterialIcons";
 import EntIcon from "react-native-vector-icons/Entypo";
 import AppColors from "../utils/AppColors";
+import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
 import moment from 'moment';
@@ -13,6 +14,8 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { GetNoteAction } from "../actions/GetNote";
 import { DeleteNoteAction } from "../actions/DeleteNote";
 import { SaveNoteAction } from "../actions/SaveNote";
+import DocumentPicker from 'react-native-document-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Note from "../classes/Note";
 
 const noteColorTags = [
@@ -49,21 +52,6 @@ const defaultState = {
 const NoteScreen = (props) => {
   const [note, setNote] = useState(defaultState);
 
-  console.log(props.route.params);
-
-  const _retrieve = async () => {
-    try {
-      const response = await GetNoteAction(props.route.params.ID);
-
-      if (response.result === 'success') {
-        setNote(response.data);
-        console.log(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const _delete = async () => {
     const taskResponse = await DeleteNoteAction(props.route.params.ID);
     console.log(taskResponse);
@@ -76,21 +64,52 @@ const NoteScreen = (props) => {
   }
 
   const SaveNoteHandler = async () => {
+    await AppController.SaveNote({
+      note: note,
+      onSuccess: () => props.navigation.goBack(),
+      onFailed: (response) => console.log(response),
+    })
+  }
+
+  const TestImagePicker = async () => {
+    // try{
+    // // const doc=await DocumentPicker.pick({
+    // //     type:[DocumentPicker.types.images],
+    // //     allowMultiSelection:false,
+    // // });
+
+    // const doc=await DocumentPicker.pickSingle({
+    //     type:[DocumentPicker.types.images],
+    // });
+
+    // console.log(doc)
+    // }
+    // catch(err){
+    //     console.log(err);
+    //     if(DocumentPicker.isCancel(e)){
+    //         console.log(e);
+    //     }
+    // }
+
     try {
-      const model = Note.create({ ...note, lastUpdated: new Date() });
-
-      if (model == null) {
-        console.log("Invalid note model!");
-        return;
-      }
-
-      const response = await SaveNoteAction(model);
-
-      if (response != null) {
-        console.log(response);
-      }
-    } catch (error) {
-      console.log(error);
+      // console.log('require h.jpg is:');
+      // console.log(require('./s.jpg'));
+      // console.log('example image is:');
+      // console.log(exampleImage);
+      // console.log('image source:');
+      // console.log(imageSource);
+      // console.log('----------------------');
+      launchImageLibrary({
+        storagOptions: { path: 'image' },
+      },
+        response => {
+          if (response.assets != null) {
+            console.log(response.assets[0]);
+          }
+        },
+      );
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -100,9 +119,21 @@ const NoteScreen = (props) => {
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
 
   useEffect(() => {
-    if (props.route.params.isCreateNote == null ||
-      props.route.params.isCreateNote == false) {
-      _retrieve();
+    if (props.route.params.isCreateNote == false) {
+      AppController.GetNote({
+        ID: props.route.params.ID,
+        onSuccess: (data) => setNote(data),
+        onFailed: (response) => console.log(response)
+      })
+    }
+    else {
+      switch (props.route.params.type) {
+        case "task":
+          setNote(prev => { return { ...prev, tasks: [] } }); break;
+        case "image":
+          TestImagePicker();
+          console.log("image type"); break;
+      }
     }
   }, []);
 
@@ -173,7 +204,6 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: "3%",
   },
-
 });
 
 export default NoteScreen;

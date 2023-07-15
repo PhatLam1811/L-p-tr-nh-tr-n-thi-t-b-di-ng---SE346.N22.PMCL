@@ -6,13 +6,12 @@ import moment from 'moment';
 
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import { DeleteNoteAction } from '../../actions/DeleteNote';
 
 const NoteCard = (props) => {
   // const imgURI = "https://www.charlieintel.com/cdn-cgi/image/width=3840,quality=75,format=auto/https://editors.charlieintel.com/wp-content/uploads/2023/05/Best-Himeko-Honkai-Star-Rail-build-Light-Cone-Relics-Planar-Ornament-more.jpg";
   const imgURI = "https://nationaltoday.com/wp-content/uploads/2021/12/Anime-Day-1200x834.jpg";
 
-  const noteCardData = {
+  const note = {
     title: props.note.title,
     subTitle: props.note.subTitle,
     colorTag: props.note.colorTag,
@@ -27,33 +26,11 @@ const NoteCard = (props) => {
     setImageRatio(width / height);
   }
 
-  const NoteSelectHandler = () => {
-    props.onSelect(props.index);
-  }
-
-  const EditNoteHandler = () => {
-    console.log("Edit Note");
-  }
-
-  const CopyNoteHandler = () => {
-    console.log("Copy Note");
-  }
-
-  const ShareNoteHandler = () => {
-    console.log("Share Note");
-  }
-
-  const DeleteNoteHandler = async () => {
-    try {
-      const response = await DeleteNoteAction(props.note.ID);
-
-      if (response === "success") {
-        console.log("Note deleted!");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const NoteSelectHandler = () => props.onSelect(props.index);
+  const EditNoteHandler = () => console.log("Edit Note");
+  const CopyNoteHandler = () => console.log("Copy Note");
+  const ShareNoteHandler = () => console.log("Share Note");
+  const DeleteNoteHandler = () => props.onDelete(props.index);
 
   return (
     <Menu>
@@ -61,18 +38,18 @@ const NoteCard = (props) => {
         onAlternativeAction={NoteSelectHandler}
         customStyles={{
           TriggerTouchableComponent: TouchableOpacity,
-          triggerWrapper: { ...styles.noteCard, backgroundColor: noteCardData.colorTag }
+          triggerWrapper: { ...styles.noteCard, backgroundColor: note.colorTag }
         }}>
-        {noteCardData.image != null &&
+        {note.image != null &&
           <Image
             style={{ ...styles.noteCard__image, aspectRatio: imageRatio }}
             onLoad={OnImageLoadHandler}
-            source={{ uri: noteCardData.image }}
+            source={{ uri: note.image }}
             resizeMode="stretch" />}
         <View style={styles.noteCard__content}>
-          <Text style={styles.noteCard_title}>{noteCardData.title}</Text>
-          <Text style={styles.noteCard_subTitle} numberOfLines={5}>{noteCardData.subTitle}</Text>
-          <Text style={styles.noteCard_lastUpdated}>{noteCardData.lastUpdated}  </Text>
+          <Text style={styles.noteCard_title}>{note.title}</Text>
+          <Text style={styles.noteCard_subTitle} numberOfLines={5}>{note.subTitle}</Text>
+          <Text style={styles.noteCard_lastUpdated}>{note.lastUpdated}  </Text>
         </View>
       </MenuTrigger>
       <MenuOptions style={styles.noteCard_popupMenu}>

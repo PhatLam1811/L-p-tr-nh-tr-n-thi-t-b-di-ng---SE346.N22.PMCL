@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import NoteCard from "./NoteCard";
 
 import { View, StyleSheet, ScrollView } from 'react-native';
 
-const NoteList = props => {
-  const [notes, setNotes] = useState([]);
+const NoteList = (props) => {
+  const notes = props.list;
 
-  const SelectNoteHandler = (index) => props.screenNavigation(notes[index].ID);
+  const SelectNoteHandler = (index) => props.onSelectNote(notes[index].ID);
+  const DeleteNoteHandler = (index) => props.onDeleteNote(notes[index].ID);
 
   const RenderNoteComponentsHandler = (list) => {
     return list.map((item) => {
@@ -16,7 +17,8 @@ const NoteList = props => {
         key={index}
         index={index}
         note={item}
-        onSelect={SelectNoteHandler} />
+        onSelect={SelectNoteHandler}
+        onDelete={DeleteNoteHandler} />
     });
   }
 
@@ -58,8 +60,6 @@ const NoteList = props => {
       return RenderGridLayoutHandler();
     }
   };
-
-  useEffect(() => setNotes(props.list), [props]);
 
   return (
     <View style={styles.noteList}>
