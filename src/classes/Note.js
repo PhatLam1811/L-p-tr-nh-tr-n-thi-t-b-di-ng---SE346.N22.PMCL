@@ -1,28 +1,46 @@
-export default class Note {
-    constructor(ID, title, subTitle, content, createDate, type) {
-        this.ID = ID;
-        this.title = title;
-        this.subTitle = subTitle;
-        this.content = content;
-        this.createDate = createDate;
-        this.type = type;
+import AppColors from "../utils/AppColors";
 
+function GenerateRandom(length) {
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZa_xXx_I_Put_A_Little_Secret_Here_xXx_bcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
 
-    }
-    static create(...args) {
+class Note {
+  constructor({ ID, title, subTitle, colorTag, lastUpdated, content, image, url, tasks }) {
+    this.ID = ID != null ? ID : GenerateRandom(7);
+    this.title = title;
+    this.subTitle = subTitle;
+    this.colorTag = colorTag;
+    this.lastUpdated = lastUpdated;
+    this.content = content;
+    this.image = image;
+    this.url = url;
+    this.tasks = tasks;
+  }
 
-        const [ID, title, subTitle, content, createDate, type] = args;
-        if (ID === null || ID === undefined ||
-            title === null || title === undefined ||
-            subTitle === null || subTitle === undefined ||
-            content === null || content === undefined ||
-            createDate === null || createDate === undefined ||
-            type === null || type === undefined
-        ) {
-            return null;
-        }
-        return new Note(...args);
-    }
+  static create(obj) {
+    if (obj.title == null || obj.title == undefined) return null;
+
+    if ((obj.subTitle == null || obj.subTitle == undefined)
+      && (obj.content == null || obj.content == undefined)
+      && (obj.image == null || obj.image == undefined)
+      && (obj.url == null || obj.url == undefined)
+      && (obj.tasks == null || obj.tasks == undefined)) return null;
+
+    if (obj.colorTag == null || obj.colorTag == undefined) obj.colorTag = AppColors.secondaryDark;
+
+    if (obj.lastUpdated == null || obj.lastUpdated == undefined) obj.lastUpdated = new Date();
+
+    return new Note(obj);
+  }
 
 }
 module.exports = Note;

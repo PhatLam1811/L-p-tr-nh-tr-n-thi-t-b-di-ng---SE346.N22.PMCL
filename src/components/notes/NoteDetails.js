@@ -1,144 +1,85 @@
 import React, { useState, useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
-import moment from 'moment';
 import TaskList from '../tasks/TaskList';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import TaskModel from '../../classes/Task.js';
-import { View, StyleSheet, TextInput, Text } from "react-native";
-import {
-    Button,
-    Dialog,
-    DialogHeader,
-    DialogContent,
-    DialogActions,
-    Provider,
-    TextInput as MyTextPut
-} from '@react-native-material/core';
-import Material from '@react-native-material/core'
+
+import { View, StyleSheet, TextInput, Text, Image } from "react-native";
 
 const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
-const SubTitleInput = (props) => {
-    const [inputHeight, setInputHeight] = useState(30);
-
-    const SubTitleInputLayoutChangeHandler = (event) => {
-        console.log("layout change");
-        setInputHeight(50);
-    }
-
-    return (
-
-
-        <View style={styles.subTitle_container}>
-
-
-            <View style={{ ...styles.subTitle_colorTag, height: inputHeight, backgroundColor: "red" }} />
-            <TextInput style={styles.subTitle_content}
-                multiline={true}
-                maxLength={subTitleMaxLength}
-                selectionColor={"#fcba03"}
-                placeholder="Note Subtitle"
-                placeholderTextColor={AppColors.iconDark}
-                onLayout={SubTitleInputLayoutChangeHandler} />
-        </View>
-    );
-};
-
-
-
 const NoteDetails = (props) => {
-    const [imageRatio, setImageRatio] = useState(0);
-    const lastUpdated = moment(new Date()).format("dddd, Do MMM YYYY h:mm a");
-    const [taskItems, setTaskItems]
-        = useState([
-            new TaskModel("watch walking dead ep6", false),
-            new TaskModel("finished todo app", true),
-            new TaskModel("report today tasks to PL", false),
-            new TaskModel("jogging", false),
-            new TaskModel("sleep at 10", false),
-
-        ]);
-    const [dialogId,setDialogId] = useState(0);
-    const [dialogValue,setDialogValue] = useState("");
-
-    const [visible, setVisible] = useState(false);
-    const ShowNoteDialog = (id) => {
-        setVisible(true);
-        setDialogId(id);
-        setDialogValue(taskItems[id].toDo)
+    const note = {
+        title: props.note.title,
+        subTitle: props.note.subTitle,
+        colorTag: props.note.colorTag,
+        lastUpdated: props.note.lastUpdated,
+        content: props.note.content,
+        image: props.note.image,
+        url: props.note.url,
+        tasks: props.note.tasks,
     }
+    const [taskItems, setTaskItems]
+        = useState();
 
-    useEffect(() => {
-        console.log('taskItems changed');
-    }, [taskItems]);
-
+    // useEffect(() => {
+    //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
+    // }, [taskItems]);
 
     return (
-        <>
-            <Provider>
 
-                {
-                    visible ?
-                        <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-                            <DialogHeader title="Edit" />
-                            <DialogContent>
-                                <MyTextPut value={dialogValue} onChangeText={text =>{setDialogValue(text)}}/>
-                                    
-                                
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    title="Cancel"
-                                    compact
-                                    variant="text"
-                                    onPress={() => setVisible(false)}
-                                />
-                                <Button
-                                    title="Ok"
-                                    compact
-                                    variant="text"
-                                    onPress={() => {
-                                        let items = taskItems;
-                                        items[dialogId].toDo = dialogValue;
-                                        console.log(items[dialogId].toDo);
-                                        setTaskItems(items);    
-                                        setVisible(false);
-                                        
-
-                                    }
-                                    }
-                                />
-                            </DialogActions>
-                        </Dialog>
-                        : null
-                }
-                <View style={styles.noteDetails}>
-                    <TextInput style={styles.noteDetails_title}
-
-                        maxLength={titleMaxLength}
-                        selectionColor={"#fcba03"}
-                        placeholder="Note Title"
-                        placeholderTextColor={AppColors.iconDark} />
-                    <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
-                    <SubTitleInput />
-                    {/* {
-
-                taskItems.map((item, index) => {
-                    console.log('on map 1 ' + item + " " + index);
-                  
-                })
-            } */}
-                    {
-                        <TaskList taskItems={taskItems} setVisible={ShowNoteDialog} setTaskItems={setTaskItems}></TaskList>
-                    }
-
-
-                </View >
-            </Provider>
-        </>
-
+        <View style={styles.noteDetails}>
+            <TextInput style={styles.noteDetails_title}
+                maxLength={titleMaxLength}
+                selectionColor={"#fcba03"}
+                value={note.title}
+                onChangeText={text => props.onTitleChange(text)}
+                placeholder="Note Title"
+                placeholderTextColor={AppColors.iconDark} />
+            <Text style={styles.noteDetails_lastUpdated}>{note.lastUpdated}</Text>
+            <View style={styles.noteDetails_subTitle}>
+                <View style={{ ...styles.subTitle_colorTag, backgroundColor: note.colorTag }} />
+                <TextInput style={styles.subTitle_content}
+                    editable
+                    multiline
+                    maxLength={subTitleMaxLength}
+                    selectionColor={"#fcba03"}
+                    value={note.subTitle}
+                    onChangeText={text => props.onSubTitleChange(text)}
+                    placeholder="Note Subtitle"
+                    placeholderTextColor={AppColors.iconDark} />
+            </View>
+            <View style={styles.noteDetails_content}>
+                {note.image != null && <View>
+                    <Image
+                        style={{
+                            width: "98%",
+                            aspectRatio: note.image.width / note.image.height,
+                        }}
+                        // complete={() => OnImageLoadHandler()}
+                        source={{ uri: note.image.uri }}
+                        resizeMode="stretch" />
+                    <MatComIcon style={styles.content_imageDeleteIcon}
+                        name="trash-can"
+                        color="red"
+                        size={30}
+                        onPress={() => props.onImageDelete()} />
+                </View>}
+                {note.tasks == null && <TextInput style={styles.content_text}
+                    editable
+                    multiline
+                    value={note.content}
+                    onChangeText={text => props.onContentChange(text)}
+                    selectionColor={"#fcba03"}
+                    placeholder="Type Your Note Here"
+                    placeholderTextColor={AppColors.iconDark} />}
+                {note.tasks != null &&
+                    <TaskList
+                        taskItems={note.tasks}
+                        setTaskItems={setTaskItems} />}
+            </View>
+        </View >
     );
 
 
