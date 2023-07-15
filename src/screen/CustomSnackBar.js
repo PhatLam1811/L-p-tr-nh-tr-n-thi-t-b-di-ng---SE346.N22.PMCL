@@ -13,13 +13,13 @@ const CustomSnackBar = (props) => {
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 500,
-            useNativeDriver: true,
+            useNativeDriver: false,
         }),
         Animated.delay(3000),
         Animated.timing(fadeAnim, {
             toValue: 0,
             duration: 500,
-            useNativeDriver: true,
+            useNativeDriver: false,
         })
     ]);
 
