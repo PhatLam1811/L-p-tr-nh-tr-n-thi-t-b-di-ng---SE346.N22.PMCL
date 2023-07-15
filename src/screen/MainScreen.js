@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import OctIcon from 'react-native-vector-icons/Octicons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
@@ -6,18 +6,16 @@ import SearchBar from '../components/SearchBar';
 import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
 import AppController from '../controllers/AppController';
+import AppContext from '../utils/AppContext';
 
 import { useIsFocused } from '@react-navigation/native';
 import { FAB } from '@react-native-material/core';
 import { StyleSheet, Switch, Text, View } from 'react-native';
-// import DocumentPicker from 'react-native-document-picker';
-
-const exampleImage = require('./s.jpg');
 
 const MainScreen = (props) => {
     const isFocus = useIsFocused();
+    const appContext = useContext(AppContext);
 
-    const [imageSource, setImageSource] = useState('');
     const [notes, setNotes] = useState([]);
     const [isGridLayout, SetIsGridLayout] = useState(true);
 
@@ -26,11 +24,6 @@ const MainScreen = (props) => {
         SetIsGridLayout(prev => !prev);
         // change notes display style
     };
-
-    const LoadNotesHandler = async () => AppController.GetAllNotes({
-        onSuccess: (data) => setNotes(data),
-        onFailed: (error) => console.log(error),
-    });
 
     const SearchNoteHandler = (input) => {
         console.log('on search: ' + input);
@@ -46,10 +39,21 @@ const MainScreen = (props) => {
         props.navigation.navigate('Detail', payload);
     }
 
+    const LoadNotesHandler = async () => AppController.GetAllNotes({
+        onSuccess: (data) => setNotes(data),
+        onFailed: (error) => console.log(error),
+    });
+
     const DeleteNoteHandler = (ID) => {
         AppController.DeleteNote({
             ID: ID,
-            onSuccess: () => LoadNotesHandler(),
+            onSuccess: () => {
+                appContext.callSnackBar({
+                    type: "congrats",
+                    message: "Delete note successfully!"
+                });
+                LoadNotesHandler();
+            },
             onFailed: (error) => console.log(error)
         });
     }
