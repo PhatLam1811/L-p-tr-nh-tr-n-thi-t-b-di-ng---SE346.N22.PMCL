@@ -48,6 +48,23 @@ const NoteScreen = (props) => {
   const [note, setNote] = useState(defaultState);
 
   const SaveNoteHandler = async () => {
+    let message = null;
+
+    if (note.subTitle == null && note.content == null &&
+      note.image == null && note.url == null &&
+      note.tasks == null)
+      message = "Please fill in note's subtitle or content";
+
+    if (note.title == null || note.title === "") message = "Note title can't be empty!";
+
+    if (message != null) {
+      appContext.callSnackBar({
+        type: "error",
+        message: message,
+      });
+      return;
+    }
+
     await AppController.SaveNote({
       note: note,
       onSuccess: () => {
@@ -57,7 +74,9 @@ const NoteScreen = (props) => {
         });
         props.navigation.goBack();
       },
-      onFailed: (response) => console.log(response),
+      onFailed: (response) => {
+        console.log(response);
+      }
     })
   }
 
@@ -93,8 +112,7 @@ const NoteScreen = (props) => {
         case "task":
           setNote(prev => { return { ...prev, tasks: [] } }); break;
         case "image":
-          ImagePicker();
-          console.log("image type"); break;
+          ImagePicker(); break;
       }
     }
   }, []);

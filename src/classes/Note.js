@@ -19,6 +19,7 @@ class Note {
     this.title = title;
     this.subTitle = subTitle;
     this.colorTag = colorTag;
+    this.createdDate = createdDate;
     this.lastUpdated = lastUpdated;
     this.content = content;
     this.image = image;
@@ -37,6 +38,7 @@ class Note {
 
     if (obj.colorTag == null || obj.colorTag == undefined) obj.colorTag = AppColors.secondaryDark;
 
+    if (obj.createdDate == null || obj.createdDate == undefined) obj.createdDate = new Date();
     if (obj.lastUpdated == null || obj.lastUpdated == undefined) obj.lastUpdated = new Date();
 
     return new Note(obj);

@@ -13,13 +13,13 @@ const CustomSnackBar = (props) => {
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 500,
-            useNativeDriver: false,
+            useNativeDriver: true,
         }),
         Animated.delay(3000),
         Animated.timing(fadeAnim, {
             toValue: 0,
             duration: 500,
-            useNativeDriver: false,
+            useNativeDriver: true,
         })
     ]);
 
@@ -30,11 +30,17 @@ const CustomSnackBar = (props) => {
     return (
         <Animated.View style={{ ...styles.snackBar, opacity: fadeAnim }}>
             <View style={styles.snackBar_iconContainer}>
-                <OctIcon name="check-circle-fill" size={25} color="#2db551" />
-                {/* <FaIcon name="exclamation-circle" size={30} color="red" /> */}
+                {props.info.type === "congrats" && <OctIcon name="check-circle-fill" size={25} color="#2db551" />}
+                {props.info.type === "error" && <FaIcon name="exclamation-circle" size={30} color="red" />}
+                {(props.info.type == null || props.info.type === "welcome") && <FaIcon name="leaf" size={25} color="blue" />}
             </View>
-            <View style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center", width: 200 }}>
-                <Text style={{ ...styles.snackBar_text, color: "#2db551", fontSize: 18 }}>Success</Text>
+            <View style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center", width: 250 }}>
+                {props.info.type === "congrats" &&
+                    <Text style={{ ...styles.snackBar_text, color: "#2db551", fontSize: 18 }}>Success</Text>}
+                {props.info.type === "error" &&
+                    <Text style={{ ...styles.snackBar_text, color: "red", fontSize: 18 }}>Error</Text>}
+                {(props.info.type == null || props.info.type === "welcome") &&
+                    <Text style={{ ...styles.snackBar_text, color: "blue", fontSize: 18, textTransform: "capitalize" }}>{props.info.type}</Text>}
                 <Text style={{ ...styles.snackBar_text, color: AppColors.textDark }}>{props.info.message}</Text>
             </View>
         </Animated.View>
@@ -69,6 +75,7 @@ const styles = StyleSheet.create({
     snackBar_text: {
         fontSize: 16.5,
         fontWeight: 600,
+        textAlign: "justify",
     }
 });
 
