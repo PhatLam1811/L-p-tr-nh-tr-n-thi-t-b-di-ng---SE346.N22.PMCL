@@ -11,7 +11,7 @@ import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
 import moment from 'moment';
 
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView,Share } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
 
 const noteColorTags = [
@@ -79,6 +79,26 @@ const NoteScreen = (props) => {
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } })
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
+  const ShareNoteHandler =async () => {try {
+
+    //nội dung Share để ở trong message, chỉ để ở dạng string
+    const result = await Share.share({
+      message:'#'+note.title+'\n'+note.subTitle+'\n'+note.content,
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+      } else {
+        // shared
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+    }
+  } catch (error) {
+    console.log(error);
+  }};
+
+
 
   useEffect(() => {
     if (props.route.params.isCreateNote == false) {
@@ -109,7 +129,9 @@ const NoteScreen = (props) => {
             onPress={() => props.navigation.goBack()} />
           <EntIcon name="share"
             {...styles.noteScreen_icon}
-            {...styles.noteScreen_shareIcon} />
+            {...styles.noteScreen_shareIcon}
+            onPress={ShareNoteHandler}
+            />
           <OctIcon name="check-circle"
             {...styles.noteScreen_icon}
             {...styles.noteScreen_saveIcon}
