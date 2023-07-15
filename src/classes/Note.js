@@ -16,8 +16,7 @@ class Note {
             title === null || title === undefined||
             subTitle === null || subTitle === undefined||
             content === null || content === undefined||
-            createDate === null || createDate === undefined||
-            type === null
+            createDate === null || createDate === undefined
             ) {
           return null;
         }
