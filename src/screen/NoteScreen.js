@@ -9,10 +9,10 @@ import AppColors from "../utils/AppColors";
 import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
-import moment from 'moment';
 
 import { View, StyleSheet, ScrollView } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
+import Mischellaneous from "./Mischellaneous";
 
 const noteColorTags = [
   AppColors.iconDark,
@@ -33,7 +33,8 @@ const sampleTasks = [
 const defaultState = {
   ID: null,
   title: null,
-  lastUpdated: moment(new Date()).format("dddd, Do MMM YYYY h:mm a"),
+  createdDate: new Date(),
+  lastUpdated: new Date(),
   subTitle: null,
   colorTag: noteColorTags[0],
   image: null,
@@ -48,6 +49,23 @@ const NoteScreen = (props) => {
   const [note, setNote] = useState(defaultState);
 
   const SaveNoteHandler = async () => {
+    let message = null;
+
+    if (note.subTitle == null && note.content == null &&
+      note.image == null && note.url == null &&
+      note.tasks == null)
+      message = "Please fill in note's subtitle or content";
+
+    if (note.title == null || note.title === "") message = "Note title can't be empty!";
+
+    if (message != null) {
+      appContext.callSnackBar({
+        type: "error",
+        message: message,
+      });
+      return;
+    }
+
     await AppController.SaveNote({
       note: note,
       onSuccess: () => {
@@ -57,7 +75,9 @@ const NoteScreen = (props) => {
         });
         props.navigation.goBack();
       },
-      onFailed: (response) => console.log(response),
+      onFailed: (response) => {
+        console.log(response);
+      }
     })
   }
 
@@ -93,8 +113,7 @@ const NoteScreen = (props) => {
         case "task":
           setNote(prev => { return { ...prev, tasks: [] } }); break;
         case "image":
-          ImagePicker();
-          console.log("image type"); break;
+          ImagePicker(); break;
       }
     }
   }, []);
@@ -121,7 +140,7 @@ const NoteScreen = (props) => {
           onContentChange={NoteContentChangeHandler}
           onImageDelete={NoteImageDeleteHandler} />
       </ScrollView>
-      <View style={styles.noteScreen_mischellaneous}></View>
+      <Mischellaneous style={styles.noteScreen_mischellaneous}></Mischellaneous>
     </View>
   );
 }

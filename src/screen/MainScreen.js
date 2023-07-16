@@ -17,16 +17,13 @@ const MainScreen = (props) => {
     const appContext = useContext(AppContext);
 
     const [notes, setNotes] = useState([]);
-    const [isGridLayout, SetIsGridLayout] = useState(true);
-
-    const ChangeNotesLayoutHandler = () => {
-        console.log('change notes layout (column to grids & vice versa)');
-        SetIsGridLayout(prev => !prev);
-        // change notes display style
-    };
 
     const SearchNoteHandler = (input) => {
-        console.log('on search: ' + input);
+        AppController.GetAllNotes({
+            filter: input,
+            onSuccess: (data) => setNotes(data),
+            onFailed: (error) => console.log(error),
+        })
     };
 
     const CreateNoteHandler = (type) => {
@@ -72,12 +69,12 @@ const MainScreen = (props) => {
             </View>
             <View style={styles.mainScreen__contentContainer}>
                 <SearchBar
-                    layout={isGridLayout ? 'grid' : 'column'}
+                    layout={appContext.appLayout}
                     onSearch={SearchNoteHandler}
-                    onChangeLayout={ChangeNotesLayoutHandler} />
+                    onChangeLayout={appContext.changeAppLayout} />
                 <NoteList
                     list={notes}
-                    layout={isGridLayout ? 'grid' : 'column'}
+                    layout={appContext.appLayout}
                     onSelectNote={SelectNoteHandler}
                     onDeleteNote={DeleteNoteHandler} />
             </View>

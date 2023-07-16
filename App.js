@@ -25,7 +25,7 @@ const AppChild = () => {
   }, [appContext.snackBarMessage]);
 
   useEffect(() => {
-    appContext.callSnackBar({ type: "welcome", message: "Welcome" });
+    appContext.callSnackBar({ type: "welcome", message: "Have a nice day!" });
   }, []);
 
   return (
