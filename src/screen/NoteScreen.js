@@ -79,7 +79,8 @@ const NoteScreen = (props) => {
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } })
   const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
-  const ShareNoteHandler =async () => {try {
+  const ShareNoteHandler =async () => {
+    try {
 
     //nội dung Share để ở trong message, chỉ để ở dạng string
     const result = await Share.share({
