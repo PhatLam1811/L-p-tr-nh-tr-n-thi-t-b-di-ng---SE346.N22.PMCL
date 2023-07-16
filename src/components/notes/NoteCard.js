@@ -25,7 +25,7 @@ const NoteCard = (props) => {
     note.tasks = itemsCopy;
     setTaskItems(itemsCopy);
     console.log('note.tasks before change:' + JSON.stringify(note.tasks));
-    await SaveNoteHandler(itemsCopy);
+    //await SaveNoteHandler(itemsCopy);
 
   }
 
