@@ -5,7 +5,7 @@ import NoteCard from "./NoteCard";
 import { View, StyleSheet, ScrollView } from 'react-native';
 
 const NoteList = (props) => {
-  const notes = props.list?.sort((a, b) => b.createdDate - a.createdDate);
+  const notes = props.list;
 
   const SelectNoteHandler = (index) => props.onSelectNote(notes[index].ID);
   const DeleteNoteHandler = (index) => props.onDeleteNote(notes[index].ID);

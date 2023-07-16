@@ -59,7 +59,6 @@ const NoteDetails = (props) => {
                             width: "98%",
                             aspectRatio: note.image.width / note.image.height,
                         }}
-                        // complete={() => OnImageLoadHandler()}
                         source={{ uri: note.image.uri }}
                         resizeMode="stretch" />
                     <MatComIcon style={styles.content_imageDeleteIcon}

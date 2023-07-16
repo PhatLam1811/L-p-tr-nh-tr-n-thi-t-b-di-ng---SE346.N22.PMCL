@@ -29,7 +29,8 @@ export const GetAllNoteAction = async () => {
   try {
     let notes = [];
 
-    const allKeys = await AsyncStorage.getAllKeys();
+    let allKeys = await AsyncStorage.getAllKeys();
+    allKeys = allKeys.filter((key) => key.includes("Note_"))
 
     const data = await AsyncStorage.multiGet(allKeys, (err, stores) => {
       stores.map((result, i, store) => {
@@ -44,10 +45,15 @@ export const GetAllNoteAction = async () => {
       });
     });
 
+    notes = notes.sort((a, b) => {
+      const aDate = new Date(a.lastUpdated);
+      const bDate = new Date(b.lastUpdated);
+      return aDate.getTime() > bDate.getTime() ? -1 : 1;
+    });
+
     return { result: 'success', data: notes };
   }
   catch (error) {
-    console.log(error)
     return { result: 'fail', error: error };
   }
 };
