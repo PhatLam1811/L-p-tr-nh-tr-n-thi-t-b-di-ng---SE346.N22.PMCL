@@ -14,26 +14,11 @@ import {
 
 import {
     TextInput, IconButton,
-    Dialog,
-    DialogHeader,
-    DialogContent,
-    DialogActions,
-    Provider,
-
 } from '@react-native-material/core';
 import Icon from "react-native-vector-icons/Octicons";
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import TaskModel from '../../classes/Task.js';
 import AppColors from '../../utils/AppColors.js';
-
-
-
-const EditNoteHandler = (toDo) => {
-
-    console.log("who am i?");
-
-
-}
 
 const CopyNoteHandler = (item) => {
     console.log("Copy Note");
@@ -56,7 +41,7 @@ const WebSearch = async (item) => {
 
 };
 
-const NewTaskScreen = (props) => {
+const TaskList = (props) => {
     const [task, setTask] = useState();
 
     const _retrieveData = async () => {
@@ -259,4 +244,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default NewTaskScreen;
+export default TaskList;

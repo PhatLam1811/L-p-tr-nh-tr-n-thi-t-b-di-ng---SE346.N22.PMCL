@@ -114,6 +114,8 @@ const NoteScreen = (props) => {
     }
   }
 
+  const NoteTaskChangeHandler = (value) => setNote(prev => { return { ...prev, tasks: value } });
+
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
@@ -157,6 +159,7 @@ const NoteScreen = (props) => {
         </View>
         <NoteDetails note={note}
           onTitleChange={NoteTitleChangeHandler}
+          onTaskChange={NoteTaskChangeHandler} // ontaskchange
           onSubTitleChange={NoteSubTitleChangeHandler}
           onContentChange={NoteContentChangeHandler}
           onImageDelete={NoteImageDeleteHandler} />

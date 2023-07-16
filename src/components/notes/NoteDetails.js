@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
-import TaskList from '../tasks/TaskList';
+import TaskList from '../tasks/NoteTaskDetails';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { View, StyleSheet, TextInput, Text, Image } from "react-native";
@@ -21,7 +21,7 @@ const NoteDetails = (props) => {
         tasks: props.note.tasks,
     }
     const [taskItems, setTaskItems]
-        = useState();
+        = useState(note.tasks);
 
     // useEffect(() => {
     //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
@@ -74,76 +74,16 @@ const NoteDetails = (props) => {
                     selectionColor={"#fcba03"}
                     placeholder="Type Your Note Here"
                     placeholderTextColor={AppColors.iconDark} />}
+                    {/* chuyen state xuong component con */}
                 {note.tasks != null &&
                     <TaskList
-                        taskItems={note.tasks}
-                        setTaskItems={setTaskItems} />}
+                        taskItems={taskItems}
+                        setTaskItems={setTaskItems} />} 
             </View>
         </View >
     );
-
-
-
 };
-// const OnImageLoadHandler = ({ nativeEvent: { source: { width, height } } }) => {
-//     setImageRatio(width / height);
-// }
 
-// useEffect(() => {
-//     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
-// }, [taskItems]);
-
-// return (
-
-//     <View style={styles.noteDetails}>
-//         <TextInput style={styles.noteDetails_title}
-//             maxLength={titleMaxLength}
-//             selectionColor={"#fcba03"}
-//             value={props.note?.title}
-//             onChangeText={text => props.onTitleChange(text)}
-//             placeholder="Note Title"
-//             placeholderTextColor={AppColors.iconDark} />
-//         <Text style={styles.noteDetails_lastUpdated}>{lastUpdated}</Text>
-//         <View style={styles.noteDetails_subTitle}>
-//             <View style={{ ...styles.subTitle_colorTag, backgroundColor: props.note?.colorTag }} />
-//             <TextInput style={styles.subTitle_content}
-//                 editable
-//                 multiline
-//                 maxLength={subTitleMaxLength}
-//                 selectionColor={"#fcba03"}
-//                 value={props.note?.subTitle}
-//                 onChangeText={text => props.onSubTitleChange(text)}
-//                 placeholder="Note Subtitle"
-//                 placeholderTextColor={AppColors.iconDark} />
-//         </View>
-//         <View style={styles.noteDetails_content}>
-//             {props.note?.image != null && <View>
-//                 <Image
-//                     style={{
-//                         width: "98%",
-//                         aspectRatio: imageRatio,
-//                     }}
-//                     onLoad={OnImageLoadHandler}
-//                     source={{ uri: props.note?.image }}
-//                     resizeMode="stretch" />
-//                 <MatComIcon style={styles.content_imageDeleteIcon}
-//                     name="trash-can"
-//                     color="red"
-//                     size={30}
-//                     onPress={() => props.onImageDelete()} />
-//             </View>}
-//             <TextInput style={styles.content_text}
-//                 editable
-//                 multiline
-//                 value={props.note?.content}
-//                 onChangeText={text => props.onContentChange(text)}
-//                 selectionColor={"#fcba03"}
-//                 placeholder="Type Your Note Here"
-//                 placeholderTextColor={AppColors.iconDark} />
-//             {taskItems.length > 0 && <TaskList taskItems={taskItems} setTaskItems={setTaskItems}></TaskList>}
-//         </View>
-//     </View >
-// );
 
 const styles = StyleSheet.create({
     noteDetails: {
