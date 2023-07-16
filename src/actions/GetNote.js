@@ -29,7 +29,9 @@ export const GetAllNoteAction = async () => {
   try {
     let notes = [];
 
-    const allKeys = await AsyncStorage.getAllKeys();
+    let allKeys = await AsyncStorage.getAllKeys();
+    console.log(allKeys);
+    allKeys = allKeys.filter((key) => key.includes("Note_"));
 
     const data = await AsyncStorage.multiGet(allKeys, (err, stores) => {
       stores.map((result, i, store) => {

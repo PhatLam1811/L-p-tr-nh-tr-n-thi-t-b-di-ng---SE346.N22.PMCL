@@ -1,5 +1,5 @@
 /* eslint-disable*/
-import {React,useState} from 'react';
+import { React, useEffect,useState } from 'react';
 
 import AppColors from '../../utils/AppColors';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
 const NoteCard = (props) => {
-  const note = {
+  let note = {
     title: props.note.title,
     subTitle: props.note.subTitle,
     colorTag: props.note.colorTag,
@@ -17,6 +17,7 @@ const NoteCard = (props) => {
     image: props.note.image,
     tasks: props.note.tasks,
   }
+  const [taskItems, setTaskItems] = useState(note.tasks);
 
   const completeTask = async (index) => {
     let itemsCopy = [...note.tasks];
@@ -24,18 +25,37 @@ const NoteCard = (props) => {
     note.tasks = itemsCopy;
     setTaskItems(itemsCopy);
     console.log('note.tasks before change:' + JSON.stringify(note.tasks));
+    await SaveNoteHandler(itemsCopy);
 
+  }
 
-  } 
-
-  
-  const [taskItems, setTaskItems]  = useState(note.tasks);
+  const SaveNoteHandler = async () => {
+    await AppController.SaveNote({
+      note: note,
+      onSuccess: () => {
+        appContext.callSnackBar({
+          type: "congrats",
+          message: "Save note successfully!"
+        });
+        props.navigation.goBack();
+      },
+      onFailed: (response) => {
+        console.log(response);
+      }
+    })
+  }
 
   const NoteSelectHandler = () => props.onSelect(props.index);
   const EditNoteHandler = () => console.log("Edit Note");
   const CopyNoteHandler = () => console.log("Copy Note");
   const ShareNoteHandler = () => console.log("Share Note");
   const DeleteNoteHandler = () => props.onDelete(props.index);
+
+  useEffect(() => {
+  
+    setTaskItems(note.tasks);
+
+  }, [note.tasks]);
 
   return (
     <Menu>
@@ -62,13 +82,14 @@ const NoteCard = (props) => {
         {
           note.tasks != null && taskItems != null &&
           taskItems.map((item, index) => {
+            
             return (
               <View>
-                  {
-                    <TouchableOpacity >
-                      <Task isFinished={item.isFinished} text={item.toDo} />
-                    </TouchableOpacity>
-                  }
+                {
+                  <TouchableOpacity onPress={() => completeTask(index)}>
+                    <Task isFinished={item.isFinished} text={item.toDo} />
+                  </TouchableOpacity>
+                }
               </View>
 
             )
