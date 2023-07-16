@@ -30,6 +30,7 @@ const SearchBar = (props) => {
                     autoFocus={false}
                     placeholder="Search notes"
                     placeholderTextColor={AppColors.iconDark}
+                    selectionColor={"#fcba03"}
                     value={searchInput}
                     onChangeText={InputTextChangeHandler} />
             </View>

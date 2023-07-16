@@ -115,10 +115,14 @@ const NoteScreen = (props) => {
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
   const ShareNoteHandler = async () => {
     try {
+      let shareContent = '#' + note.title;
+      shareContent += note.subTitle != null ? '\n' + note.subTitle : "";
+      shareContent += note.content != null ? '\n' + note.content : "";
+      shareContent += note.url != null ? '\n' + note.url : "";
 
       //nội dung Share để ở trong message, chỉ để ở dạng string
       const result = await Share.share({
-        message: '#' + note.title + '\n' + note.subTitle + '\n' + note.content,
+        message: shareContent,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -133,8 +137,6 @@ const NoteScreen = (props) => {
       console.log(error);
     }
   };
-
-
 
   useEffect(() => {
     if (props.route.params.isCreateNote == false) {

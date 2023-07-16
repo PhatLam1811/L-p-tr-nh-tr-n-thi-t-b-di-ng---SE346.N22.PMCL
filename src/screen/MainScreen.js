@@ -7,12 +7,12 @@ import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
 import AppController from '../controllers/AppController';
 import AppContext from '../utils/AppContext';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 import { useIsFocused } from '@react-navigation/native';
 import { FAB } from '@react-native-material/core';
-import { StyleSheet, Switch, Text, View,Share } from 'react-native';
+import { StyleSheet, Switch, Text, View, Share } from 'react-native';
 import { GetNoteAction } from '../actions/GetNote';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 const MainScreen = (props) => {
     const isFocus = useIsFocused();
@@ -57,44 +57,49 @@ const MainScreen = (props) => {
         });
     }
 
-    const ShareNoteHandler=async(ID)=>{
+    const ShareNoteHandler = async (ID) => {
         try {
-            const response= await GetNoteAction(ID);
-            const note=response.data;
+            const response = await GetNoteAction(ID);
+            const note = response.data;
 
+            let shareContent = '#' + note.title;
+            shareContent += note.subTitle != null ? '\n' + note.subTitle : "";
+            shareContent += note.content != null ? '\n' + note.content : "";
+            shareContent += note.url != null ? '\n' + note.url : "";
 
             //nội dung Share để ở trong message, chỉ để ở dạng string
             const result = await Share.share({
-              message:'#'+note.title+'\n'+note.subTitle+'\n'+note.content,
+                message: shareContent,
             });
             if (result.action === Share.sharedAction) {
-              if (result.activityType) {
-                // shared with activity type of result.activityType
-              } else {
-                // shared
-              }
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
             } else if (result.action === Share.dismissedAction) {
-              // dismissed
+                // dismissed
             }
-          } catch (error) {
+        } catch (error) {
             console.log(error);
-          }
-};
+        }
+    };
 
-const CopyNoteHandler=async(ID)=>{
-    try {
-        console.log(ID);
-        const response= await GetNoteAction(ID);
-        const note=response.data;
-        //console.log(note);
+    const CopyNoteHandler = async (ID) => {
+        try {
+            const response = await GetNoteAction(ID);
+            const note = response.data;
 
-        Clipboard.setString('#'+note.title+'\n'+note.subTitle+'\n'+note.content);
+            let copyContent = '#' + note.title;
+            copyContent += note.subTitle != null ? '\n' + note.subTitle : "";
+            copyContent += note.content != null ? '\n' + note.content : "";
+            copyContent += note.url != null ? '\n' + note.url : "";
 
-      } catch (error) {
-        console.log(error);
-      }
-}
-    
+            Clipboard.setString(copyContent);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         if (isFocus) {
@@ -117,10 +122,10 @@ const CopyNoteHandler=async(ID)=>{
                     list={notes}
                     layout={appContext.appLayout}
                     onSelectNote={SelectNoteHandler}
-                    onDeleteNote={DeleteNoteHandler} 
+                    onDeleteNote={DeleteNoteHandler}
                     onCopyNote={CopyNoteHandler}
                     onShareNote={ShareNoteHandler}
-                    />
+                />
             </View>
             <View style={styles.mainScreen__toolbar}>
                 <OctIcon
