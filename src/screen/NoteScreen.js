@@ -12,6 +12,7 @@ import TaskModel from "../classes/Task";
 
 import { View, StyleSheet, ScrollView } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
+import Mischellaneous from "./Mischellaneous";
 
 const noteColorTags = [
   AppColors.iconDark,
@@ -139,7 +140,7 @@ const NoteScreen = (props) => {
           onContentChange={NoteContentChangeHandler}
           onImageDelete={NoteImageDeleteHandler} />
       </ScrollView>
-      <View style={styles.noteScreen_mischellaneous}></View>
+      <Mischellaneous style={styles.noteScreen_mischellaneous}></Mischellaneous>
     </View>
   );
 }
