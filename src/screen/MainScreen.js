@@ -12,18 +12,13 @@ import { useIsFocused } from '@react-navigation/native';
 import { FAB } from '@react-native-material/core';
 import { StyleSheet, Switch, Text, View, Share } from 'react-native';
 import { GetNoteAction } from '../actions/GetNote';
+import { DarkTheme } from '../utils/AppColors';
 
 const MainScreen = (props) => {
     const isFocus = useIsFocused();
     const appContext = useContext(AppContext);
 
-    const [isDarkTheme, setIsDarkTheme] = useState(null);
     const [notes, setNotes] = useState([]);
-
-    const ChangeAppThemeHandler = () => {
-        setIsDarkTheme(prev => !prev);
-        appContext.changeAppTheme();
-    }
 
     const SearchNoteHandler = (input) => {
         AppController.GetAllNotes({
@@ -179,7 +174,7 @@ const MainScreen = (props) => {
         <View style={styles.mainScreen}>
             <View style={styles.mainScreen__header}>
                 <Text style={styles.mainScreen__title}>My Notes</Text>
-                <Switch value={isDarkTheme} onValueChange={ChangeAppThemeHandler} />
+                <Switch value={appContext.appTheme === DarkTheme} onValueChange={appContext.changeAppTheme} />
             </View>
             <View style={styles.mainScreen__contentContainer}>
                 <SearchBar

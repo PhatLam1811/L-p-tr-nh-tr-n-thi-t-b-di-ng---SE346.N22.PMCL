@@ -36,10 +36,10 @@ export const AppContextProvider = (props) => {
     }
 
     const ChangeAppTheme = () => {
-        if (appTheme !== LightTheme) {
-            setAppTheme(LightTheme);
-        } else {
+        if (appTheme !== DarkTheme) {
             setAppTheme(DarkTheme);
+        } else {
+            setAppTheme(LightTheme);
         }
     }
 
@@ -72,7 +72,8 @@ export const AppContextProvider = (props) => {
 
         const GetAppTheme = async () => {
             try {
-                const saveTheme = await AsyncStorage.getItem("_AppTheme");
+                let saveTheme = await AsyncStorage.getItem("_AppTheme");
+                saveTheme = JSON.parse(saveTheme);
                 setAppTheme(saveTheme != null ? saveTheme : DarkTheme);
             } catch (error) {
                 console.log(error);
@@ -85,8 +86,6 @@ export const AppContextProvider = (props) => {
             SaveAppTheme();
         }
     }, [appTheme])
-
-    console.log(appTheme);
 
     return (
         <AppContext.Provider
