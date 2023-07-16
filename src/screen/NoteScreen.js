@@ -69,17 +69,29 @@ const NoteScreen = (props) => {
     await AppController.SaveNote({
       note: note,
       onSuccess: () => {
+        props.navigation.goBack();
         appContext.callSnackBar({
           type: "congrats",
           message: "Save note successfully!"
         });
-        props.navigation.goBack();
       },
       onFailed: (response) => {
         console.log(response);
       }
     })
   }
+
+  const DeleteNoteHandler = () => AppController.DeleteNote({
+    ID: props.route.params.ID,
+    onSuccess: () => {
+      appContext.callSnackBar({
+        type: "congrats",
+        message: "Delete note successfully!"
+      });
+      props.navigation.goBack();
+    },
+    onFailed: (error) => console.log(error)
+  });
 
   const ImagePicker = async () => {
     try {
@@ -140,7 +152,10 @@ const NoteScreen = (props) => {
           onContentChange={NoteContentChangeHandler}
           onImageDelete={NoteImageDeleteHandler} />
       </ScrollView>
-      <Mischellaneous style={styles.noteScreen_mischellaneous}></Mischellaneous>
+      <Mischellaneous
+        isCreateNote={props.route.params.isCreateNote}
+        addImage={ImagePicker}
+        deleteNote={DeleteNoteHandler} />
     </View>
   );
 }
@@ -158,11 +173,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.secondaryDark,
     height: 60,
     alignItems: "center",
-  },
-
-  noteScreen_mischellaneous: {
-    backgroundColor: AppColors.primaryDark,
-    height: 50,
   },
 
   noteScreen_icon: {

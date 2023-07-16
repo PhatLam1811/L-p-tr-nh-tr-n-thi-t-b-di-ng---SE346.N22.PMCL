@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import AppColors from "../../utils/AppColors";
 import TaskList from '../tasks/TaskList';

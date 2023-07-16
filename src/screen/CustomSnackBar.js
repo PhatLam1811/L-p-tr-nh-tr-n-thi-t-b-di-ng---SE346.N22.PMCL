@@ -12,13 +12,13 @@ const CustomSnackBar = (props) => {
     const snackBarAnimation = Animated.sequence([
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 500,
+            duration: 300,
             useNativeDriver: true,
         }),
         Animated.delay(3000),
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 500,
+            duration: 300,
             useNativeDriver: true,
         })
     ]);
