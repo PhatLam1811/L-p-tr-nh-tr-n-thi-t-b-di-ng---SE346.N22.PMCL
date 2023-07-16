@@ -10,6 +10,7 @@ import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
 import Mischellaneous from "../components/tools/Mischellaneous";
+import AddURLDialog from "../dialogs/AddURLDialog";
 
 import { View, StyleSheet, ScrollView } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -47,6 +48,7 @@ const NoteScreen = (props) => {
   const appContext = useContext(AppContext);
 
   const [note, setNote] = useState(defaultState);
+  const [isURLDialogVisible, setIsURLDialogVisible] = useState(false);
 
   const SaveNoteHandler = async () => {
     let message = null;
@@ -126,6 +128,8 @@ const NoteScreen = (props) => {
           setNote(prev => { return { ...prev, tasks: [] } }); break;
         case "image":
           ImagePicker(); break;
+        case "url":
+          setIsURLDialogVisible(true); break;
       }
     }
   }, []);
@@ -155,7 +159,9 @@ const NoteScreen = (props) => {
       <Mischellaneous
         isCreateNote={props.route.params.isCreateNote}
         addImage={ImagePicker}
+        addUrl={() => setIsURLDialogVisible(true)}
         deleteNote={DeleteNoteHandler} />
+      <AddURLDialog isVisible={isURLDialogVisible} setIsVisible={setIsURLDialogVisible} />
     </View>
   );
 }

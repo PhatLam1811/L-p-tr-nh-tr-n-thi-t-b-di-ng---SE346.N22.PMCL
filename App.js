@@ -62,9 +62,10 @@ const AppChild = () => {
 }
 
 const App = () => {
-  return (<AppContextProvider>
-    <AppChild />
-  </AppContextProvider>)
+  return (
+    <AppContextProvider>
+      <AppChild />
+    </AppContextProvider>)
 };
 
 export default App;

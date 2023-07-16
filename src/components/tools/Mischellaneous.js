@@ -60,7 +60,7 @@ const Mischellaneous = (props) => {
                 <MatIcon name="image" {...styles.mischellaneousIcon} />
                 <Text style={styles.mischellaneous_text}>Add Image</Text>
             </Pressable>
-            <Pressable style={styles.mischellaneousOption} >
+            <Pressable style={styles.mischellaneousOption} onPress={() => OptionHandler(props.addUrl)}>
                 <OctIcon name="globe" {...styles.mischellaneousIcon} />
                 <Text style={styles.mischellaneous_text}>Add Url</Text>
             </Pressable>
