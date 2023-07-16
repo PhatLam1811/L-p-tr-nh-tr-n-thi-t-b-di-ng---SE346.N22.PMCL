@@ -5,4 +5,16 @@ const AppColors = {
     textDark: "#a8a8a8",
 }
 
+export const colorTags = [
+    AppColors.iconDark,
+    "red",
+    "blue",
+    "yellow",
+    "purple",
+    "green",
+    "black",
+    "white",
+]
+
+
 export default AppColors;

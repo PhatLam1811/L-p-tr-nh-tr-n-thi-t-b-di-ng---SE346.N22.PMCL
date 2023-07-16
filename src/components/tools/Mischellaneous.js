@@ -6,6 +6,7 @@ import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import ColorPicker from "../others/ColorPicker";
 
 const Mischellaneous = (props) => {
     const slideAnim = useRef(new Animated.Value(0)).current;
@@ -47,8 +48,9 @@ const Mischellaneous = (props) => {
             <Pressable style={styles.mischellaneousToggleButton} onPress={ToggleMischellaneousBar}>
                 <Text style={styles.mischellaneous_text}>Mischellaneous</Text>
             </Pressable>
-            <View style={styles.mischellaneousColorPicker}>
-            </View>
+            <ColorPicker
+                onSelectTag={props.onSelectTag}
+                onTagChange={(tag) => props.selectTag(tag)} />
             <Pressable style={styles.mischellaneousOption}>
                 <OctIcon
                     name="checklist"
@@ -101,12 +103,6 @@ const styles = StyleSheet.create({
     mischellaneous_text: {
         color: AppColors.iconDark,
         fontSize: 17,
-    },
-
-    mischellaneousColorPicker: {
-        backgroundColor: "blue",
-        width: "100%",
-        height: 50,
     },
 
     mischellaneousOption: {

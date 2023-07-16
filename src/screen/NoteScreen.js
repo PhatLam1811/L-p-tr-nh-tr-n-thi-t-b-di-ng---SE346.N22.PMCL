@@ -15,14 +15,6 @@ import AddURLDialog from "../dialogs/AddURLDialog";
 import { View, StyleSheet, ScrollView, Share } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
 
-const noteColorTags = [
-  AppColors.iconDark,
-  "#fcba03",
-  "red",
-  "purple",
-  "black",
-];
-
 const sampleTasks = [
   new TaskModel("watch walking dead ep6", false),
   new TaskModel("finished todo app", true),
@@ -37,7 +29,7 @@ const defaultState = {
   createdDate: new Date(),
   lastUpdated: new Date(),
   subTitle: null,
-  colorTag: noteColorTags[0],
+  colorTag: AppColors.iconDark,
   image: null,
   content: null,
   url: null,
@@ -113,6 +105,7 @@ const NoteScreen = (props) => {
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url } });
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
+  const NoteColorTagChangeHandler = (tag) => setNote(prev => { return { ...prev, colorTag: tag } })
   const ShareNoteHandler = async () => {
     try {
       let shareContent = '#' + note.title;
@@ -185,6 +178,8 @@ const NoteScreen = (props) => {
       </ScrollView>
       <Mischellaneous
         isCreateNote={props.route.params.isCreateNote}
+        onSelectTag={note.colorTag}
+        selectTag={NoteColorTagChangeHandler}
         addImage={ImagePicker}
         addUrl={() => setIsURLDialogVisible(true)}
         deleteNote={DeleteNoteHandler} />
