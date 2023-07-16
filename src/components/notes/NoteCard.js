@@ -1,9 +1,10 @@
 /* eslint-disable*/
-import React from 'react';
+import React, { useContext } from 'react';
 
-import AppColors from '../../utils/AppColors';
+import AppContext from '../../utils/AppContext';
 import moment from 'moment';
 
+import { colorTags } from '../../utils/AppColors';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 
@@ -17,11 +18,78 @@ const NoteCard = (props) => {
     tasks: props.note.tasks,
   }
 
+  const appContext = useContext(AppContext);
+
   const NoteSelectHandler = () => props.onSelect(props.index);
   const EditNoteHandler = () => props.onSelect(props.index);
   const CopyNoteHandler = () => props.onCopy(props.index);
   const ShareNoteHandler = () => props.onShare(props.index);
   const DeleteNoteHandler = () => props.onDelete(props.index);
+
+  const styles = StyleSheet.create({
+    noteCard: {
+      flexDirection: "column",
+      color: appContext.appTheme?.text,
+      width: "100%",
+      height: "auto",
+      marginBottom: "5%",
+      borderRadius: 10,
+    },
+
+    noteCard__image: {
+      width: "100%",
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+    },
+
+    noteCard__content: {
+      flexDirection: "column",
+      padding: 10,
+    },
+
+    noteCard_title: {
+      color: note.colorTag === colorTags[0] ? appContext.appTheme?.text : "black",
+      fontSize: 18,
+      fontWeight: 600,
+      marginBottom: 10,
+    },
+
+    noteCard_subTitle: {
+      color: note.colorTag === colorTags[0] ? appContext.appTheme?.text : "black",
+      flexWrap: "wrap",
+      marginBottom: 10,
+    },
+
+    noteCard_lastUpdated: {
+      color: note.colorTag === colorTags[0] ? appContext.appTheme?.text : "black",
+      fontSize: 10,
+    },
+
+    noteCard_popupMenu: {
+      backgroundColor: appContext.appTheme?.secondary,
+      flexDirection: "column",
+      justifyContent: "space-evenly",
+      alignItems: "flex-start",
+      height: 190,
+    },
+
+    popupMenu_title: {
+      color: "#fcba03",
+      padding: 10,
+    },
+
+    popupMenu_options: {
+      optionWrapper: {
+        width: "100%",
+        paddingVertical: 10,
+        paddingHorizontal: 0,
+      },
+      optionText: {
+        color: appContext.appTheme?.text,
+        paddingHorizontal: 10,
+      },
+    },
+  });
 
   return (
     <Menu>
@@ -29,7 +97,10 @@ const NoteCard = (props) => {
         onAlternativeAction={NoteSelectHandler}
         customStyles={{
           TriggerTouchableComponent: TouchableOpacity,
-          triggerWrapper: { ...styles.noteCard, backgroundColor: note.colorTag }
+          triggerWrapper: {
+            ...styles.noteCard,
+            backgroundColor: note.colorTag != colorTags[0] ? note.colorTag : appContext.appTheme?.secondary,
+          }
         }}>
         {note.image != null &&
           <Image
@@ -55,71 +126,5 @@ const NoteCard = (props) => {
     </Menu >
   );
 };
-
-const styles = StyleSheet.create({
-  noteCard: {
-    flexDirection: "column",
-    backgroundColor: AppColors.secondaryDark,
-    color: AppColors.textDark,
-    width: "100%",
-    height: "auto",
-    marginBottom: "5%",
-    borderRadius: 10,
-  },
-
-  noteCard__image: {
-    width: "100%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-
-  noteCard__content: {
-    flexDirection: "column",
-    padding: 10,
-  },
-
-  noteCard_title: {
-    color: AppColors.textDark,
-    fontSize: 18,
-    fontWeight: 600,
-    marginBottom: 10,
-  },
-
-  noteCard_subTitle: {
-    color: AppColors.textDark,
-    flexWrap: "wrap",
-    marginBottom: 10,
-  },
-
-  noteCard_lastUpdated: {
-    color: AppColors.textDark,
-    fontSize: 10,
-  },
-
-  noteCard_popupMenu: {
-    backgroundColor: AppColors.secondaryDark,
-    flexDirection: "column",
-    justifyContent: "space-evenly",
-    alignItems: "flex-start",
-    height: 190,
-  },
-
-  popupMenu_title: {
-    color: "#fcba03",
-    padding: 10,
-  },
-
-  popupMenu_options: {
-    optionWrapper: {
-      width: "100%",
-      paddingVertical: 10,
-      paddingHorizontal: 0,
-    },
-    optionText: {
-      color: AppColors.textDark,
-      paddingHorizontal: 10,
-    },
-  },
-});
 
 export default NoteCard;

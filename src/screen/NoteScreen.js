@@ -5,7 +5,6 @@ import OctIcon from "react-native-vector-icons/Octicons";
 import MatIcon from "react-native-vector-icons/MaterialIcons";
 import EntIcon from "react-native-vector-icons/Entypo";
 import AppContext from "../utils/AppContext";
-import AppColors from "../utils/AppColors";
 import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
@@ -14,6 +13,7 @@ import AddURLDialog from "../dialogs/AddURLDialog";
 
 import { View, StyleSheet, ScrollView, Share } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
+import { colorTags } from "../utils/AppColors";
 
 const sampleTasks = [
   new TaskModel("watch walking dead ep6", false),
@@ -29,7 +29,7 @@ const defaultState = {
   createdDate: new Date(),
   lastUpdated: new Date(),
   subTitle: null,
-  colorTag: AppColors.iconDark,
+  colorTag: colorTags[0],
   image: null,
   content: null,
   url: null,
@@ -151,6 +151,43 @@ const NoteScreen = (props) => {
     }
   }, []);
 
+  const styles = StyleSheet.create({
+    noteScreen: {
+      flex: 1,
+      flexDirection: "column",
+      backgroundColor: appContext.appTheme?.primary,
+    },
+
+    noteScreen_header: {
+      flex: 1,
+      flexDirection: "row",
+      backgroundColor: appContext.appTheme?.primary,
+      height: 60,
+      alignItems: "center",
+    },
+
+    noteScreen_icon: {
+      backgroundColor: "transparent",
+      color: appContext.appTheme?.icon,
+      size: 30,
+    },
+
+    noteScreen_backIcon: {
+      size: 40,
+      marginLeft: "3%",
+    },
+
+    noteScreen_shareIcon: {
+      marginLeft: "auto",
+      marginRight: 20,
+    },
+
+    noteScreen_saveIcon: {
+      marginLeft: 0,
+      marginRight: "3%",
+    },
+  });
+
   return (
     <View style={styles.noteScreen}>
       <ScrollView style={{ height: "100%" }}>
@@ -190,42 +227,5 @@ const NoteScreen = (props) => {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  noteScreen: {
-    flex: 1,
-    flexDirection: "column",
-    backgroundColor: AppColors.secondaryDark,
-  },
-
-  noteScreen_header: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: AppColors.secondaryDark,
-    height: 60,
-    alignItems: "center",
-  },
-
-  noteScreen_icon: {
-    backgroundColor: "transparent",
-    color: AppColors.iconDark,
-    size: 30,
-  },
-
-  noteScreen_backIcon: {
-    size: 40,
-    marginLeft: "3%",
-  },
-
-  noteScreen_shareIcon: {
-    marginLeft: "auto",
-    marginRight: 20,
-  },
-
-  noteScreen_saveIcon: {
-    marginLeft: 0,
-    marginRight: "3%",
-  },
-});
 
 export default NoteScreen;

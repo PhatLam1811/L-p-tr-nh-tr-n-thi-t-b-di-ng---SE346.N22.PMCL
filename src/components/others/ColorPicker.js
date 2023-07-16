@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
-import AppColors, { colorTags } from "../../utils/AppColors";
-
+import AppContext from "../../utils/AppContext";
 import ColorItem from "./ColorItem";
 
+import { colorTags } from "../../utils/AppColors";
 import { View, Text, ScrollView } from "react-native";
 
 const ColorPicker = (props) => {
+    const appContext = useContext(AppContext);
+
     const [tags, setTags] = useState([]);
 
     const LoadColorTags = (onSelectTag) => {
@@ -46,11 +48,11 @@ const ColorPicker = (props) => {
             height: 50,
             paddingHorizontal: 20
         }}>
-            <ScrollView horizontal>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {tags.map((tag) => tag)}
             </ScrollView>
             <Text style={{
-                color: AppColors.textDark,
+                color: appContext.appTheme?.text,
                 fontSize: 17,
                 fontWeight: 500,
                 marginStart: 5,
