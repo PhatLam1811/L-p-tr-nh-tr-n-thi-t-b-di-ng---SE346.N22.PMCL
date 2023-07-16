@@ -46,7 +46,7 @@ const NoteCard = (props) => {
         </View>
       </MenuTrigger>
       <MenuOptions style={styles.noteCard_popupMenu}>
-        <Text style={styles.popupMenu_title}>Note Title {props.id}</Text>
+        <Text style={styles.popupMenu_title}>{note.title}</Text>
         <MenuOption customStyles={styles.popupMenu_options} onSelect={EditNoteHandler} value={1} text="Edit Note" />
         <MenuOption customStyles={styles.popupMenu_options} onSelect={CopyNoteHandler} value={1} text="Copy Note" />
         <MenuOption customStyles={styles.popupMenu_options} onSelect={ShareNoteHandler} value={2} text="Share Note" />
