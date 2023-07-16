@@ -8,7 +8,6 @@ import { View, Modal, Text, StyleSheet, TextInput, Pressable, Keyboard } from "r
 
 const AddURLDialog = (props) => {
     const httpsRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
-    const nonHttpsRegex = /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
 
     const appContext = useContext(AppContext);
 
@@ -16,10 +15,9 @@ const AddURLDialog = (props) => {
 
     const AddURLHandler = () => {
         Keyboard.dismiss();
-        if (urlInput.trim().match(httpsRegex) != null ||
-            urlInput.trim().match(nonHttpsRegex) != null) {
-            props.onUrlAdded(urlInput);
+        if (urlInput.trim().match(httpsRegex) != null) {
             props.setIsVisible(false);
+            props.onUrlAdded(urlInput);
         } else {
             appContext.callSnackBar({
                 type: "error",

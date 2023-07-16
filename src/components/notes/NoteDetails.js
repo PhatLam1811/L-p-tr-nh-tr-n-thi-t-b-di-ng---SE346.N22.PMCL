@@ -81,6 +81,7 @@ const NoteDetails = (props) => {
                     <TaskList
                         taskItems={note.tasks}
                         setTaskItems={setTaskItems} />}
+                <View style={{ height: 100 }} />
             </View>
         </View >
     );

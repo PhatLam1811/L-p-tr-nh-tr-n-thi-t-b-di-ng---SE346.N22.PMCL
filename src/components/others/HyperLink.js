@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
+import AppContext from "../../utils/AppContext";
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 
 const HyperLink = (props) => {
+    const appContext = useContext(AppContext);
+
+    const [url, setUrl] = useState(null);
+
+    const GoToLink = useCallback(async () => {
+        const isSuccess = await Linking.openURL(url);
+
+        if (!isSuccess) {
+            appContext.callSnackBar({
+                type: "error",
+                message: "Can't open url!"
+            });
+        }
+    }, [url])
+
+    useEffect(() => setUrl(props.link), [props.link]);
+
     return (
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-            <Text style={styles.hyperLink}>{props.link}</Text>
+            <Pressable style={{ maxWidth: "90%", marginStart: 3 }} onPress={GoToLink}>
+                <Text style={styles.hyperLink}>{props.link}</Text>
+            </Pressable>
             <MatComIcon style={{ marginEnd: 25 }}
                 name="trash-can"
                 color="red"
@@ -20,11 +40,9 @@ const HyperLink = (props) => {
 const styles = StyleSheet.create({
     hyperLink: {
         color: "#fcba03",
-        width: "80%",
         fontSize: 18,
         textAlign: "justify",
         textDecorationLine: "underline",
-        marginHorizontal: 3,
     },
 })
 
