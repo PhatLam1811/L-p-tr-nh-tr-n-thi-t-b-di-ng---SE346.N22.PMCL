@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from "react";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppController from "../controllers/AppController";
 
+import { DarkTheme, LightTheme } from "./AppColors";
+
 const AppContext = React.createContext({
+    appTheme: {
+        primary: "",
+        secondary: "",
+        icon: "",
+        text: "",
+    },
     appLayout: null,
     snackBarMessage: null,
     callSnackBar: ({ type, message }) => { },
-    changeAppLayout: () => { }
+    changeAppLayout: () => { },
+    changeAppTheme: () => { },
 });
 
 export const AppContextProvider = (props) => {
+    const [appTheme, setAppTheme] = useState(null);
     const [appLayout, setAppLayout] = useState(null);
     const [snackBarMessage, setSnackbarMessage] = useState({ type: null, message: null });
 
@@ -22,6 +33,14 @@ export const AppContextProvider = (props) => {
 
     const ChangeAppLayout = () => {
         setAppLayout(prev => prev !== "grid" ? "grid" : "column");
+    }
+
+    const ChangeAppTheme = () => {
+        if (appTheme !== LightTheme) {
+            setAppTheme(LightTheme);
+        } else {
+            setAppTheme(DarkTheme);
+        }
     }
 
     useEffect(() => {
@@ -41,13 +60,43 @@ export const AppContextProvider = (props) => {
         }
     }, [appLayout]);
 
+    useEffect(() => {
+        const SaveAppTheme = async () => {
+            try {
+                const json = JSON.stringify(appTheme);
+                await AsyncStorage.setItem("_AppTheme", json);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        const GetAppTheme = async () => {
+            try {
+                const saveTheme = await AsyncStorage.getItem("_AppTheme");
+                setAppTheme(saveTheme != null ? saveTheme : DarkTheme);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (appTheme == null) {
+            GetAppTheme();
+        } else {
+            SaveAppTheme();
+        }
+    }, [appTheme])
+
+    console.log(appTheme);
+
     return (
         <AppContext.Provider
             value={{
+                appTheme: appTheme,
                 appLayout: appLayout,
                 snackBarMessage: snackBarMessage,
                 callSnackBar: CallSnackBar,
                 changeAppLayout: ChangeAppLayout,
+                changeAppTheme: ChangeAppTheme,
             }}>
             {props.children}
         </AppContext.Provider>

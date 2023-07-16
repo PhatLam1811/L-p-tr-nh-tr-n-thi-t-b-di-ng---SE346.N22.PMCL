@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 
 import AppContext from "../utils/AppContext";
-import AppColors from "../utils/AppColors";
 import OctIcon from 'react-native-vector-icons/Octicons';
 
 import { View, Modal, Text, StyleSheet, TextInput, Pressable, Keyboard } from "react-native";
@@ -28,6 +27,42 @@ const AddURLDialog = (props) => {
 
     useEffect(() => setUrlInput(""), [props.isVisible]);
 
+    const styles = StyleSheet.create({
+        urlDialogBackground: {
+            backgroundColor: "rgba(0, 0, 0, 0.45)",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+        },
+
+        urlDialog: {
+            backgroundColor: appContext.appTheme?.secondary,
+            width: 300,
+            padding: 20,
+            borderRadius: 5,
+        },
+
+        urlDialogText: {
+            color: appContext.appTheme?.text,
+            fontSize: 17.5,
+            fontWeight: 500,
+        },
+
+        urlDialogIcon: {
+            backgroundColor: 'transparent',
+            color: appContext.appTheme?.text,
+            size: 23,
+            marginEnd: 15,
+        },
+
+        urlDialogAction: {
+            color: "#fcba03",
+            fontSize: 16,
+            fontWeight: 500,
+        },
+    });
+
     return (
         <Modal visible={props.isVisible} transparent={true} >
             <Pressable style={styles.urlDialogBackground} onPress={() => props.setIsVisible(false)}>
@@ -42,7 +77,7 @@ const AddURLDialog = (props) => {
                         autoFocus={true}
                         onChangeText={(text) => setUrlInput(text)}
                         placeholder="Enter URL"
-                        placeholderTextColor={AppColors.iconDark}
+                        placeholderTextColor={appContext.appTheme?.icon}
                         selectionColor={"#fcba03"}
                         inputMode="url" />
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", marginTop: 5 }}>
@@ -58,41 +93,5 @@ const AddURLDialog = (props) => {
         </Modal >
     )
 }
-
-const styles = StyleSheet.create({
-    urlDialogBackground: {
-        backgroundColor: "rgba(0, 0, 0, 0.45)",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "100%",
-    },
-
-    urlDialog: {
-        backgroundColor: AppColors.secondaryDark,
-        width: 300,
-        padding: 20,
-        borderRadius: 5,
-    },
-
-    urlDialogText: {
-        color: AppColors.textDark,
-        fontSize: 17.5,
-        fontWeight: 500,
-    },
-
-    urlDialogIcon: {
-        backgroundColor: 'transparent',
-        color: AppColors.textDark,
-        size: 23,
-        marginEnd: 15,
-    },
-
-    urlDialogAction: {
-        color: "#fcba03",
-        fontSize: 16,
-        fontWeight: 500,
-    },
-});
 
 export default AddURLDialog;

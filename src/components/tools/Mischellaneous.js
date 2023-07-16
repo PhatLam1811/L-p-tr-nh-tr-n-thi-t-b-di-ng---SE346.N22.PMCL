@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
-import AppColors from "../../utils/AppColors";
 import OctIcon from 'react-native-vector-icons/Octicons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import ColorPicker from "../others/ColorPicker";
+import AppContext from "../../utils/AppContext";
 
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
-import ColorPicker from "../others/ColorPicker";
 
 const Mischellaneous = (props) => {
+    const appContext = useContext(AppContext);
     const slideAnim = useRef(new Animated.Value(0)).current;
     const [isVisible, setIsVisible] = useState(false);
 
@@ -33,6 +34,47 @@ const Mischellaneous = (props) => {
         callback();
         ToggleMischellaneousBar();
     }
+
+    const styles = StyleSheet.create({
+        mischellaneous: {
+            backgroundColor: appContext.appTheme?.secondary,
+            position: "absolute",
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+        },
+
+        mischellaneousToggleButton: {
+            backgroundColor: "transparent",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: 50,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+        },
+
+        mischellaneous_text: {
+            color: appContext.appTheme?.text,
+            fontSize: 17,
+        },
+
+        mischellaneousOption: {
+            flexDirection: "row",
+            alignItems: "center",
+            width: "100%",
+            paddingVertical: 10,
+        },
+
+        mischellaneousIcon: {
+            color: appContext.appTheme?.icon,
+            size: 30,
+            marginHorizontal: 15,
+        },
+    });
 
     return (
         <Animated.View style={{
@@ -77,46 +119,5 @@ const Mischellaneous = (props) => {
         </Animated.View >
     );
 }
-
-const styles = StyleSheet.create({
-    mischellaneous: {
-        backgroundColor: AppColors.primaryDark,
-        position: "absolute",
-        bottom: 0,
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-    },
-
-    mischellaneousToggleButton: {
-        backgroundColor: "transparent",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: 50,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-    },
-
-    mischellaneous_text: {
-        color: AppColors.iconDark,
-        fontSize: 17,
-    },
-
-    mischellaneousOption: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-        paddingVertical: 10,
-    },
-
-    mischellaneousIcon: {
-        color: AppColors.iconDark,
-        size: 30,
-        marginHorizontal: 15,
-    },
-});
 
 export default Mischellaneous;

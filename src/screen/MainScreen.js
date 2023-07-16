@@ -4,7 +4,6 @@ import OctIcon from 'react-native-vector-icons/Octicons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import SearchBar from '../components/tools/SearchBar';
 import NoteList from '../components/notes/NoteList';
-import AppColors from '../utils/AppColors';
 import AppController from '../controllers/AppController';
 import AppContext from '../utils/AppContext';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -18,7 +17,13 @@ const MainScreen = (props) => {
     const isFocus = useIsFocused();
     const appContext = useContext(AppContext);
 
+    const [isDarkTheme, setIsDarkTheme] = useState(null);
     const [notes, setNotes] = useState([]);
+
+    const ChangeAppThemeHandler = () => {
+        setIsDarkTheme(prev => !prev);
+        appContext.changeAppTheme();
+    }
 
     const SearchNoteHandler = (input) => {
         AppController.GetAllNotes({
@@ -107,11 +112,74 @@ const MainScreen = (props) => {
         }
     }, [isFocus]);
 
+    const styles = StyleSheet.create({
+        mainScreen: {
+            flex: 1,
+            flexDirection: 'column',
+            backgroundColor: appContext.appTheme?.primary,
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            height: '100%',
+        },
+
+        mainScreen__header: {
+            flex: 1,
+            flexDirection: 'row',
+            backgroundColor: 'inherit',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+        },
+
+        mainScreen__contentContainer: {
+            flex: 8,
+            flexDirection: 'column',
+            backgroundColor: 'inherit',
+        },
+
+        mainScreen__toolbar: {
+            flex: 1,
+            backgroundColor: appContext.appTheme?.secondary,
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+            paddingHorizontal: '3%',
+        },
+
+        mainScreen__title: {
+            backgroundColor: 'transparent',
+            color: appContext.appTheme?.text,
+            fontSize: 25,
+            fontWeight: 700,
+            marginLeft: '5%',
+        },
+
+        mainScreen__icon: {
+            backgroundColor: 'transparent',
+            color: appContext.appTheme?.icon,
+            size: 25,
+            marginHorizontal: '3%',
+        },
+
+        mainScreen__newNoteFAB: {
+            backgroundColor: 'transparent',
+            color: '#fcba03',
+            variant: 'standard',
+            size: 'default',
+            marginLeft: 'auto',
+            marginRight: '5%',
+            marginTop: '-7%',
+            marginBottom: 'auto',
+        },
+    });
+
     return (
         <View style={styles.mainScreen}>
             <View style={styles.mainScreen__header}>
                 <Text style={styles.mainScreen__title}>My Notes</Text>
-                <Switch />
+                <Switch value={isDarkTheme} onValueChange={ChangeAppThemeHandler} />
             </View>
             <View style={styles.mainScreen__contentContainer}>
                 <SearchBar
@@ -153,68 +221,5 @@ const MainScreen = (props) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    mainScreen: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: AppColors.primaryDark,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-    },
-
-    mainScreen__header: {
-        flex: 1,
-        flexDirection: 'row',
-        backgroundColor: 'inherit',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-    },
-
-    mainScreen__contentContainer: {
-        flex: 8,
-        flexDirection: 'column',
-        backgroundColor: 'inherit',
-    },
-
-    mainScreen__toolbar: {
-        flex: 1,
-        backgroundColor: AppColors.secondaryDark,
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%',
-        paddingHorizontal: '3%',
-    },
-
-    mainScreen__title: {
-        backgroundColor: 'transparent',
-        color: AppColors.textDark,
-        fontSize: 25,
-        fontWeight: 700,
-        marginLeft: '5%',
-    },
-
-    mainScreen__icon: {
-        backgroundColor: 'transparent',
-        color: AppColors.iconDark,
-        size: 25,
-        marginHorizontal: '3%',
-    },
-
-    mainScreen__newNoteFAB: {
-        backgroundColor: 'transparent',
-        color: '#fcba03',
-        variant: 'standard',
-        size: 'default',
-        marginLeft: 'auto',
-        marginRight: '5%',
-        marginTop: '-7%',
-        marginBottom: 'auto',
-    },
-});
 
 export default MainScreen;

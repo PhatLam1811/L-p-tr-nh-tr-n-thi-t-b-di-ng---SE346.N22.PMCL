@@ -1,4 +1,4 @@
-import AppColors from "../utils/AppColors";
+import { colorTags } from "../utils/AppColors";
 
 function GenerateRandom(length) {
   let result = '';
@@ -36,7 +36,7 @@ class Note {
       && (obj.url == null || obj.url == undefined)
       && (obj.tasks == null || obj.tasks == undefined)) return null;
 
-    if (obj.colorTag == null || obj.colorTag == undefined) obj.colorTag = AppColors.secondaryDark;
+    if (obj.colorTag == null || obj.colorTag == undefined) obj.colorTag = colorTags[0];
 
     if (obj.createdDate == null || obj.createdDate == undefined) obj.createdDate = new Date();
     if (obj.lastUpdated == null || obj.lastUpdated == undefined) obj.lastUpdated = new Date();
