@@ -12,7 +12,7 @@ import TaskModel from "../classes/Task";
 import Mischellaneous from "../components/tools/Mischellaneous";
 import AddURLDialog from "../dialogs/AddURLDialog";
 
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Share } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
 
 const noteColorTags = [
@@ -113,6 +113,30 @@ const NoteScreen = (props) => {
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url } });
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
+  const ShareNoteHandler = async () => {
+    try {
+      let shareContent = '#' + note.title;
+      shareContent += note.subTitle != null ? '\n' + note.subTitle : "";
+      shareContent += note.content != null ? '\n' + note.content : "";
+      shareContent += note.url != null ? '\n' + note.url : "";
+
+      //nội dung Share để ở trong message, chỉ để ở dạng string
+      const result = await Share.share({
+        message: shareContent,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (props.route.params.isCreateNote == false) {
@@ -144,7 +168,9 @@ const NoteScreen = (props) => {
             onPress={() => props.navigation.goBack()} />
           <EntIcon name="share"
             {...styles.noteScreen_icon}
-            {...styles.noteScreen_shareIcon} />
+            {...styles.noteScreen_shareIcon}
+            onPress={ShareNoteHandler}
+          />
           <OctIcon name="check-circle"
             {...styles.noteScreen_icon}
             {...styles.noteScreen_saveIcon}

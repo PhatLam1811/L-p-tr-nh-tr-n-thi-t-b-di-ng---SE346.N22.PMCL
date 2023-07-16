@@ -5,15 +5,11 @@ import {View, Text, Button, TextInput} from 'react-native';
 import {connect} from 'react-redux';
 import {FlatList, StyleSheet, Alert} from 'react-native';
 
-import { GetNoteAction ,GetAllNoteAction} from '../actions/GetNote.js';
+import {GetNoteAction, GetAllNoteAction} from '../actions/GetNote.js';
 
 import moment from 'moment';
 import NavigationBar from '../components/NavigationBar';
-
-  // const saveTitle = await AsyncStorage.getItem('noteTitle');
-  // const saveSubTitle = await AsyncStorage.getItem('noteSubTitle');
-  // const saveContent = await AsyncStorage.getItem('noteContent');
-const DetailNoteScreen =(props) => {
+const DetailNoteScreen = props => {
   const styles = StyleSheet.create({
     container: {
       paddingTop: 22,
@@ -32,47 +28,55 @@ const DetailNoteScreen =(props) => {
     },
   });
 
-
   const [inputTitle, setInputTitle] = useState('');
   const [inputSubTitle, setInputSubTitle] = useState('');
   const [inputNote, setInputNote] = useState('');
 
-  useEffect(async()=>{
-      const note=await GetNoteAction(props.NoteID);
-    console.log(note)
+  useEffect(async () => {
+    const note = await GetNoteAction(props.NoteID);
+    console.log(note);
 
-      setInputTitle(note.data.title);
-      setInputSubTitle(note.data.subTitle);
-      setInputNote(note.data.content);
-      const noteRes= await GetAllNoteAction();
-      console.log(noteRes.data);
-  },[])
+    setInputTitle(note.data.title);
+    setInputSubTitle(note.data.subTitle);
+    setInputNote(note.data.content);
+    const noteRes = await GetAllNoteAction();
+    console.log(noteRes.data);
+  }, []);
 
-  const inputTitleChange=title=>{
-setInputTitle(title)
-  }
-  const inputSubTitleChange=subTitle=>{
-    setInputSubTitle(subTitle)
-      }
-      const inputNoteChange=note=>{
-        setInputNote(note)
-          }
+  const inputTitleChange = title => {
+    setInputTitle(title);
+  };
+  const inputSubTitleChange = subTitle => {
+    setInputSubTitle(subTitle);
+  };
+  const inputNoteChange = note => {
+    setInputNote(note);
+  };
 
   return (
     <View>
       <NavigationBar />
-      <TextInput placeholder="Note title" placeholderTextColor="#1f1c1cf8" onChangeText={inputTitleChange} value={inputTitle} />
+      <TextInput
+        placeholder="Note title"
+        placeholderTextColor="#1f1c1cf8"
+        onChangeText={inputTitleChange}
+        value={inputTitle}
+      />
       <Text style={styles.timestamp}>
         {moment().utcOffset('+07:00').format('LLLL')}
       </Text>
-      <TextInput placeholder="Note subtitle" placeholderTextColor="#383a3bc0" onChangeText={inputSubTitleChange} value={inputSubTitle}/>
+      <TextInput
+        placeholder="Note subtitle"
+        placeholderTextColor="#383a3bc0"
+        onChangeText={inputSubTitleChange}
+        value={inputSubTitle}
+      />
       <TextInput
         placeholder="Type your note here"
         placeholderTextColor="#383a3bc0"
         onChangeText={inputNoteChange}
         value={inputNote}
       />
-
     </View>
   );
 };
