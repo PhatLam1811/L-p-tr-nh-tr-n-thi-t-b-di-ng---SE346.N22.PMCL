@@ -43,7 +43,8 @@ const WebSearch = async (item) => {
 
 const TaskList = (props) => {
     const [task, setTask] = useState();
-
+    const [taskItems, setTaskItems]
+        = useState(props.taskItems);
     const _retrieveData = async () => {
         console.log("im retrieving...");
 
@@ -57,22 +58,22 @@ const TaskList = (props) => {
 
     const completeTask = async (index) => {
         console.log('called');
-        let itemsCopy = [...props.taskItems];
+        let itemsCopy = [...taskItems];
         itemsCopy[index].isFinished = !itemsCopy[index].isFinished;
-        props.setTaskItems(itemsCopy);
+        setTaskItems(itemsCopy);
 
     }
     const deleteTask = async (index) => {
         console.log('called');
-        let itemsCopy = [...props.taskItems];
+        let itemsCopy = [...taskItems];
         itemsCopy.splice(index, 1);
-        props.setTaskItems(itemsCopy);
+        setTaskItems(itemsCopy);
 
     }
     const HandleAddTask = async () => {
-        props.setTaskItems([...props.taskItems, new TaskModel(task, false)]);
+        setTaskItems([...taskItems, new TaskModel(task, false)]);
 
-        console.log('taskItems before change:' + JSON.stringify(props.taskItems));
+        console.log('taskItems before change:' + JSON.stringify(taskItems));
         //const saveData = await SaveNoteAction(itemsCopy);
 
         //Keyboard.dismiss();
@@ -84,10 +85,14 @@ const TaskList = (props) => {
     };
 
     useEffect(() => {
-        console.log('taskItems after change:' + JSON.stringify(props.taskItems));
         //props.taskItems = taskItems;
-        console.log('set props.items');
-    }, [props.taskItems]);
+        console.log('taskItems after change:' + JSON.stringify(props.taskItems));
+
+         props.onTaskChange(taskItems);
+        console.log('taskItems after change:' + JSON.stringify(props.taskItems));
+
+        console.log('set items');
+    }, [taskItems]);
 
     const screenNavigation = (ID) => {
         props.navigation.navigate('Detail', {
@@ -125,7 +130,7 @@ const TaskList = (props) => {
             <View style={styles.items}>
                 {
 
-                    props.taskItems.map((item, index) => {
+                    taskItems.map((item, index) => {
 
 
                         return (

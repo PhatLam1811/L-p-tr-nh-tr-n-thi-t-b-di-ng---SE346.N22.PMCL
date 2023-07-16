@@ -114,7 +114,10 @@ const NoteScreen = (props) => {
     }
   }
 
-  const NoteTaskChangeHandler = (value) => setNote(prev => { return { ...prev, tasks: value } });
+  const NoteTaskChangeHandler = (value) => setNote(prev => { 
+    console.log("NoteTaskChangeHandler called");
+    return { ...prev, tasks: value } 
+  });
 
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });

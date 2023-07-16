@@ -15,34 +15,8 @@ import {
     TextInput as MyTextPut
 } from '@react-native-material/core';
 
-const titleMaxLength = 50;
-const subTitleMaxLength = 70;
-
-const SubTitleInput = (props) => {
-    const [inputHeight, setInputHeight] = useState(30);
-
-    const SubTitleInputLayoutChangeHandler = (event) => {
-        console.log("layout change");
-        setInputHeight(50);
-    }
-
-    return (
 
 
-        <View style={styles.subTitle_container}>
-
-
-            <View style={{ ...styles.subTitle_colorTag, height: inputHeight, backgroundColor: "red" }} />
-            <TextInput style={styles.subTitle_content}
-                multiline={true}
-                maxLength={subTitleMaxLength}
-                selectionColor={"#fcba03"}
-                placeholder="Note Subtitle"
-                placeholderTextColor={AppColors.iconDark}
-                onLayout={SubTitleInputLayoutChangeHandler} />
-        </View>
-    );
-};
 
 
 

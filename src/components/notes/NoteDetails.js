@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 
 import AppColors from "../../utils/AppColors";
-import TaskList from '../tasks/NoteTaskDetails';
+import TaskList from '../tasks/TaskList';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import {
+    Button,
+    Dialog,
+    DialogHeader,
+    DialogContent,
+    DialogActions,
+    Provider,
+    TextInput as MyTextPut
+} from '@react-native-material/core';
 
 import { View, StyleSheet, TextInput, Text, Image } from "react-native";
 
@@ -10,6 +19,17 @@ const titleMaxLength = 50;
 const subTitleMaxLength = 70;
 
 const NoteDetails = (props) => {
+
+    const [dialogId,setDialogId] = useState(0);
+    const [dialogValue,setDialogValue] = useState("");
+
+    const [visible, setVisible] = useState(false);
+    const ShowNoteDialog = (id) => {
+        setVisible(true);
+        setDialogId(id);
+        setDialogValue(note.tasks[id].toDo)
+    }
+
     const note = {
         title: props.note.title,
         subTitle: props.note.subTitle,
@@ -20,67 +40,107 @@ const NoteDetails = (props) => {
         url: props.note.url,
         tasks: props.note.tasks,
     }
-    const [taskItems, setTaskItems]
-        = useState(note.tasks);
+
 
     // useEffect(() => {
     //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
     // }, [taskItems]);
 
     return (
+        <Provider>
+            {
+                visible ?
+                    <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+                        <DialogHeader title="Edit" />
+                        <DialogContent>
+                            <MyTextPut value={dialogValue} onChangeText={text => { setDialogValue(text) }} />
 
-        <View style={styles.noteDetails}>
-            <TextInput style={styles.noteDetails_title}
-                maxLength={titleMaxLength}
-                selectionColor={"#fcba03"}
-                value={note.title}
-                onChangeText={text => props.onTitleChange(text)}
-                placeholder="Note Title"
-                placeholderTextColor={AppColors.iconDark} />
-            <Text style={styles.noteDetails_lastUpdated}>{note.lastUpdated}</Text>
-            <View style={styles.noteDetails_subTitle}>
-                <View style={{ ...styles.subTitle_colorTag, backgroundColor: note.colorTag }} />
-                <TextInput style={styles.subTitle_content}
-                    editable
-                    multiline
-                    maxLength={subTitleMaxLength}
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                title="Cancel"
+                                compact
+                                variant="text"
+                                onPress={() => setVisible(false)}
+                            />
+                            <Button
+                                title="Ok"
+                                compact
+                                variant="text"
+                                onPress={() => {
+                                    let items = taskItems;
+                                    items[dialogId].toDo = dialogValue;
+                                    console.log(items[dialogId].toDo);
+                                    setTaskItems(items);
+                                    setVisible(false);
+
+
+                                }
+                                }
+                            />
+                        </DialogActions>
+                    </Dialog>
+                    : null
+            }
+            <View style={styles.noteDetails}>
+                <TextInput style={styles.noteDetails_title}
+                    maxLength={titleMaxLength}
                     selectionColor={"#fcba03"}
-                    value={note.subTitle}
-                    onChangeText={text => props.onSubTitleChange(text)}
-                    placeholder="Note Subtitle"
+                    value={note.title}
+                    onChangeText={text => props.onTitleChange(text)}
+                    placeholder="Note Title"
                     placeholderTextColor={AppColors.iconDark} />
-            </View>
-            <View style={styles.noteDetails_content}>
-                {note.image != null && <View>
-                    <Image
-                        style={{
-                            width: "98%",
-                            aspectRatio: note.image.width / note.image.height,
-                        }}
-                        // complete={() => OnImageLoadHandler()}
-                        source={{ uri: note.image.uri }}
-                        resizeMode="stretch" />
-                    <MatComIcon style={styles.content_imageDeleteIcon}
-                        name="trash-can"
-                        color="red"
-                        size={30}
-                        onPress={() => props.onImageDelete()} />
-                </View>}
-                {note.tasks == null && <TextInput style={styles.content_text}
-                    editable
-                    multiline
-                    value={note.content}
-                    onChangeText={text => props.onContentChange(text)}
-                    selectionColor={"#fcba03"}
-                    placeholder="Type Your Note Here"
-                    placeholderTextColor={AppColors.iconDark} />}
-                    {/* chuyen state xuong component con */}
-                {note.tasks != null &&
-                    <TaskList
-                        taskItems={taskItems}
-                        setTaskItems={setTaskItems} />} 
-            </View>
-        </View >
+                <Text style={styles.noteDetails_lastUpdated}>{note.lastUpdated}</Text>
+                <View style={styles.noteDetails_subTitle}>
+                    <View style={{ ...styles.subTitle_colorTag, backgroundColor: note.colorTag }} />
+                    <TextInput style={styles.subTitle_content}
+                        editable
+                        multiline
+                        maxLength={subTitleMaxLength}
+                        selectionColor={"#fcba03"}
+                        value={note.subTitle}
+                        onChangeText={text => props.onSubTitleChange(text)}
+                        placeholder="Note Subtitle"
+                        placeholderTextColor={AppColors.iconDark} />
+                </View>
+                <View style={styles.noteDetails_content}>
+                    {note.image != null && <View>
+                        <Image
+                            style={{
+                                width: "98%",
+                                aspectRatio: note.image.width / note.image.height,
+                            }}
+                            // complete={() => OnImageLoadHandler()}
+                            source={{ uri: note.image.uri }}
+                            resizeMode="stretch" />
+                        <MatComIcon style={styles.content_imageDeleteIcon}
+                            name="trash-can"
+                            color="red"
+                            size={30}
+                            onPress={() => props.onImageDelete()} />
+                    </View>}
+                    {note.tasks == null && <TextInput style={styles.content_text}
+                        editable
+                        multiline
+                        value={note.content}
+                        onChangeText={text => props.onContentChange(text)}
+                        selectionColor={"#fcba03"}
+                        placeholder="Type Your Note Here"
+                        placeholderTextColor={AppColors.iconDark} />}
+                   
+                    
+                    {
+                        
+                    note.tasks != null &&
+                        <TaskList
+                            taskItems={note.tasks} 
+                            setVisible={ShowNoteDialog} 
+                            onTaskChange = {props.onTaskChange}
+                             />}
+                </View>
+            </View >
+        </Provider>
     );
 };
 
