@@ -9,10 +9,11 @@ import AppColors from "../utils/AppColors";
 import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
+import Mischellaneous from "../components/tools/Mischellaneous";
+import AddURLDialog from "../dialogs/AddURLDialog";
 
 import { View, StyleSheet, ScrollView } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
-import Mischellaneous from "./Mischellaneous";
 
 const noteColorTags = [
   AppColors.iconDark,
@@ -47,6 +48,7 @@ const NoteScreen = (props) => {
   const appContext = useContext(AppContext);
 
   const [note, setNote] = useState(defaultState);
+  const [isURLDialogVisible, setIsURLDialogVisible] = useState(false);
 
   const SaveNoteHandler = async () => {
     let message = null;
@@ -69,17 +71,29 @@ const NoteScreen = (props) => {
     await AppController.SaveNote({
       note: note,
       onSuccess: () => {
+        props.navigation.goBack();
         appContext.callSnackBar({
           type: "congrats",
           message: "Save note successfully!"
         });
-        props.navigation.goBack();
       },
       onFailed: (response) => {
         console.log(response);
       }
     })
   }
+
+  const DeleteNoteHandler = () => AppController.DeleteNote({
+    ID: props.route.params.ID,
+    onSuccess: () => {
+      appContext.callSnackBar({
+        type: "congrats",
+        message: "Delete note successfully!"
+      });
+      props.navigation.goBack();
+    },
+    onFailed: (error) => console.log(error)
+  });
 
   const ImagePicker = async () => {
     try {
@@ -97,8 +111,8 @@ const NoteScreen = (props) => {
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
-  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } })
-  const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
+  const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url } });
+  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
 
   useEffect(() => {
     if (props.route.params.isCreateNote == false) {
@@ -114,6 +128,8 @@ const NoteScreen = (props) => {
           setNote(prev => { return { ...prev, tasks: [] } }); break;
         case "image":
           ImagePicker(); break;
+        case "url":
+          setIsURLDialogVisible(true); break;
       }
     }
   }, []);
@@ -138,9 +154,18 @@ const NoteScreen = (props) => {
           onTitleChange={NoteTitleChangeHandler}
           onSubTitleChange={NoteSubTitleChangeHandler}
           onContentChange={NoteContentChangeHandler}
-          onImageDelete={NoteImageDeleteHandler} />
+          onUrlChange={NoteUrlChangeHandler}
+          onImageDelete={NoteImageChangeHandler} />
       </ScrollView>
-      <Mischellaneous style={styles.noteScreen_mischellaneous}></Mischellaneous>
+      <Mischellaneous
+        isCreateNote={props.route.params.isCreateNote}
+        addImage={ImagePicker}
+        addUrl={() => setIsURLDialogVisible(true)}
+        deleteNote={DeleteNoteHandler} />
+      <AddURLDialog
+        isVisible={isURLDialogVisible}
+        setIsVisible={setIsURLDialogVisible}
+        onUrlAdded={NoteUrlChangeHandler} />
     </View>
   );
 }
@@ -158,11 +183,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.secondaryDark,
     height: 60,
     alignItems: "center",
-  },
-
-  noteScreen_mischellaneous: {
-    backgroundColor: AppColors.primaryDark,
-    height: 50,
   },
 
   noteScreen_icon: {

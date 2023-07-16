@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import OctIcon from 'react-native-vector-icons/Octicons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/tools/SearchBar';
 import NoteList from '../components/notes/NoteList';
 import AppColors from '../utils/AppColors';
 import AppController from '../controllers/AppController';

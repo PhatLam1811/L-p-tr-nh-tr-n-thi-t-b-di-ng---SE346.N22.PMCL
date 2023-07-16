@@ -1,11 +1,11 @@
 /* eslint-disable*/
 import React, { useContext, useEffect, useState } from "react";
+import AppContext, { AppContextProvider } from "./src/utils/AppContext";
 
 import MainScreen from "./src/screen/MainScreen";
 import NewTaskScreen from "./src/screen/NewTaskScreen";
 import NoteScreen from "./src/screen/NoteScreen";
-import CustomSnackBar from "./src/screen/CustomSnackBar";
-import AppContext, { AppContextProvider } from "./src/utils/AppContext";
+import CustomSnackBar from "./src/components/tools/CustomSnackBar";
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -62,9 +62,10 @@ const AppChild = () => {
 }
 
 const App = () => {
-  return (<AppContextProvider>
-    <AppChild />
-  </AppContextProvider>)
+  return (
+    <AppContextProvider>
+      <AppChild />
+    </AppContextProvider>)
 };
 
 export default App;

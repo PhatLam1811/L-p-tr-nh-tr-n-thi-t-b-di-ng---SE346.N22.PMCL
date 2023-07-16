@@ -1,1 +1,0 @@
-export const ScreenType={main:'MAIN',newTask:'NEWTASK',detail:'DETAIL'}
