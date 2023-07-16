@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-import AppColors from "../utils/AppColors";
+import AppColors from "../../utils/AppColors";
 import OctIcon from "react-native-vector-icons/Octicons";
 import FaIcon from "react-native-vector-icons/FontAwesome";
 

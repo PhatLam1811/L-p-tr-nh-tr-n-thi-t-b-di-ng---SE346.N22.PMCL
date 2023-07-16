@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import AppColors from "../utils/AppColors";
+import AppColors from "../../utils/AppColors";
 import OctIcon from 'react-native-vector-icons/Octicons';
 import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";

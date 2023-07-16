@@ -9,10 +9,10 @@ import AppColors from "../utils/AppColors";
 import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import TaskModel from "../classes/Task";
+import Mischellaneous from "../components/tools/Mischellaneous";
 
 import { View, StyleSheet, ScrollView } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
-import Mischellaneous from "./Mischellaneous";
 
 const noteColorTags = [
   AppColors.iconDark,

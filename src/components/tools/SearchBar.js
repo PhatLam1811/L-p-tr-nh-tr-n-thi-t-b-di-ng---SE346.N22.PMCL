@@ -5,7 +5,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 import OctIcon from "react-native-vector-icons/Octicons";
 import MatIcon from "react-native-vector-icons/MaterialIcons";
 import FeaIcon from "react-native-vector-icons/Feather";
-import AppColors from "../utils/AppColors";
+import AppColors from "../../utils/AppColors";
 
 const SearchBar = (props) => {
     const [searchInput, setSearchInput] = useState("");
