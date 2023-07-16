@@ -62,7 +62,7 @@ const Mischellaneous = () => {
             <Pressable style={styles.mischellaneousOption} onPress={ToggleMischellaneousBar}>
                 <MatComIcon
                     name="trash-can"
-                    style={styles.mischellaneousIcon}
+                    {...styles.mischellaneousIcon}
                     color="red"
                     size={30} />
                 <Text style={styles.mischellaneous_text}>Delete Note</Text>
