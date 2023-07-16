@@ -19,8 +19,8 @@ const NoteCard = (props) => {
 
   const NoteSelectHandler = () => props.onSelect(props.index);
   const EditNoteHandler = () => props.onSelect(props.index);
-  const CopyNoteHandler = () => console.log("Copy Note");
-  const ShareNoteHandler = () => console.log("Share Note");
+  const CopyNoteHandler = () => props.onCopy(props.index);
+  const ShareNoteHandler = () => props.onShare(props.index);
   const DeleteNoteHandler = () => props.onDelete(props.index);
 
   return (

@@ -11,12 +11,12 @@ const HyperLink = (props) => {
     const [url, setUrl] = useState(null);
 
     const GoToLink = useCallback(async () => {
-        const isSuccess = await Linking.openURL(url);
-
-        if (!isSuccess) {
+        try {
+            await Linking.openURL(url);
+        } catch (error) {
             appContext.callSnackBar({
                 type: "error",
-                message: "Can't open url!"
+                message: `Unexpected error - Could not open URL ${url}`,
             });
         }
     }, [url])

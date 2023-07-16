@@ -9,6 +9,8 @@ const NoteList = (props) => {
 
   const SelectNoteHandler = (index) => props.onSelectNote(notes[index].ID);
   const DeleteNoteHandler = (index) => props.onDeleteNote(notes[index].ID);
+  const ShareNoteHandler = (index) => props.onShareNote(notes[index].ID);
+  const CopyNoteHandler = (index) => props.onCopyNote(notes[index].ID);
 
   const RenderNoteComponentsHandler = (list) => {
     return list.map((item) => {
@@ -18,7 +20,10 @@ const NoteList = (props) => {
         index={index}
         note={item}
         onSelect={SelectNoteHandler}
-        onDelete={DeleteNoteHandler} />
+        onDelete={DeleteNoteHandler} 
+        onShare={ShareNoteHandler}
+        onCopy={CopyNoteHandler}
+        />
     });
   }
 

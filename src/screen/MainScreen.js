@@ -10,7 +10,9 @@ import AppContext from '../utils/AppContext';
 
 import { useIsFocused } from '@react-navigation/native';
 import { FAB } from '@react-native-material/core';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View,Share } from 'react-native';
+import { GetNoteAction } from '../actions/GetNote';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const MainScreen = (props) => {
     const isFocus = useIsFocused();
@@ -55,6 +57,45 @@ const MainScreen = (props) => {
         });
     }
 
+    const ShareNoteHandler=async(ID)=>{
+        try {
+            const response= await GetNoteAction(ID);
+            const note=response.data;
+
+
+            //nội dung Share để ở trong message, chỉ để ở dạng string
+            const result = await Share.share({
+              message:'#'+note.title+'\n'+note.subTitle+'\n'+note.content,
+            });
+            if (result.action === Share.sharedAction) {
+              if (result.activityType) {
+                // shared with activity type of result.activityType
+              } else {
+                // shared
+              }
+            } else if (result.action === Share.dismissedAction) {
+              // dismissed
+            }
+          } catch (error) {
+            console.log(error);
+          }
+};
+
+const CopyNoteHandler=async(ID)=>{
+    try {
+        console.log(ID);
+        const response= await GetNoteAction(ID);
+        const note=response.data;
+        //console.log(note);
+
+        Clipboard.setString('#'+note.title+'\n'+note.subTitle+'\n'+note.content);
+
+      } catch (error) {
+        console.log(error);
+      }
+}
+    
+
     useEffect(() => {
         if (isFocus) {
             LoadNotesHandler();
@@ -76,7 +117,10 @@ const MainScreen = (props) => {
                     list={notes}
                     layout={appContext.appLayout}
                     onSelectNote={SelectNoteHandler}
-                    onDeleteNote={DeleteNoteHandler} />
+                    onDeleteNote={DeleteNoteHandler} 
+                    onCopyNote={CopyNoteHandler}
+                    onShareNote={ShareNoteHandler}
+                    />
             </View>
             <View style={styles.mainScreen__toolbar}>
                 <OctIcon
