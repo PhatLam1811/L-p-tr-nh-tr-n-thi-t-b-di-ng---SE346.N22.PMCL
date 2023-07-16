@@ -61,6 +61,7 @@ const NoteScreen = (props) => {
   }
 
   const SaveNoteHandler = async () => {
+    console.log(note);
     await AppController.SaveNote({
       note: note,
       onSuccess: () => props.navigation.goBack(),

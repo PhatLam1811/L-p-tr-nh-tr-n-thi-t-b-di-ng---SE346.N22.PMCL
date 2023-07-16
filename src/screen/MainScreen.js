@@ -73,6 +73,7 @@ const MainScreen = (props) => {
                     onChangeLayout={ChangeNotesLayoutHandler} />
                 <NoteList
                     list={notes}
+                    setNotes={setNotes}
                     layout={isGridLayout ? 'grid' : 'column'}
                     onSelectNote={SelectNoteHandler}
                     onDeleteNote={DeleteNoteHandler} />

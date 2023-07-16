@@ -88,19 +88,11 @@ const TaskList = (props) => {
         //props.taskItems = taskItems;
         console.log('taskItems after change:' + JSON.stringify(props.taskItems));
 
-         props.onTaskChange(taskItems);
+        props.onTaskChange(taskItems);
         console.log('taskItems after change:' + JSON.stringify(props.taskItems));
 
         console.log('set items');
     }, [taskItems]);
-
-    const screenNavigation = (ID) => {
-        props.navigation.navigate('Detail', {
-            ID: ID,
-            onGoBack: () => _retrieveData(),
-        });
-    }
-
 
 
     return (

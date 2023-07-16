@@ -69,10 +69,12 @@ const NoteDetails = (props) => {
                                 compact
                                 variant="text"
                                 onPress={() => {
-                                    let items = taskItems;
+                                    let items = note.tasks;
                                     items[dialogId].toDo = dialogValue;
                                     console.log(items[dialogId].toDo);
-                                    setTaskItems(items);
+
+                                    note.tasks = items
+                                    //setTaskItems(items);
                                     setVisible(false);
 
 
@@ -137,7 +139,9 @@ const NoteDetails = (props) => {
                             taskItems={note.tasks} 
                             setVisible={ShowNoteDialog} 
                             onTaskChange = {props.onTaskChange}
-                             />}
+                             />
+                             
+                             }
                 </View>
             </View >
         </Provider>

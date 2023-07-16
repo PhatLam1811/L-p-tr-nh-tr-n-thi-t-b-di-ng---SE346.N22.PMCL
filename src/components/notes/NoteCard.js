@@ -1,8 +1,9 @@
 /* eslint-disable*/
-import React from 'react';
+import {React,useState} from 'react';
 
 import AppColors from '../../utils/AppColors';
 import moment from 'moment';
+import Task from '../tasks/Task';
 
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
@@ -16,6 +17,19 @@ const NoteCard = (props) => {
     image: props.note.image,
     tasks: props.note.tasks,
   }
+
+  const completeTask = async (index) => {
+    let itemsCopy = [...note.tasks];
+    itemsCopy[index].isFinished = !itemsCopy[index].isFinished;
+    note.tasks = itemsCopy;
+    setTaskItems(itemsCopy);
+    console.log('note.tasks before change:' + JSON.stringify(note.tasks));
+
+
+  } 
+
+  
+  const [taskItems, setTaskItems]  = useState(note.tasks);
 
   const NoteSelectHandler = () => props.onSelect(props.index);
   const EditNoteHandler = () => console.log("Edit Note");
@@ -44,6 +58,23 @@ const NoteCard = (props) => {
           <Text style={styles.noteCard_subTitle} numberOfLines={5}>{note.subTitle}</Text>
           <Text style={styles.noteCard_lastUpdated}>{note.lastUpdated}  </Text>
         </View>
+
+        {
+          note.tasks != null && taskItems != null &&
+          taskItems.map((item, index) => {
+            return (
+              <View>
+                  {
+                    <TouchableOpacity >
+                      <Task isFinished={item.isFinished} text={item.toDo} />
+                    </TouchableOpacity>
+                  }
+              </View>
+
+            )
+          })
+
+        }
       </MenuTrigger>
       <MenuOptions style={styles.noteCard_popupMenu}>
         <Text style={styles.popupMenu_title}>Note Title {props.id}</Text>

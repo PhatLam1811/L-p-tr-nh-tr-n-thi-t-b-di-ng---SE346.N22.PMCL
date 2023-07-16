@@ -10,8 +10,12 @@ const NoteList = (props) => {
   const SelectNoteHandler = (index) => props.onSelectNote(notes[index].ID);
   const DeleteNoteHandler = (index) => props.onDeleteNote(notes[index].ID);
 
-  const RenderNoteComponentsHandler = (list) => {
-    return list.map((item) => {
+  const RenderNoteComponentsHandler = (notes) => {
+    console.log("am i loaded?");
+    console.log(notes);
+
+      return notes.map((item) => {
+
       const index = notes.findIndex(noteItem => noteItem.ID === item.ID);
       return <NoteCard
         key={index}
