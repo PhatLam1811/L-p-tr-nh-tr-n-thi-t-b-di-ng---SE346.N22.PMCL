@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
+import AppContext from "../utils/AppContext";
 import AppColors from "../utils/AppColors";
 import OctIcon from 'react-native-vector-icons/Octicons';
 
-import { View, Modal, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import { View, Modal, Text, StyleSheet, TextInput, Pressable, Keyboard } from "react-native";
 
 const AddURLDialog = (props) => {
+    const httpsRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
+    const nonHttpsRegex = /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
+
+    const appContext = useContext(AppContext);
+
     const [urlInput, setUrlInput] = useState("");
 
+    const AddURLHandler = () => {
+        Keyboard.dismiss();
+        if (urlInput.trim().match(httpsRegex) != null ||
+            urlInput.trim().match(nonHttpsRegex) != null) {
+            props.onUrlAdded(urlInput);
+            props.setIsVisible(false);
+        } else {
+            appContext.callSnackBar({
+                type: "error",
+                message: "Please enter a valid URL",
+            });
+        }
+    }
 
+    useEffect(() => setUrlInput(""), [props.isVisible]);
 
     return (
         <Modal visible={props.isVisible} transparent={true} >
@@ -21,19 +41,23 @@ const AddURLDialog = (props) => {
                     <TextInput
                         style={styles.urlDialogText}
                         value={urlInput}
+                        autoFocus={true}
                         onChangeText={(text) => setUrlInput(text)}
-                        selectionColor={"#fcba03"} />
+                        placeholder="Enter URL"
+                        placeholderTextColor={AppColors.iconDark}
+                        selectionColor={"#fcba03"}
+                        inputMode="url" />
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", marginTop: 5 }}>
                         <Pressable onPress={() => props.setIsVisible(false)}>
                             <Text style={{ ...styles.urlDialogAction, marginEnd: 20 }}>CANCEL</Text>
                         </Pressable>
-                        <Pressable>
+                        <Pressable onPress={AddURLHandler}>
                             <Text style={styles.urlDialogAction}>ADD</Text>
                         </Pressable>
                     </View>
                 </View>
             </Pressable>
-        </Modal>
+        </Modal >
     )
 }
 

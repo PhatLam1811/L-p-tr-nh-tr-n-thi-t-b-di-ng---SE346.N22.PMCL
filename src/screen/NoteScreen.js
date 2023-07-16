@@ -111,8 +111,8 @@ const NoteScreen = (props) => {
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
-  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } })
-  const NoteImageDeleteHandler = () => setNote(prev => { return { ...prev, image: null } });
+  const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url } });
+  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
 
   useEffect(() => {
     if (props.route.params.isCreateNote == false) {
@@ -154,14 +154,18 @@ const NoteScreen = (props) => {
           onTitleChange={NoteTitleChangeHandler}
           onSubTitleChange={NoteSubTitleChangeHandler}
           onContentChange={NoteContentChangeHandler}
-          onImageDelete={NoteImageDeleteHandler} />
+          onUrlChange={NoteUrlChangeHandler}
+          onImageDelete={NoteImageChangeHandler} />
       </ScrollView>
       <Mischellaneous
         isCreateNote={props.route.params.isCreateNote}
         addImage={ImagePicker}
         addUrl={() => setIsURLDialogVisible(true)}
         deleteNote={DeleteNoteHandler} />
-      <AddURLDialog isVisible={isURLDialogVisible} setIsVisible={setIsURLDialogVisible} />
+      <AddURLDialog
+        isVisible={isURLDialogVisible}
+        setIsVisible={setIsURLDialogVisible}
+        onUrlAdded={NoteUrlChangeHandler} />
     </View>
   );
 }

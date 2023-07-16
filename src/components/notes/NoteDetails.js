@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import AppColors from "../../utils/AppColors";
 import TaskList from '../tasks/TaskList';
+import HyperLink from "../others/HyperLink";
 import MatComIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from 'moment';
 
@@ -53,6 +54,7 @@ const NoteDetails = (props) => {
                     placeholderTextColor={AppColors.iconDark} />
             </View>
             <View style={styles.noteDetails_content}>
+                {note.url != null && <HyperLink link={note.url} onLinkDelete={() => props.onUrlChange(null)} />}
                 {note.image != null && <View>
                     <Image
                         style={{
@@ -65,7 +67,7 @@ const NoteDetails = (props) => {
                         name="trash-can"
                         color="red"
                         size={30}
-                        onPress={() => props.onImageDelete()} />
+                        onPress={() => props.onImageDelete(null)} />
                 </View>}
                 {note.tasks == null && <TextInput style={styles.content_text}
                     editable
