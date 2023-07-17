@@ -7,21 +7,12 @@ import EntIcon from "react-native-vector-icons/Entypo";
 import AppContext from "../utils/AppContext";
 import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
-import TaskModel from "../classes/Task";
 import Mischellaneous from "../components/tools/Mischellaneous";
 import AddURLDialog from "../dialogs/AddURLDialog";
 
 import { View, StyleSheet, ScrollView, Share } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { colorTags } from "../utils/AppColors";
-
-const sampleTasks = [
-  new TaskModel("watch walking dead ep6", false),
-  new TaskModel("finished todo app", true),
-  new TaskModel("report today tasks to PL", false),
-  new TaskModel("jogging", false),
-  new TaskModel("sleep at 10", false),
-];
 
 const defaultState = {
   ID: null,
@@ -43,25 +34,22 @@ const NoteScreen = (props) => {
   const [isURLDialogVisible, setIsURLDialogVisible] = useState(false);
 
   const SaveNoteHandler = async () => {
-    let message = null;
-
     if (note.subTitle == null && note.content == null &&
       note.image == null && note.url == null &&
-      note.tasks == null)
-      message = "Please fill in note's subtitle or content";
-
-    if (note.title == null || note.title === "") message = "Note title can't be empty!";
-
-    if (message != null) {
+      (note.tasks == null || note.tasks.length === 0)) {
       appContext.callSnackBar({
         type: "error",
-        message: message,
+        message: "Please fill in note content",
       });
       return;
     }
 
+    let saveNote = note;
+
+    if (saveNote.title == null || saveNote.title === "") saveNote = { ...saveNote, title: "Untitled" };
+
     await AppController.SaveNote({
-      note: note,
+      note: saveNote,
       onSuccess: () => {
         props.navigation.goBack();
         appContext.callSnackBar({
@@ -78,11 +66,11 @@ const NoteScreen = (props) => {
   const DeleteNoteHandler = () => AppController.DeleteNote({
     ID: props.route.params.ID,
     onSuccess: () => {
+      props.navigation.goBack();
       appContext.callSnackBar({
         type: "congrats",
         message: "Delete note successfully!"
       });
-      props.navigation.goBack();
     },
     onFailed: (error) => console.log(error)
   });
@@ -105,7 +93,8 @@ const NoteScreen = (props) => {
   const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
   const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url } });
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
-  const NoteColorTagChangeHandler = (tag) => setNote(prev => { return { ...prev, colorTag: tag } })
+  const NoteColorTagChangeHandler = (tag) => setNote(prev => { return { ...prev, colorTag: tag } });
+  const NoteTaskChangeHandler = (value) => setNote(prev => { return { ...prev, tasks: value } });
   const ShareNoteHandler = async () => {
     try {
       let shareContent = '#' + note.title;
@@ -210,6 +199,7 @@ const NoteScreen = (props) => {
           onTitleChange={NoteTitleChangeHandler}
           onSubTitleChange={NoteSubTitleChangeHandler}
           onContentChange={NoteContentChangeHandler}
+          onTasksChange={NoteTaskChangeHandler}
           onUrlChange={NoteUrlChangeHandler}
           onImageDelete={NoteImageChangeHandler} />
       </ScrollView>
