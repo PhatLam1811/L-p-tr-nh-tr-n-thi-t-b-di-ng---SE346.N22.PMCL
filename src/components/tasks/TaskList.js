@@ -89,6 +89,7 @@ const TaskList = (props) => {
         console.log('taskItems after change:' + JSON.stringify(props.taskItems));
 
         props.onTaskChange(taskItems);
+        
         console.log('taskItems after change:' + JSON.stringify(props.taskItems));
 
         console.log('set items');

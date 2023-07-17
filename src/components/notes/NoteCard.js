@@ -2,6 +2,7 @@
 import { React, useEffect,useState } from 'react';
 
 import AppColors from '../../utils/AppColors';
+import AppController from '../../controllers/AppController';
 import moment from 'moment';
 import Task from '../tasks/Task';
 
@@ -10,6 +11,7 @@ import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-m
 
 const NoteCard = (props) => {
   let note = {
+    ID : props.note.ID,
     title: props.note.title,
     subTitle: props.note.subTitle,
     colorTag: props.note.colorTag,
@@ -24,26 +26,20 @@ const NoteCard = (props) => {
     itemsCopy[index].isFinished = !itemsCopy[index].isFinished;
     note.tasks = itemsCopy;
     setTaskItems(itemsCopy);
-    console.log('note.tasks before change:' + JSON.stringify(note.tasks));
-    //await SaveNoteHandler(itemsCopy);
-
+    console.log('note.tasks with id ' + note.id + ' before change:' + JSON.stringify(note.tasks));
+    await SaveNoteHandler(note);
   }
 
   const SaveNoteHandler = async () => {
+    console.log("saving " + note);
     await AppController.SaveNote({
       note: note,
-      onSuccess: () => {
-        appContext.callSnackBar({
-          type: "congrats",
-          message: "Save note successfully!"
-        });
-        props.navigation.goBack();
-      },
-      onFailed: (response) => {
-        console.log(response);
-      }
+      onSuccess: () => console.log('update task'),
+      onFailed: (response) => console.log(response),
     })
   }
+
+  
 
   const NoteSelectHandler = () => props.onSelect(props.index);
   const EditNoteHandler = () => console.log("Edit Note");
