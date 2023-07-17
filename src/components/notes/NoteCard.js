@@ -1,30 +1,49 @@
 /* eslint-disable*/
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
+import AppController from '../../controllers/AppController';
+import Task from "../tasks/Task";
 import AppContext from '../../utils/AppContext';
 import moment from 'moment';
 
 import { colorTags } from '../../utils/AppColors';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import TaskShorcut from '../tasks/TaskShortcut';
 
 const NoteCard = (props) => {
-  const note = {
-    title: props.note.title,
-    subTitle: props.note.subTitle,
-    colorTag: props.note.colorTag,
-    lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY, h:mm a"),
-    image: props.note.image,
-    tasks: props.note.tasks,
-  }
-
   const appContext = useContext(AppContext);
+
+  const [note, setNote] = useState({});
 
   const NoteSelectHandler = () => props.onSelect(props.index);
   const EditNoteHandler = () => props.onSelect(props.index);
   const CopyNoteHandler = () => props.onCopy(props.index);
   const ShareNoteHandler = () => props.onShare(props.index);
   const DeleteNoteHandler = () => props.onDelete(props.index);
+
+  const NoteTasksChangeHandler = async (index) => {
+    let itemsCopy = [...note.tasks];
+    itemsCopy[index].isFinished = !itemsCopy[index].isFinished;
+    await AppController.SaveNote({
+      note: { ...note, tasks: itemsCopy },
+      onSuccess: () => setNote(prev => { return { ...prev, tasks: itemsCopy } }),
+      onFailed: (response) => console.log(response),
+    })
+  }
+
+  useEffect(() => {
+    const temp = {
+      ID: props.note.ID,
+      title: props.note.title,
+      subTitle: props.note.subTitle,
+      colorTag: props.note.colorTag,
+      lastUpdated: moment(props.note.lastUpdated).format("dddd, Do MMM YYYY, h:mm a"),
+      image: props.note.image,
+      tasks: props.note.tasks,
+    }
+    setNote(temp);
+  }, [props.note])
 
   const styles = StyleSheet.create({
     noteCard: {
@@ -112,7 +131,8 @@ const NoteCard = (props) => {
             resizeMode="stretch" />}
         <View style={styles.noteCard__content}>
           <Text style={styles.noteCard_title}>{note.title}</Text>
-          <Text style={styles.noteCard_subTitle} numberOfLines={5}>{note.subTitle}</Text>
+          {(note.subTitle != null || note.tasks == null) && <Text style={styles.noteCard_subTitle} numberOfLines={5}>{note.subTitle}</Text>}
+          {note.tasks != null && note.tasks.map((item, index) => <TaskShorcut key={index} index={index} content={item} onCheck={NoteTasksChangeHandler} />)}
           <Text style={styles.noteCard_lastUpdated}>{note.lastUpdated}  </Text>
         </View>
       </MenuTrigger>

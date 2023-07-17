@@ -26,12 +26,6 @@ const NoteDetails = (props) => {
     }
 
     const appContext = useContext(AppContext);
-    const [taskItems, setTaskItems]
-        = useState();
-
-    // useEffect(() => {
-    //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
-    // }, [taskItems]);
 
     const styles = StyleSheet.create({
         noteDetails: {
@@ -100,7 +94,6 @@ const NoteDetails = (props) => {
     });
 
     return (
-
         <View style={styles.noteDetails}>
             <TextInput style={styles.noteDetails_title}
                 maxLength={titleMaxLength}
@@ -126,8 +119,8 @@ const NoteDetails = (props) => {
                     placeholderTextColor={appContext.appTheme?.icon} />
             </View>
             <View style={styles.noteDetails_content}>
-                {note.url != null && <HyperLink link={note.url} onLinkDelete={() => props.onUrlChange(null)} />}
-                {note.image != null && <View>
+                {note.url != null && note.tasks == null && <HyperLink link={note.url} onLinkDelete={() => props.onUrlChange(null)} />}
+                {note.image != null && note.tasks == null && <View>
                     <Image
                         style={{
                             width: "98%",
@@ -152,7 +145,9 @@ const NoteDetails = (props) => {
                 {note.tasks != null &&
                     <TaskList
                         taskItems={note.tasks}
-                        setTaskItems={setTaskItems} />}
+                        // setVisible={ShowEditDialog}
+                        onTasksChange={props.onTasksChange}
+                    />}
                 <View style={{ height: 100 }} />
             </View>
         </View >
