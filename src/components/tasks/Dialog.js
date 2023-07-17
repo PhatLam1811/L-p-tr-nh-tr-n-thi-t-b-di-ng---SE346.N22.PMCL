@@ -11,22 +11,9 @@ const AddURLDialog = (props) => {
 
     const appContext = useContext(AppContext);
 
-    const [urlInput, setUrlInput] = useState("");
+    const [urlInput, setUrlInput] = useState();
 
-    const AddURLHandler = () => {
-        Keyboard.dismiss();
-        if (urlInput.trim().match(httpsRegex) != null) {
-            props.setIsVisible(false);
-            props.onUrlAdded(urlInput);
-        } else {
-            appContext.callSnackBar({
-                type: "error",
-                message: "Please enter a valid URL",
-            });
-        }
-    }
-
-    useEffect(() => setUrlInput(""), [props.isVisible]);
+    useEffect(() => setUrlInput(props.task.toDo), [props.isVisible]);
 
     const styles = StyleSheet.create({
         urlDialogBackground: {
@@ -38,21 +25,21 @@ const AddURLDialog = (props) => {
         },
 
         urlDialog: {
-            backgroundColor: appContext.appTheme?.secondary,
+            backgroundColor: "rgba(0, 0, 0, 0.90)",
             width: 300,
             padding: 20,
             borderRadius: 5,
         },
 
         urlDialogText: {
-            color: appContext.appTheme?.text,
+            color: '#fff',
             fontSize: 17.5,
             fontWeight: 500,
         },
 
         urlDialogIcon: {
             backgroundColor: 'transparent',
-            color: appContext.appTheme?.text,
+            color: '#fff',
             size: 23,
             marginEnd: 15,
         },
@@ -63,21 +50,21 @@ const AddURLDialog = (props) => {
             fontWeight: 500,
         },
     });
-
+   
     return (
         <Modal visible={props.isVisible} transparent={true} >
             <Pressable style={styles.urlDialogBackground} onPress={() => props.setIsVisible(false)}>
                 <View style={styles.urlDialog}>
                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 5 }}>
                         <OctIcon name="globe" {...styles.urlDialogIcon} />
-                        <Text style={styles.urlDialogText}>Add URL</Text>
+                        <Text style={styles.urlDialogText}>Edit</Text>
                     </View>
                     <TextInput
                         style={styles.urlDialogText}
                         value={urlInput}
+
                         autoFocus={true}
                         onChangeText={(text) => setUrlInput(text)}
-                        placeholder="Enter URL"
                         placeholderTextColor={appContext.appTheme?.icon}
                         selectionColor={"#fcba03"}
                         inputMode="url" />
@@ -85,8 +72,13 @@ const AddURLDialog = (props) => {
                         <Pressable onPress={() => props.setIsVisible(false)}>
                             <Text style={{ ...styles.urlDialogAction, marginEnd: 20 }}>CANCEL</Text>
                         </Pressable>
-                        <Pressable onPress={AddURLHandler}>
-                            <Text style={styles.urlDialogAction}>ADD</Text>
+                        <Pressable onPress={() => {
+                            props.task.toDo = urlInput;
+                            props.setIsVisible(false);
+                        }
+
+                        }>
+                            <Text style={styles.urlDialogAction}>Submit</Text>
                         </Pressable>
                     </View>
                 </View>

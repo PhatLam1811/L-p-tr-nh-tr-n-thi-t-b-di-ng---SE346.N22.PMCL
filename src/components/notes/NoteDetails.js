@@ -12,6 +12,7 @@ import {
     Provider,
     TextInput as MyTextPut
 } from '@react-native-material/core';
+import EditDialog from "../tasks/Dialog";
 
 import { View, StyleSheet, TextInput, Text, Image } from "react-native";
 
@@ -20,12 +21,13 @@ const subTitleMaxLength = 70;
 
 const NoteDetails = (props) => {
 
-    const [dialogId,setDialogId] = useState(0);
-    const [dialogValue,setDialogValue] = useState("");
+    const [dialogId, setDialogId] = useState(0);
+    const [dialogValue, setDialogValue] = useState("");
 
     const [visible, setVisible] = useState(false);
     const ShowNoteDialog = (id) => {
         setVisible(true);
+        console.log("ready to log")
         setDialogId(id);
         setDialogValue(note.tasks[id].toDo)
     }
@@ -42,47 +44,18 @@ const NoteDetails = (props) => {
     }
 
 
-    // useEffect(() => {
-    //     console.log('taskItems after change at ntoedetails:' + JSON.stringify(taskItems));
-    // }, [taskItems]);
 
     return (
-        <Provider>
+        <View>
             {
                 visible ?
-                    <Dialog visible={visible} onDismiss={() => setVisible(false)}>
-                        <DialogHeader title="Edit" />
-                        <DialogContent>
-                            <MyTextPut value={dialogValue} onChangeText={text => { setDialogValue(text) }} />
-
-
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                title="Cancel"
-                                compact
-                                variant="text"
-                                onPress={() => setVisible(false)}
-                            />
-                            <Button
-                                title="Ok"
-                                compact
-                                variant="text"
-                                onPress={() => {
-                                    let items = note.tasks;
-                                    items[dialogId].toDo = dialogValue;
-                                    console.log(items[dialogId].toDo);
-
-                                    note.tasks = items
-                                    //setTaskItems(items);
-                                    setVisible(false);
-
-
-                                }
-                                }
-                            />
-                        </DialogActions>
-                    </Dialog>
+                    <EditDialog
+                        isVisible={visible}
+                        setIsVisible={setVisible}
+                        task={dialogId != null && note.tasks[dialogId] != null && note.tasks[dialogId]}
+                        editTaskId={dialogId}
+                    />
+                   
                     : null
             }
             <View style={styles.noteDetails}>
@@ -130,21 +103,23 @@ const NoteDetails = (props) => {
                         selectionColor={"#fcba03"}
                         placeholder="Type Your Note Here"
                         placeholderTextColor={AppColors.iconDark} />}
-                   
-                    
+
+
                     {
-                        
-                    note.tasks != null &&
+
+                        note.tasks != null &&
                         <TaskList
-                            taskItems={note.tasks} 
-                            setVisible={ShowNoteDialog} 
-                            onTaskChange = {props.onTaskChange}
-                             />
-                             
-                             }
+                            taskItems={note.tasks}
+                            setVisible={ShowNoteDialog}
+                            onTaskChange={props.onTaskChange}
+                        />
+
+                    }
                 </View>
             </View >
-        </Provider>
+
+
+        </View>
     );
 };
 
