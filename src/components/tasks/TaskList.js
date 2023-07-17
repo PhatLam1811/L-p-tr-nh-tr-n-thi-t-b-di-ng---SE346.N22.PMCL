@@ -156,7 +156,7 @@ const TaskList = (props) => {
                                 </MenuTrigger>
                                 <MenuOptions style={styles.noteCard_popupMenu}>
                                     <Text style={styles.popupMenu_title}>{item.toDo}</Text>
-                                    <MenuOption customStyles={styles.popupMenu_options} onSelect={props.setVisible} value={index} text="Edit Task" />
+                                    <MenuOption customStyles={styles.popupMenu_options} onSelect={props.showEditTaskDialog} value={{ isVisible: true, index: index, task: item }} text="Edit Task" />
                                     <MenuOption customStyles={styles.popupMenu_options} onSelect={WebSearch} value={index} text="Web Search" />
                                     <MenuOption customStyles={styles.popupMenu_options} onSelect={CopyTaskHandler} value={item.toDo} text="Copy To Clipboard" />
                                     <MenuOption customStyles={styles.popupMenu_options} onSelect={deleteTask} value={index} text="Delete Task" />

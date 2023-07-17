@@ -9,6 +9,7 @@ import AppController from "../controllers/AppController";
 import NoteDetails from "../components/notes/NoteDetails";
 import Mischellaneous from "../components/tools/Mischellaneous";
 import AddURLDialog from "../dialogs/AddURLDialog";
+import EditTaskDialog from "../dialogs/EditTaskDialog";
 
 import { View, StyleSheet, ScrollView, Share } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -32,6 +33,7 @@ const NoteScreen = (props) => {
 
   const [note, setNote] = useState(defaultState);
   const [isURLDialogVisible, setIsURLDialogVisible] = useState(false);
+  const [editTaskDialog, setEditTaskDialog] = useState({ isVisible: false, index: -1, task: null });
 
   const SaveNoteHandler = async () => {
     if (note.subTitle == null && note.content == null &&
@@ -95,6 +97,15 @@ const NoteScreen = (props) => {
   const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
   const NoteColorTagChangeHandler = (tag) => setNote(prev => { return { ...prev, colorTag: tag } });
   const NoteTaskChangeHandler = (value) => setNote(prev => { return { ...prev, tasks: value } });
+
+  const NoteTaskEditHandler = ({ index, toDo }) => {
+    let temp = note.tasks;
+    if (index != -1) {
+      temp[index].toDo = toDo;
+      setNote(prev => { return { ...prev, tasks: temp } })
+    }
+  }
+
   const ShareNoteHandler = async () => {
     try {
       let shareContent = '#' + note.title;
@@ -201,7 +212,8 @@ const NoteScreen = (props) => {
           onContentChange={NoteContentChangeHandler}
           onTasksChange={NoteTaskChangeHandler}
           onUrlChange={NoteUrlChangeHandler}
-          onImageDelete={NoteImageChangeHandler} />
+          onImageDelete={NoteImageChangeHandler}
+          showEditTaskDialog={setEditTaskDialog} />
       </ScrollView>
       <Mischellaneous
         isCreateNote={props.route.params.isCreateNote}
@@ -214,6 +226,12 @@ const NoteScreen = (props) => {
         isVisible={isURLDialogVisible}
         setIsVisible={setIsURLDialogVisible}
         onUrlAdded={NoteUrlChangeHandler} />
+      <EditTaskDialog
+        index={editTaskDialog.index}
+        task={editTaskDialog.task}
+        isVisible={editTaskDialog.isVisible}
+        onTaskEdit={NoteTaskEditHandler}
+        setIsVisible={setEditTaskDialog} />
     </View>
   );
 }
