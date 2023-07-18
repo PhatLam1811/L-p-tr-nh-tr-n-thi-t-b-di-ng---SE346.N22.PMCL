@@ -11,9 +11,9 @@ const TaskShorcut = (props) => {
     const styles = StyleSheet.create({
         taskShorcut: {
             flexDirection: "row",
+            alignItems: "center",
             width: "95%",
-            height: 40,
-            marginVertical: 5,
+            marginVertical: 10,
         },
 
         checkbox: {
@@ -39,8 +39,15 @@ const TaskShorcut = (props) => {
         },
 
         text: {
+            width: "80%",
             color: appContext.appTheme?.text,
-        }
+        },
+
+        textChecked: {
+            width: '80%',
+            color: appContext.appTheme?.text,
+            textDecorationLine: "line-through",
+        },
     })
 
     return (
@@ -48,7 +55,7 @@ const TaskShorcut = (props) => {
             <View style={props.content.isFinished ? styles.checked : styles.checkbox}>
                 {props.content.isFinished && <Icon name="check" size={24} style={{}} color={"#fff"} />}
             </View>
-            <Text style={styles.text}>{props.content.toDo} </Text>
+            <Text style={props.content.isFinished ? styles.textChecked : styles.text}>{props.content.toDo} </Text>
         </TouchableOpacity>
     );
 }

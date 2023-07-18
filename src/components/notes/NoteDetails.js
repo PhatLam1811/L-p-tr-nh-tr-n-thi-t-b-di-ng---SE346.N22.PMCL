@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import AppContext from "../../utils/AppContext";
 import TaskList from '../tasks/TaskList';
@@ -145,7 +145,7 @@ const NoteDetails = (props) => {
                 {note.tasks != null &&
                     <TaskList
                         taskItems={note.tasks}
-                        // setVisible={ShowEditDialog}
+                        showEditTaskDialog={props.showEditTaskDialog}
                         onTasksChange={props.onTasksChange}
                     />}
                 <View style={{ height: 100 }} />

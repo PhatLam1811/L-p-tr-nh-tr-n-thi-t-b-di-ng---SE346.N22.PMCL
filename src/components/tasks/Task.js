@@ -42,7 +42,6 @@ const Task = (props) => {
         itemLeft: {
             flexDirection: 'row',
             alignItems: 'center',
-            flexWrap: 'wrap'
         },
 
         square: {
@@ -72,12 +71,12 @@ const Task = (props) => {
         },
 
         itemText: {
-            maxWidth: '100%',
+            maxWidth: '95%',
             color: appContext.appTheme?.text,
         },
 
         itemTextButCompleted: {
-            maxWidth: '80%',
+            maxWidth: '95%',
             color: appContext.appTheme?.text,
             textDecorationLine: "line-through",
             textDecorationStyle: 'solid'

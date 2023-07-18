@@ -2,7 +2,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import AppController from '../../controllers/AppController';
-import Task from "../tasks/Task";
 import AppContext from '../../utils/AppContext';
 import moment from 'moment';
 
