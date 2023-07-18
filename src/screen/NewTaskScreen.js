@@ -9,7 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import { Button, TextInput, IconButton, Stack } from '@react-native-material/core';
+import { TextInput, IconButton, Stack } from '@react-native-material/core';
 import Icon from "react-native-vector-icons/Octicons";
 
 
