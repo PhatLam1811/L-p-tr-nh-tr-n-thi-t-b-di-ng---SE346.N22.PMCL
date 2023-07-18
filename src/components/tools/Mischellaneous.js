@@ -30,6 +30,11 @@ const Mischellaneous = (props) => {
         }
     }
 
+    const AddTasksHandler = () => {
+        props.addTasks([]);
+        ToggleMischellaneousBar();
+    }
+
     const OptionHandler = (callback) => {
         callback();
         ToggleMischellaneousBar();
@@ -93,11 +98,8 @@ const Mischellaneous = (props) => {
             <ColorPicker
                 onSelectTag={props.onSelectTag}
                 onTagChange={(tag) => props.selectTag(tag)} />
-            <Pressable style={styles.mischellaneousOption}>
-                <OctIcon
-                    name="checklist"
-                    {...styles.mischellaneousIcon}
-                />
+            <Pressable style={styles.mischellaneousOption} onPress={AddTasksHandler}>
+                <OctIcon name="checklist" {...styles.mischellaneousIcon} />
                 <Text style={styles.mischellaneous_text}>Add Checklist</Text>
             </Pressable>
             <Pressable style={styles.mischellaneousOption} onPress={() => OptionHandler(props.addImage)}>

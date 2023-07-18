@@ -92,11 +92,11 @@ const NoteScreen = (props) => {
 
   const NoteTitleChangeHandler = (value) => setNote(prev => { return { ...prev, title: value } });
   const NoteSubTitleChangeHandler = (value) => setNote(prev => { return { ...prev, subTitle: value } });
-  const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value } });
-  const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url } });
-  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image } });
+  const NoteContentChangeHandler = (value) => setNote(prev => { return { ...prev, content: value, tasks: null } });
+  const NoteUrlChangeHandler = (url) => setNote(prev => { return { ...prev, url: url, tasks: null } });
+  const NoteImageChangeHandler = (image) => setNote(prev => { return { ...prev, image: image, tasks: null } });
   const NoteColorTagChangeHandler = (tag) => setNote(prev => { return { ...prev, colorTag: tag } });
-  const NoteTaskChangeHandler = (value) => setNote(prev => { return { ...prev, tasks: value } });
+  const NoteTaskChangeHandler = (value) => setNote(prev => { return { ...prev, image: null, content: null, url: null, tasks: value } });
 
   const NoteTaskEditHandler = ({ index, toDo }) => {
     let temp = note.tasks;
@@ -221,6 +221,7 @@ const NoteScreen = (props) => {
         selectTag={NoteColorTagChangeHandler}
         addImage={ImagePicker}
         addUrl={() => setIsURLDialogVisible(true)}
+        addTasks={NoteTaskChangeHandler}
         deleteNote={DeleteNoteHandler} />
       <AddURLDialog
         isVisible={isURLDialogVisible}
