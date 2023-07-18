@@ -76,6 +76,13 @@ const MainScreen = props => {
       shareContent += note.url != null ? '\n' + note.url : '';
 
       //nội dung Share để ở trong message, chỉ để ở dạng string
+
+      if (note.tasks != null)
+        note.tasks.map((item, index) => {
+          shareContent += `\n${index}. ${item.toDo} ${
+            item.isFinished ? ' ✔' : '✘'
+          }`;
+        });
       const result = await Share.share({
         message: shareContent,
       });
@@ -102,6 +109,13 @@ const MainScreen = props => {
       copyContent += note.subTitle != null ? '\n' + note.subTitle : '';
       copyContent += note.content != null ? '\n' + note.content : '';
       copyContent += note.url != null ? '\n' + note.url : '';
+
+      if (note.tasks != null)
+        note.tasks.map((item, index) => {
+          copyContent += `\n${index}. ${item.toDo} ${
+            item.isFinished ? ' ✔' : '✘'
+          }`;
+        });
 
       Clipboard.setString(copyContent);
     } catch (error) {
@@ -167,19 +181,19 @@ const MainScreen = props => {
     },
 
     mainScreen__icon_plus: {
-        backgroundColor: 'transparent',
-        color: appContext.appTheme?.icon,
-        size: 25,
-        margin:23
-      },
+      backgroundColor: 'transparent',
+      color: appContext.appTheme?.icon,
+      size: 25,
+      margin: 23,
+    },
 
     mainScreen__newNoteFAB: {
       backgroundColor: '#fcba03',
       color: '#fcba03',
       position: 'absolute',
-      width:65,
-      height:65,
-      borderRadius:100,
+      width: 65,
+      height: 65,
+      borderRadius: 100,
       bottom: 50,
       right: 30,
     },
