@@ -95,6 +95,10 @@ const MainScreen = (props) => {
             copyContent += note.content != null ? '\n' + note.content : "";
             copyContent += note.url != null ? '\n' + note.url : "";
 
+            if (note.tasks != null) note.tasks.map((item, index) => {
+                copyContent += `\n${index}. ${item.toDo} ${item.isFinished ? " ✔" : "✘"}`;
+            })
+
             Clipboard.setString(copyContent);
         } catch (error) {
             console.log(error);
